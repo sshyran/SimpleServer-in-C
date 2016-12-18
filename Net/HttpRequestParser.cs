@@ -8,6 +8,5 @@ namespace SimpleServer.Net
 {
     public class HttpParser
     {
-        
     }
 }

@@ -1,4 +1,5 @@
 ﻿using DMP9Labs.IO.Plugins;
+using SimpleServer.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,16 +21,6 @@ namespace SimpleServer.Plugins
         public Logger GetLogger()
         {
             return SimpleServer.PluginLoggerRegistry[this];
-        }
-    }
-    public class Logger : TextWriter
-    {
-        public override Encoding Encoding
-        {
-            get
-            {
-                return Encoding.ASCII;
-            }
         }
     }
     public class Loader : PluginProvider

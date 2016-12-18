@@ -18,7 +18,7 @@ namespace SimpleServer.Logging
         {
             Logger logger = new Logger();
             logger.InitialLog = initialLogger;
-            logger.LogFile = new StreamWriter(output) { AutoFlush = true };
+            logger.LogFile = new StreamWriter(output,true) { AutoFlush = true };
             logger.prefix = " [" + prefix + "] ";
             return logger;
         }

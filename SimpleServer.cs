@@ -1,4 +1,5 @@
 ﻿using DMP9Labs.IO.Plugins;
+using SimpleServer.Logging;
 using SimpleServer.Net;
 using SimpleServer.Plugins;
 using System;
@@ -18,14 +19,88 @@ using System.Text;
 using System.Threading.Tasks;
 namespace SimpleServer
 {
+    /// <summary>
+    /// Represents the SimpleServer static objects
+    /// </summary>
     public static class SimpleServer
     {
+        /// <summary>
+        /// The registry created by the host application
+        /// </summary>
+        public static SimpleServerRegistry Registry { get; set; }
+        /// <summary>
+        /// Represents a list of loaded raw plugins
+        /// </summary>
         public static List<PluginBase> CachedPlugins { get; set; }
+        /// <summary>
+        /// Represents plugin loggers created by the host application
+        /// </summary>
         public static Dictionary<PluginBase, Logger> PluginLoggerRegistry { get; set; }
+        /// <summary>
+        /// The selected server loaded by the host application
+        /// </summary>
         public static Server OpenServer { get; set; }
-        public static Logging.Logger Logger { get; set; }
+        /// <summary>
+        /// Represents the host application's logger
+        /// </summary>
+        public static Logger Logger { get; set; }
+        /// <summary>
+        /// Represents the SimpleServer default error page
+        /// </summary>
         public static string DefaultErrorPage { get { return Internals.ErrorPage; } }
+        /// <summary>
+        /// Represents the SimpleServer API version
+        /// </summary>
         public static string APIVersion { get { return typeof(SimpleServer).Assembly.GetName().Version.Major.ToString() + typeof(SimpleServer).Assembly.GetName().Version.MajorRevision; } }
+    }
+    /// <summary>
+    /// Represents the registry for the host application's use
+    /// </summary>
+    public class SimpleServerRegistry
+    {
+        /// <summary>
+        /// Called when an object is added to the registry
+        /// </summary>
+        public event RegistryEventHandler RegistryAddition;
+        /// <summary>
+        /// Adds a Function to the registry for the host application's function creation dialog
+        /// </summary>
+        /// <param name="functionType">typeof(MyFunction)</param>
+        /// <returns>true if operation success</returns>
+        public bool RegisterFunction(Type functionType)
+        {
+            try
+            {
+                if (functionType.IsAssignableFrom(typeof(Function)))
+                {
+                    RegistryAddition.Invoke(SimpleServer.CachedPlugins.First(x => x.Assembly == functionType.Assembly), new RegistryEventArgs() { Action = RegistryFunction.REGISTER_FUNCTION, Subject = functionType });
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception e)
+            {
+                SimpleServer.PluginLoggerRegistry[SimpleServer.CachedPlugins.First(x => x.Assembly == functionType.Assembly)].ERROR(e,"Function registration for type '"+functionType.FullName+"' failed");
+                return false;
+            }
+        }
+    }
+    public enum RegistryFunction
+    {
+        REGISTER_FUNCTION,
+        UNREGISTER_FUNCTION,
+        REGISTER_INTERNAL_FUNCTION,
+        UNREGISTER_INTERNAL_FUNCTION,
+        
+    }
+    public delegate void RegistryEventHandler(object sender,RegistryEventArgs e);
+    public class RegistryEventArgs
+    {
+        public RegistryFunction Action { get; set; }
+        public object Subject { get; set; }
     }
     [Serializable]
     public abstract class Function : ISerializable
