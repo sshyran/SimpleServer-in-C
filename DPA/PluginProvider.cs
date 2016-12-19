@@ -21,9 +21,9 @@ namespace DMP9Labs.IO.Plugins
             string index = c.Split('$')[0]; // Obtain encoded index prior to $ splitter
             string asm = c.Split('$')[1]; // Obtain encoded assembly after $ splitter
             rasm.Add(0x4d); rasm.Add(0x5a); // Mark Zbikowski
-            foreach (string s in Enumerable.Range(0, asm.Length / 2).Select(i => asm.Substring(i * 2, 2)))
+            foreach (byte b in new DlfEncoder().DecodeString(asm))
             {
-                rasm.Add(Convert.FromBase64String(s + "==")[0]);
+                rasm.Add(b);
             }
             p.Assembly = Assembly.Load(rasm.ToArray());
             p.RawAssembly = rasm.ToArray();

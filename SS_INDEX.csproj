@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DPA\DlfEncoder.cs" />
     <Compile Include="DPA\PluginProvider.cs" />
     <Compile Include="Internals.Designer.cs">
       <AutoGen>True</AutoGen>
