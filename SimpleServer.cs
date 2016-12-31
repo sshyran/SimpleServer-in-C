@@ -1,4 +1,5 @@
-﻿using DMP9Labs.IO.Plugins;
+﻿using DMP9Labs.IO;
+using DMP9Labs.IO.Plugins;
 using SimpleServer.Logging;
 using SimpleServer.Net;
 using SimpleServer.Plugins;
@@ -52,6 +53,14 @@ namespace SimpleServer
         /// Represents the SimpleServer API version
         /// </summary>
         public static string APIVersion { get { return typeof(SimpleServer).Assembly.GetName().Version.Major.ToString() + typeof(SimpleServer).Assembly.GetName().Version.MajorRevision; } }
+    }
+    public class SimpleServerInfo : DlfDescription
+    {
+
+    }
+    public class SimpleServerInstance
+    {
+
     }
     /// <summary>
     /// Represents the registry for the host application's use

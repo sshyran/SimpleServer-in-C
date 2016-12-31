@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DPA\DlfDescription.cs" />
     <Compile Include="DPA\DlfEncoder.cs" />
     <Compile Include="DPA\PluginProvider.cs" />
     <Compile Include="Internals.Designer.cs">
@@ -56,6 +57,7 @@
     <Compile Include="Net\HttpRequestParser.cs" />
     <Compile Include="Net\HttpResponse.cs" />
     <Compile Include="Net\WebClient.cs" />
+    <Compile Include="PluginIndex.cs" />
     <Compile Include="SimpleServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SimpleServer.Plugins.cs" />
