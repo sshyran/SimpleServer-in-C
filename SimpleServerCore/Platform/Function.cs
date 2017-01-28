@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace SimpleServer.Core.Platform
 {
-    public abstract class Function
+    public interface Function
     {
+        string GetPath();
+
     }
 }
