@@ -31,6 +31,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
+    <Compile Include="Platform\Function.cs" />
+    <Compile Include="Platform\Net\Http\HttpContext.cs" />
+    <Compile Include="Platform\Net\Listeners\HttpListener.cs" />
+    <Compile Include="Platform\Net\Listeners\Listener.cs" />
     <Compile Include="Platform\Net\WebRequest.cs" />
     <Compile Include="Platform\Net\WebServer.cs" />
     <Compile Include="Platform\Platform.cs" />
