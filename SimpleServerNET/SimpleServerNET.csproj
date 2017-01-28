@@ -40,8 +40,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DotNetListener.cs" />
     <Compile Include="DotNetPlatform.cs" />
     <Compile Include="DotNetWebRequest.cs" />
+    <Compile Include="DotNetWebServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
