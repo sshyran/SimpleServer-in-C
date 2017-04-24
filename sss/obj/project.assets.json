@@ -7080,10 +7080,10 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\users\\perksey.desktop-keokabv\\documents\\visual studio 2017\\Projects\\SimpleServer\\sss\\sss.csproj",
-      "projectName": "sss",
-      "projectPath": "c:\\users\\perksey.desktop-keokabv\\documents\\visual studio 2017\\Projects\\SimpleServer\\sss\\sss.csproj",
-      "outputPath": "c:\\users\\perksey.desktop-keokabv\\documents\\visual studio 2017\\Projects\\SimpleServer\\sss\\obj\\",
+      "projectUniqueName": "C:\\Users\\Perksey.DESKTOP-KEOKABV\\Documents\\Visual Studio 2017\\Projects\\SimpleServer\\sss\\SimpleServer Command Tool.csproj",
+      "projectName": "SimpleServer Command Tool",
+      "projectPath": "C:\\Users\\Perksey.DESKTOP-KEOKABV\\Documents\\Visual Studio 2017\\Projects\\SimpleServer\\sss\\SimpleServer Command Tool.csproj",
+      "outputPath": "C:\\Users\\Perksey.DESKTOP-KEOKABV\\Documents\\Visual Studio 2017\\Projects\\SimpleServer\\sss\\obj\\",
       "projectStyle": "PackageReference",
       "originalTargetFrameworks": [
         "netcoreapp1.1"
