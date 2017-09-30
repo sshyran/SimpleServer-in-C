@@ -1,9 +1,0 @@
-C:\Users\Perksey.DESKTOP-KEOKABV\Documents\Visual Studio 2017\Projects\SimpleServer\sss\bin\Debug\netcoreapp1.1\sssc.deps.json
-C:\Users\Perksey.DESKTOP-KEOKABV\Documents\Visual Studio 2017\Projects\SimpleServer\sss\bin\Debug\netcoreapp1.1\sssc.runtimeconfig.json
-C:\Users\Perksey.DESKTOP-KEOKABV\Documents\Visual Studio 2017\Projects\SimpleServer\sss\bin\Debug\netcoreapp1.1\sssc.runtimeconfig.dev.json
-C:\Users\Perksey.DESKTOP-KEOKABV\Documents\Visual Studio 2017\Projects\SimpleServer\sss\bin\Debug\netcoreapp1.1\sssc.dll
-C:\Users\Perksey.DESKTOP-KEOKABV\Documents\Visual Studio 2017\Projects\SimpleServer\sss\bin\Debug\netcoreapp1.1\sssc.pdb
-C:\Users\Perksey.DESKTOP-KEOKABV\Documents\Visual Studio 2017\Projects\SimpleServer\sss\obj\Debug\netcoreapp1.1\SimpleServer Command Tool.csprojResolveAssemblyReference.cache
-C:\Users\Perksey.DESKTOP-KEOKABV\Documents\Visual Studio 2017\Projects\SimpleServer\sss\obj\Debug\netcoreapp1.1\SimpleServer Command Tool.AssemblyInfo.cs
-C:\Users\Perksey.DESKTOP-KEOKABV\Documents\Visual Studio 2017\Projects\SimpleServer\sss\obj\Debug\netcoreapp1.1\sssc.dll
-C:\Users\Perksey.DESKTOP-KEOKABV\Documents\Visual Studio 2017\Projects\SimpleServer\sss\obj\Debug\netcoreapp1.1\sssc.pdb
