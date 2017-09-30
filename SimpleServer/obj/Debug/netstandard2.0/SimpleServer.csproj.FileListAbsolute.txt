@@ -1,0 +1,9 @@
+C:\Users\DMP9\Documents\Visual Studio 2017\Projects\SimpleServer\SimpleServer\obj\Debug\netstandard2.0\SimpleServer.csprojResolveAssemblyReference.cache
+C:\Users\DMP9\Documents\Visual Studio 2017\Projects\SimpleServer\SimpleServer\obj\Debug\netstandard2.0\SimpleServer.csproj.CoreCompileInputs.cache
+C:\Users\DMP9\Documents\Visual Studio 2017\Projects\SimpleServer\SimpleServer\obj\Debug\netstandard2.0\SimpleServer.AssemblyInfoInputs.cache
+C:\Users\DMP9\Documents\Visual Studio 2017\Projects\SimpleServer\SimpleServer\obj\Debug\netstandard2.0\SimpleServer.AssemblyInfo.cs
+C:\Users\DMP9\Documents\Visual Studio 2017\Projects\SimpleServer\SimpleServer\bin\Debug\netstandard2.0\SimpleServer.deps.json
+C:\Users\DMP9\Documents\Visual Studio 2017\Projects\SimpleServer\SimpleServer\bin\Debug\netstandard2.0\SimpleServer.dll
+C:\Users\DMP9\Documents\Visual Studio 2017\Projects\SimpleServer\SimpleServer\bin\Debug\netstandard2.0\SimpleServer.pdb
+C:\Users\DMP9\Documents\Visual Studio 2017\Projects\SimpleServer\SimpleServer\obj\Debug\netstandard2.0\SimpleServer.dll
+C:\Users\DMP9\Documents\Visual Studio 2017\Projects\SimpleServer\SimpleServer\obj\Debug\netstandard2.0\SimpleServer.pdb
