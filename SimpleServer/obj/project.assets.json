@@ -186,11 +186,11 @@
       "hideWarningsAndErrors": true
     },
     "restore": {
-      "projectUniqueName": "C:\\Users\\DMP9\\Documents\\Visual Studio 2017\\Projects\\SimpleServer\\SimpleServer\\SimpleServer.csproj",
+      "projectUniqueName": "C:\\Users\\DMP9\\Source\\Repos\\SimpleServer3\\SimpleServer\\SimpleServer.csproj",
       "projectName": "SimpleServer",
-      "projectPath": "C:\\Users\\DMP9\\Documents\\Visual Studio 2017\\Projects\\SimpleServer\\SimpleServer\\SimpleServer.csproj",
+      "projectPath": "C:\\Users\\DMP9\\Source\\Repos\\SimpleServer3\\SimpleServer\\SimpleServer.csproj",
       "packagesPath": "C:\\Users\\DMP9\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\DMP9\\Documents\\Visual Studio 2017\\Projects\\SimpleServer\\SimpleServer\\obj\\",
+      "outputPath": "C:\\Users\\DMP9\\Source\\Repos\\SimpleServer3\\SimpleServer\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -204,7 +204,6 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Users\\DMP9\\AppData\\Roaming\\Cosmos User Kit\\Kernel\\packages": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
