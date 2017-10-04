@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 
 namespace SimpleServer
 {
@@ -8,6 +9,10 @@ namespace SimpleServer
         public static void Initialize(IPlatform platform)
         {
             Platform = platform;
+        }
+        public SimpleServer(IPEndPoint defaultEndPoint)
+        {
+
         }
     }
 }
