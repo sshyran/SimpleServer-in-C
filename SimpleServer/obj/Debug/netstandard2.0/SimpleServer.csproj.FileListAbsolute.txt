@@ -1,0 +1,4 @@
+C:\Users\Dylan Perks\Documents\_Important Documents\7) SimpleServer\SimpleServer\obj\Debug\netstandard2.0\SimpleServer.csprojResolveAssemblyReference.cache
+C:\Users\Dylan Perks\Documents\_Important Documents\7) SimpleServer\SimpleServer\obj\Debug\netstandard2.0\SimpleServer.csproj.CoreCompileInputs.cache
+C:\Users\Dylan Perks\Documents\_Important Documents\7) SimpleServer\SimpleServer\obj\Debug\netstandard2.0\SimpleServer.AssemblyInfoInputs.cache
+C:\Users\Dylan Perks\Documents\_Important Documents\7) SimpleServer\SimpleServer\obj\Debug\netstandard2.0\SimpleServer.AssemblyInfo.cs
