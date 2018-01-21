@@ -17,5 +17,9 @@ namespace SimpleServer.Internals
             fqdn.AddRange(host.AliasFQDNs);
             _hostnames = fqdn.ToArray();
         }
+        public void Start()
+        {
+
+        }
     }
 }
