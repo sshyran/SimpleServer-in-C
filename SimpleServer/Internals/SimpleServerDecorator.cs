@@ -6,5 +6,6 @@ namespace SimpleServer.Internals
 {
     public class SimpleServerDecorator
     {
+         
     }
 }

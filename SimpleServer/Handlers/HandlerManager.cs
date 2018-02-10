@@ -4,7 +4,11 @@ using System.Text;
 
 namespace SimpleServer.Handlers
 {
-    class HandlerManager
+    public class HandlerManager
     {
+        public HandlerManager(SimpleServer server)
+        {
+
+        }
     }
 }
