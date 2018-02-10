@@ -3,19 +3,27 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleServer", "SimpleServer\SimpleServer.csproj", "{1D261E03-5DDA-4EF7-AFF0-53DB03FB4DCF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleServer", "SimpleServer\SimpleServer.csproj", "{1D261E03-5DDA-4EF7-AFF0-53DB03FB4DCF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleServer.Framework", "SimpleServer.Framework\SimpleServer.Framework.csproj", "{6DE67E8E-9065-47D1-AF1B-65813C9C250E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleServer.Framework", "SimpleServer.Framework\SimpleServer.Framework.csproj", "{6DE67E8E-9065-47D1-AF1B-65813C9C250E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleServer.Framework.Gui", "SimpleServer.Framework.Gui\SimpleServer.Framework.Gui.csproj", "{67601D37-BD4F-42CD-B31B-B36FA9EC606C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleServer.Framework.Gui", "SimpleServer.Framework.Gui\SimpleServer.Framework.Gui.csproj", "{67601D37-BD4F-42CD-B31B-B36FA9EC606C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleServer.GSS", "SimpleServer.GSS\SimpleServer.GSS.csproj", "{BF611680-7568-4D2E-A014-AA93713B23CD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleServer.GSS", "SimpleServer.GSS\SimpleServer.GSS.csproj", "{BF611680-7568-4D2E-A014-AA93713B23CD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleServer.Json", "SimpleServer.Json\SimpleServer.Json.csproj", "{43D6343D-2D07-4AD2-BB6A-7419069D6A96}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleServer.Json", "SimpleServer.Json\SimpleServer.Json.csproj", "{43D6343D-2D07-4AD2-BB6A-7419069D6A96}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Framework", "Framework", "{B9CCAAFD-C0A9-481E-8411-76AC0286981B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GUI", "GUI", "{320C64F2-D335-4E06-8FF9-E9B14370A521}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Httpd", "Httpd", "{11EC1FA6-719C-4E7B-A7FD-0EAFC328DFFF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleServer.Daemon", "SimpleServer.Daemon\SimpleServer.Daemon.csproj", "{139EAE14-9BB5-4C58-B9E4-B69355FA7800}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Devkit", "Devkit", "{C5C3A7A5-07AD-4BE2-9121-7D0C176954A1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleServer.Sdk", "SimpleServer.Sdk\SimpleServer.Sdk.csproj", "{30708D40-F6A5-4598-9E74-81E8111F5290}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,6 +51,14 @@ Global
 		{43D6343D-2D07-4AD2-BB6A-7419069D6A96}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{43D6343D-2D07-4AD2-BB6A-7419069D6A96}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{43D6343D-2D07-4AD2-BB6A-7419069D6A96}.Release|Any CPU.Build.0 = Release|Any CPU
+		{139EAE14-9BB5-4C58-B9E4-B69355FA7800}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{139EAE14-9BB5-4C58-B9E4-B69355FA7800}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{139EAE14-9BB5-4C58-B9E4-B69355FA7800}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{139EAE14-9BB5-4C58-B9E4-B69355FA7800}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30708D40-F6A5-4598-9E74-81E8111F5290}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30708D40-F6A5-4598-9E74-81E8111F5290}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30708D40-F6A5-4598-9E74-81E8111F5290}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30708D40-F6A5-4598-9E74-81E8111F5290}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -52,6 +68,8 @@ Global
 		{67601D37-BD4F-42CD-B31B-B36FA9EC606C} = {B9CCAAFD-C0A9-481E-8411-76AC0286981B}
 		{BF611680-7568-4D2E-A014-AA93713B23CD} = {320C64F2-D335-4E06-8FF9-E9B14370A521}
 		{43D6343D-2D07-4AD2-BB6A-7419069D6A96} = {B9CCAAFD-C0A9-481E-8411-76AC0286981B}
+		{139EAE14-9BB5-4C58-B9E4-B69355FA7800} = {11EC1FA6-719C-4E7B-A7FD-0EAFC328DFFF}
+		{30708D40-F6A5-4598-9E74-81E8111F5290} = {C5C3A7A5-07AD-4BE2-9121-7D0C176954A1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {840E999D-5950-4938-B388-DDF60457EBC6}
