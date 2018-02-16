@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace SimpleServer
 {
@@ -19,8 +20,12 @@ namespace SimpleServer
         public bool HasWildcardHost()
         {
             bool result = false;
-            Hosts.ForEach(x => { result = x.FQDN == "*" || x.AliasFQDNs.Contains("*"); });
+            Hosts.ForEach(x => { if (x.FQDN == "*" || x.AliasFQDNs.Contains("*")) { result = true; } });
             return result;
+        }
+        internal async Task HandleRequestAsync(SimpleServerRequest request,SimpleServerResponse response)
+        {
+
         }
         public void Start()
         {
@@ -52,6 +57,7 @@ namespace SimpleServer
                 Log.WriteLine("Ports are bindable, proceeding with server start...");
                 // Everybody START YOUR ENGINES!
                 _engines.ForEach(x => x.Start());
+                Log.WriteLine("SimpleServer is now active.");
             }
             catch (Exception ex)
             {

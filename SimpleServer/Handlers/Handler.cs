@@ -4,11 +4,8 @@ using System.Text;
 
 namespace SimpleServer.Handlers
 {
-    public class HandlerManager
+    public interface IHandler
     {
-        public HandlerManager(SimpleServer server)
-        {
-
-        }
+        void Handle();
     }
 }

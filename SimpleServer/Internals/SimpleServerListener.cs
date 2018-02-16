@@ -3,14 +3,19 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SimpleServer.Internals
 {
-    public class SimpleServerListener
+    public class SimpleServerListener : IDisposable
     {
         private TcpListener _tcpListener;
         private SimpleServer _server;
+        private bool _isListening;
+        private CancellationTokenSource _cts;
+        private Task _listener;
+        private bool _disposed;
 
         public SimpleServerListener(IPEndPoint localEndpoint,SimpleServer server)
         {
@@ -39,12 +44,74 @@ namespace SimpleServer.Internals
 
         public void Start()
         {
+            if (_disposed)
+                throw new ObjectDisposedException("Object has been disposed.");
+
+            if (_cts != null)
+                throw new InvalidOperationException("HttpListener is already running.");
+
+            _cts = new CancellationTokenSource();
+            _isListening = true;
             _tcpListener.Start();
+            _listener = Task.Run(Listen, _cts.Token);
+        }
+        public async Task Listen()
+        {
+            while (_isListening)
+            {
+                // Await request.
+
+                var client = await _tcpListener.AcceptTcpClientAsync().ConfigureAwait(false);
+                var conn = new SimpleServerConnection(client, _server);
+                var request = await SimpleServerEngine.ProcessRequestAsync(conn);
+
+                // Handle request in a separate thread.
+
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                Task.Run(async () =>
+                {
+                    // Process request.
+
+                    var response = new SimpleServerResponse(request, conn);
+
+                    try
+                    {
+                        response.Initialize();
+                        await _server.HandleRequestAsync(request, response);
+                    }
+                    catch (Exception)
+                    {
+                        conn.Dispose();
+                    }
+                });
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            }
         }
 
         public void Stop()
         {
+            if (_cts == null)
+                throw new InvalidOperationException("HttpListener is not running.");
+
+            _cts.Cancel();
+            _cts = null;
+
+            _isListening = false;
             _tcpListener.Stop();
+
+            try
+            {
+                // Stop task
+                _listener.Wait(TimeSpan.FromMilliseconds(1));
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        public void Dispose()
+        {
+            throw new NotImplementedException();
         }
 
         public Socket Socket => _tcpListener.Server;

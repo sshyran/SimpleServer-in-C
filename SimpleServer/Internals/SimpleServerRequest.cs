@@ -13,7 +13,7 @@ namespace SimpleServer.Internals
     {
         private SimpleServerConnection client;
 
-        // Request regex developed by DMP9 Labs
+        // Request regex developed by Ultz
         internal static string requestRegex = @"^(?<method>GET|HEAD|POST|PUT|DELETE|OPTIONS|TRACE|PATCH).(?<url>.*).(?<version>(HTTP\/1\.1|HTTP\/1\.0))$";
 
         internal SimpleServerRequest()
@@ -54,17 +54,18 @@ namespace SimpleServer.Internals
             {
                 throw new Exception("Invalid request -- couldn't match request line to regex");
             }
-            if (!Headers.ContainsKey("Host"))
-            {
-                if ()
-            }
+            //if (SimpleServerConfig.Http11Only && version)
+            //if (!Headers.ContainsKey("Host"))
+            //{
+            //    if ()
+            //}
 
-            var url = new UriBuilder(Headers.Host + m.Groups["url"]).Uri;
-            var httpMethod = m.Groups["method"];
+            //var url = new UriBuilder(Headers.Host + m.Groups["url"]).Uri;
+            //var httpMethod = m.Groups["method"];
 
-            Version = m.Groups["version"].Value;
-            Method = httpMethod.Value;
-            RequestUri = url;
+            //Version = m.Groups["version"].Value;
+            //Method = httpMethod.Value;
+            //RequestUri = url;
         }
 
         private async Task PrepareInputStream(StreamReader reader)
@@ -81,7 +82,7 @@ namespace SimpleServer.Internals
         private void ParseHeaders(IEnumerable<string> lines)
         {
             lines = lines.Skip(1);
-            Headers.ParseHeaderLines(lines);
+            //Headers.ParseHeaderLines(lines);
         }
 
         private static async Task<StringBuilder> ReadRequest(StreamReader reader)
