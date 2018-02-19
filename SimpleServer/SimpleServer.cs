@@ -1,5 +1,7 @@
-﻿using SimpleServer.Internals;
+﻿using SimpleServer.Handlers;
+using SimpleServer.Internals;
 using SimpleServer.Logging;
+using SimpleServer.Managers;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -16,6 +18,7 @@ namespace SimpleServer
             Hosts = new List<SimpleServerHost>();
         }
         List<SimpleServerEngine> _engines;
+        HandlerManager handler;
         public List<SimpleServerHost> Hosts { get; set; }
         public bool HasWildcardHost()
         {
@@ -27,8 +30,13 @@ namespace SimpleServer
         {
 
         }
+        public void AddHandler(IHandler h)
+        {
+            handler.Add(h);
+        }
         public void Start()
         {
+            handler = HandlerManager.For(this);
             try
             {
                 List<int> ports = new List<int>();

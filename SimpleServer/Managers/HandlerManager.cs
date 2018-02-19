@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace SimpleServer.Managers
 {
@@ -12,6 +13,10 @@ namespace SimpleServer.Managers
         private static Dictionary<SimpleServer,HandlerManager> submanagers;
         public static HandlerManager For(SimpleServer server)
         {
+            if (!submanagers.ContainsKey(server))
+            {
+                submanagers.Add(server,new HandlerManager());
+            }
             return submanagers[server];
         }
         public HandlerManager With(IHandler handler)
@@ -22,6 +27,10 @@ namespace SimpleServer.Managers
         public void Add(IHandler handler)
         {
             handlers.Add(handler);
+        }
+        public async Task HandleAsync()
+        {
+
         }
     }
 }
