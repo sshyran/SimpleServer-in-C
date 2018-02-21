@@ -11,9 +11,12 @@ namespace SimpleServer.Internals
     {
         TcpClient _client;
         internal SimpleServer _server;
-        internal SimpleServerConnection(TcpClient client,SimpleServer server)
+        internal SimpleServerListener _listener;
+        internal SimpleServerConnection(TcpClient client,SimpleServer server,SimpleServerListener listener)
         {
             _client = client;
+            _listener = listener;
+            _server = server;
         }
         public IPEndPoint LocalEndPoint => (IPEndPoint)_client.Client.LocalEndPoint;
         public IPEndPoint RemoteEndPoint => (IPEndPoint)_client.Client.RemoteEndPoint;
@@ -35,6 +38,10 @@ namespace SimpleServer.Internals
         public SimpleServer GetServer()
         {
             return _server;
+        }
+        public SimpleServerListener GetListener()
+        {
+            return _listener;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SimpleServer.Logging;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -16,16 +17,13 @@ namespace SimpleServer.Internals
 
             this.client = client;
             Request = request;
-        }
-
-        internal void Initialize()
-        {
             OutputStream = new MemoryStream();
 
             Version = Request.Version;
             StatusCode = 200;
             ReasonPhrase = "OK";
         }
+        
 
         SimpleServerRequest Request { get; set; }
 
@@ -60,6 +58,7 @@ namespace SimpleServer.Internals
             outputStream.Seek(0, SeekOrigin.Begin);
 
             var socketStream = client.Stream;
+            
 
             string header = $"{Version} {StatusCode} {ReasonPhrase}\r\n" +
                             Headers +
@@ -90,7 +89,40 @@ namespace SimpleServer.Internals
         /// </summary>
         public async void Close()
         {
-            await Send();
+            //try
+            //{
+                //await Send();
+
+            var outputStream = OutputStream as MemoryStream;
+            MemoryStream memStream = new MemoryStream(outputStream.ToArray());
+            
+            memStream.Seek(0, SeekOrigin.Begin);
+
+            var socketStream = client.Stream;
+
+
+            string header = $"{Version} {StatusCode} {ReasonPhrase}\r\n" +
+                            Headers +
+                            $"Content-Length: {memStream.Length}\r\n" +
+                            "\r\n";
+
+            byte[] headerArray = Encoding.UTF8.GetBytes(header);
+            await socketStream.WriteAsync(headerArray, 0, headerArray.Length);
+            await memStream.CopyToAsync(socketStream);
+
+            await socketStream.FlushAsync();
+            //}
+            //catch (Exception ex)
+            //{
+            //    if (SimpleServerConfig.IgnoreSendExceptions)
+            //    {
+            //        Log.Warn(Request.Method + " " + Request.RawUrl + " raised a send exception. For more details, disable IgnoreSendExceptions.");
+            //    }
+            //    else
+            //    {
+            //        Log.Error(ex);
+            //    }
+            //}
             CloseSocket();
         }
 

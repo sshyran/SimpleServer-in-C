@@ -13,90 +13,8 @@ namespace SimpleServer.Internals
     {
         private SimpleServerConnection client;
 
-        // Request regex developed by Ultz
-        internal static string requestRegex = @"^(?<method>GET|HEAD|POST|PUT|DELETE|OPTIONS|TRACE|PATCH).(?<url>.*).(?<version>(HTTP\/1\.1|HTTP\/1\.0))$";
-
         internal SimpleServerRequest()
         {
-        }
-
-        internal async Task ProcessAsync()
-        {
-            var reader = new StreamReader(client.Stream);
-
-            StringBuilder request = await ReadRequest(reader);
-
-            var localEndpoint = client.LocalEndPoint;
-            var remoteEnpoint = client.RemoteEndPoint;
-
-            LocalEndpoint = (IPEndPoint)localEndpoint;
-            RemoteEndpoint = (IPEndPoint)remoteEnpoint;
-
-            var lines = request.ToString().Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
-
-            ParseHeaders(lines);
-            ParseRequestLine(lines);
-
-            await PrepareInputStream(reader);
-
-            // make sure we don't run into any RAM problems
-            request.Clear();
-            request = null;
-        }
-
-        private void ParseRequestLine(string[] lines)
-        {
-            var line = lines.ElementAt(0);
-            Regex regex = new Regex(requestRegex);
-            Match m = regex.Match(line);
-
-            if (!m.Success)
-            {
-                throw new Exception("Invalid request -- couldn't match request line to regex");
-            }
-            //if (SimpleServerConfig.Http11Only && version)
-            //if (!Headers.ContainsKey("Host"))
-            //{
-            //    if ()
-            //}
-
-            //var url = new UriBuilder(Headers.Host + m.Groups["url"]).Uri;
-            //var httpMethod = m.Groups["method"];
-
-            //Version = m.Groups["version"].Value;
-            //Method = httpMethod.Value;
-            //RequestUri = url;
-        }
-
-        private async Task PrepareInputStream(StreamReader reader)
-        {
-            if (Method == "POST" || Method == "PUT" || Method == "PATCH")
-            {
-
-                InputStream = new MemoryStream();
-
-                await reader.BaseStream.CopyToAsync(InputStream);
-            }
-        }
-
-        private void ParseHeaders(IEnumerable<string> lines)
-        {
-            lines = lines.Skip(1);
-            //Headers.ParseHeaderLines(lines);
-        }
-
-        private static async Task<StringBuilder> ReadRequest(StreamReader reader)
-        {
-            var request = new StringBuilder();
-
-            string line = null;
-            while (!string.IsNullOrWhiteSpace(line = await reader.ReadLineAsync()))
-            {
-                request.AppendLine(line);
-            }
-
-            var requestStr = request.ToString();
-            return request;
         }
 
         /// <summary>
@@ -158,5 +76,7 @@ namespace SimpleServer.Internals
         }
 
         public SimpleServerConnection Connection { get; internal set; }
+        public string RawUrl { get; internal set; }
+        public string FormattedUrl { get { return RawUrl.UrlFormat(); } }
     }
 }

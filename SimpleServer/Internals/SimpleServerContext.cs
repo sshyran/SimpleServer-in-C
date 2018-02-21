@@ -4,7 +4,9 @@ using System.Text;
 
 namespace SimpleServer.Internals
 {
-    class SimpleServerContext
+    public class SimpleServerContext
     {
+        public SimpleServerRequest Request { get; set; }
+        public SimpleServerResponse Response { get; set; }
     }
 }

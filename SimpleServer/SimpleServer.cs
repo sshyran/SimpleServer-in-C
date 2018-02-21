@@ -15,7 +15,22 @@ namespace SimpleServer
     {
         public SimpleServer()
         {
+            if (!_initialized)
+            {
+                Initialize();
+            }
             Hosts = new List<SimpleServerHost>();
+        }
+        private static bool _initialized = false;
+        public static void Initialize()
+        {
+            if (_initialized)
+                return;
+            SimpleServerConfig.Http11Only = false;
+            SimpleServerConfig.Http2Subsystem = false;
+            SimpleServerConfig.IgnoreSendExceptions = true;
+            Log.Writers = new List<System.IO.TextWriter>();
+            _initialized = true;
         }
         List<SimpleServerEngine> _engines;
         HandlerManager handler;
@@ -28,11 +43,7 @@ namespace SimpleServer
         }
         internal async Task HandleRequestAsync(SimpleServerRequest request,SimpleServerResponse response)
         {
-
-        }
-        public void AddHandler(IHandler h)
-        {
-            handler.Add(h);
+            await handler.HandleAsync(new SimpleServerContext() { Request = request, Response = response });
         }
         public void Start()
         {
@@ -71,6 +82,12 @@ namespace SimpleServer
             {
                 Log.Error(ex);
             }
+        }
+        public void Stop()
+        {
+            Log.WriteLine("Stopping server...");
+            _engines.ForEach(x => x.Stop());
+            Log.WriteLine("SimpleServer is no longer active.");
         }
     }
 }

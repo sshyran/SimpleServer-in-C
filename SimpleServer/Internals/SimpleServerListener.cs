@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SimpleServer.Logging;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
@@ -16,11 +17,13 @@ namespace SimpleServer.Internals
         private CancellationTokenSource _cts;
         private Task _listener;
         private bool _disposed;
+        private SimpleServerEngine _engine;
 
-        public SimpleServerListener(IPEndPoint localEndpoint,SimpleServer server)
+        public SimpleServerListener(IPEndPoint localEndpoint,SimpleServer server,SimpleServerEngine engine)
         {
             LocalEndpoint = localEndpoint;
-
+            _engine = engine;
+            _server = server;
             Initialize();
         }
 
@@ -39,7 +42,7 @@ namespace SimpleServer.Internals
         private async Task<SimpleServerConnection> Accept_Internal()
         {
             var tcpClient = await _tcpListener.AcceptTcpClientAsync();
-            return new SimpleServerConnection(tcpClient,_server);
+            return new SimpleServerConnection(tcpClient,_server, this);
         }
 
         public void Start()
@@ -62,9 +65,10 @@ namespace SimpleServer.Internals
                 // Await request.
 
                 var client = await _tcpListener.AcceptTcpClientAsync().ConfigureAwait(false);
-                var conn = new SimpleServerConnection(client, _server);
+                var conn = new SimpleServerConnection(client, _server, this);
                 var request = await SimpleServerEngine.ProcessRequestAsync(conn);
-
+                if (request == null)
+                    continue;
                 // Handle request in a separate thread.
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
@@ -76,12 +80,12 @@ namespace SimpleServer.Internals
 
                     try
                     {
-                        response.Initialize();
                         await _server.HandleRequestAsync(request, response);
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         conn.Dispose();
+                        Log.Error(ex);
                     }
                 });
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
@@ -113,7 +117,10 @@ namespace SimpleServer.Internals
         {
             throw new NotImplementedException();
         }
-
         public Socket Socket => _tcpListener.Server;
+        public SimpleServerEngine GetEngine()
+        {
+            return _engine;
+        }
     }
 }

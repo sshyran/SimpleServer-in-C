@@ -18,5 +18,9 @@ namespace SimpleServer
         /// Creates an experimental instance of SimpleServerEngine that runs HTTP 2 along with the traditional HTTP 1.X engines
         /// </summary>
         public static bool Http2Subsystem { get; set; }
+        /// <summary>
+        /// This will treat send exceptions as warnings rather than errors, keeping the log relatively clutter free.
+        /// </summary>
+        public static bool IgnoreSendExceptions { get; set; }
     }
 }

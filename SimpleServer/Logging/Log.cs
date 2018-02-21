@@ -55,7 +55,7 @@ namespace SimpleServer.Logging
             var name = method.Name;
             return new Log(type);
         }
-        internal static void AddWriter(TextWriter writer)
+        public static void AddWriter(TextWriter writer)
         {
             Writers.Add(writer);
         }
