@@ -74,8 +74,12 @@ namespace SimpleServer.Internals
                 Stream stream;
                 if (method == "POST" || method == "PUT" || method == "PATCH")
                 {
-                    stream = new MemoryStream();
-                    await reader.BaseStream.CopyToAsync(stream);
+                    //stream = new MemoryStream();
+                    //await reader.BaseStream.CopyToAsync(stream);
+                    var contentLength = long.Parse(headers["Content-Length"]);
+                    char[] buffer = new char[contentLength];
+                    await reader.ReadAsync(buffer, 0, (int)contentLength);
+                    stream = new MemoryStream(Encoding.UTF8.GetBytes(buffer));
                 }
                 else
                 {
