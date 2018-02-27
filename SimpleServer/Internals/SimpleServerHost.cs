@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using SimpleServer.Decorators;
 
 namespace SimpleServer.Internals
 {
@@ -9,13 +10,13 @@ namespace SimpleServer.Internals
     {
         public SimpleServerHost()
         {
-            Decorators = new List<SimpleServerDecorator>();
+            Decorators = new List<IDecorator>();
             Handlers = new List<IHandler>();
             FQDN = "*";
             AliasFQDNs = new List<string>();
             Endpoint = new SimpleServerEndpoint();
         }
-        public List<SimpleServerDecorator> Decorators { get; set; }
+        public List<IDecorator> Decorators { get; set; }
         public List<IHandler> Handlers { get; set; }
         public string FQDN { get; set; }
         public List<string> AliasFQDNs { get; set; }
