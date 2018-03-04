@@ -1,10 +1,7 @@
-﻿using SimpleServer.Handlers;
-using SimpleServer.Internals;
+﻿using System.IO;
 using SimpleServer;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
+using SimpleServer.Handlers;
+using SimpleServer.Internals;
 
 namespace TestApp
 {
@@ -13,40 +10,35 @@ namespace TestApp
         public bool CanHandle(SimpleServerRequest request)
         {
             if (request.Method == "GET" && request.FormattedUrl == "/")
-            {
                 return true;
-            }
-            else if (request.Method == "POST" && request.FormattedUrl == "/")
-            {
-                return true;
-            }
+            if (request.Method == "POST" && request.FormattedUrl == "/") return true;
+
             return false;
         }
 
         public void Handle(SimpleServerContext context)
         {
             if (context.Request.FormattedUrl == "/")
-            {
                 if (context.Request.Method == "GET")
                 {
-                    StreamWriter sw = new StreamWriter(context.Response.OutputStream);
-                    sw.WriteLine("<h1>Hello, World!</h1><form action=\"/\" method=\"POST\"><a>What's your name?</a><input type=\"text\" name=\"name\" value=\"Dylan\" /><input type=\"submit\" /></form>");
+                    var sw = new StreamWriter(context.Response.OutputStream);
+                    sw.WriteLine(
+                        "<h1>Hello, World!</h1><form action=\"/\" method=\"POST\"><a>What's your name?</a><input type=\"text\" name=\"name\" value=\"Dylan\" /><input type=\"submit\" /></form>");
                     sw.Flush();
                     sw.Close();
                     context.Response.Close();
                 }
                 else if (context.Request.Method == "POST")
                 {
-                    StreamReader sr = new StreamReader(context.Request.InputStream);
+                    var sr = new StreamReader(context.Request.InputStream);
                     var query = sr.ReadToEnd().AsFormParameters();
                     sr.Close();
-                    StreamWriter sw = new StreamWriter(context.Response.OutputStream);
-                    sw.WriteLine("<h1>Hello, "+query["name"]+"</h1><a href=\"/\">< Return</a>");
+                    var sw = new StreamWriter(context.Response.OutputStream);
+                    sw.WriteLine("<h1>Hello, " + query["name"] + "</h1><a href=\"/\">< Return</a>");
                     sw.Flush();
                     sw.Close();
                     context.Response.Close();
                 }
-            }
         }
     }
 }

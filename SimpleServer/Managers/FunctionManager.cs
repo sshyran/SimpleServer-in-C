@@ -1,20 +1,17 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using SimpleServer.Exceptions;
+﻿using System.Collections.Generic;
 using SimpleServer.Functions;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SimpleServer.Managers
 {
     public class FunctionManager
     {
-        private static Dictionary<string, Function> types = new Dictionary<string, Function>();
+        private static readonly Dictionary<string, Function> types = new Dictionary<string, Function>();
+
         public static void RegisterType(string typeid, Function dummyInstance)
         {
-            types.Add(typeid,dummyInstance);
+            types.Add(typeid, dummyInstance);
         }
+
         public static Function Deserialize(string s)
         {
             // TODO: Function system

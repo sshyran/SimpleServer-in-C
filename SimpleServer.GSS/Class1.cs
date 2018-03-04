@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SimpleServer.GSS
+﻿namespace SimpleServer.GSS
 {
     public class Class1
     {

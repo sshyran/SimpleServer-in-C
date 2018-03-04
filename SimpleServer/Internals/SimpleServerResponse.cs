@@ -1,5 +1,4 @@
-﻿using SimpleServer.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -9,7 +8,7 @@ namespace SimpleServer.Internals
 {
     public class SimpleServerResponse
     {
-        private SimpleServerConnection client;
+        private readonly SimpleServerConnection client;
 
         internal SimpleServerResponse(SimpleServerRequest request, SimpleServerConnection client)
         {
@@ -23,32 +22,32 @@ namespace SimpleServer.Internals
             StatusCode = 200;
             ReasonPhrase = "OK";
         }
-        
 
-        SimpleServerRequest Request { get; set; }
+
+        private SimpleServerRequest Request { get; }
 
         /// <summary>
-        /// Gets the headers of the HTTP response.
+        ///     Gets the headers of the HTTP response.
         /// </summary>
-        public Dictionary<string,string> Headers { get; private set; }
+        public Dictionary<string, string> Headers { get; }
 
         /// <summary>
-        /// Gets the stream containing the content of this response.
+        ///     Gets the stream containing the content of this response.
         /// </summary>
-        public Stream OutputStream { get; private set; }
+        public Stream OutputStream { get; }
 
         /// <summary>
-        /// Gets or sets the HTTP version.
+        ///     Gets or sets the HTTP version.
         /// </summary>
         public string Version { get; set; }
 
         /// <summary>
-        /// Gets or sets the HTTP status code.
+        ///     Gets or sets the HTTP status code.
         /// </summary>
         public int StatusCode { get; set; }
 
         /// <summary>
-        /// Gets or sets the HTTP reason phrase.
+        ///     Gets or sets the HTTP reason phrase.
         /// </summary>
         public string ReasonPhrase { get; set; }
 
@@ -58,23 +57,22 @@ namespace SimpleServer.Internals
             outputStream.Seek(0, SeekOrigin.Begin);
 
             var socketStream = client.Stream;
-            
 
-            string header = $"{Version} {StatusCode} {ReasonPhrase}\r\n" +
-                            Headers +
-                            $"Content-Length: {outputStream.Length}\r\n" +
-                            "\r\n";
 
-            byte[] headerArray = Encoding.UTF8.GetBytes(header);
+            var header = $"{Version} {StatusCode} {ReasonPhrase}\r\n" +
+                         Headers +
+                         $"Content-Length: {outputStream.Length}\r\n" +
+                         "\r\n";
+
+            var headerArray = Encoding.UTF8.GetBytes(header);
             await socketStream.WriteAsync(headerArray, 0, headerArray.Length);
             await outputStream.CopyToAsync(socketStream);
 
             await socketStream.FlushAsync();
-
         }
 
         /// <summary>
-        /// Writes a string to OutputStream.
+        ///     Writes a string to OutputStream.
         /// </summary>
         /// <param name="text"></param>
         /// <returns></returns>
@@ -85,28 +83,28 @@ namespace SimpleServer.Internals
         }
 
         /// <summary>
-        /// Closes this response and sends it.
+        ///     Closes this response and sends it.
         /// </summary>
         public async void Close()
         {
             //try
             //{
-                //await Send();
+            //await Send();
 
             var outputStream = OutputStream as MemoryStream;
-            MemoryStream memStream = new MemoryStream(outputStream.ToArray());
-            
+            var memStream = new MemoryStream(outputStream.ToArray());
+
             memStream.Seek(0, SeekOrigin.Begin);
 
             var socketStream = client.Stream;
 
 
-            string header = $"{Version} {StatusCode} {ReasonPhrase}\r\n" +
-                            Headers +
-                            $"Content-Length: {memStream.Length}\r\n" +
-                            "\r\n";
+            var header = $"{Version} {StatusCode} {ReasonPhrase}\r\n" +
+                         Headers +
+                         $"Content-Length: {memStream.Length}\r\n" +
+                         "\r\n";
 
-            byte[] headerArray = Encoding.UTF8.GetBytes(header);
+            var headerArray = Encoding.UTF8.GetBytes(header);
             await socketStream.WriteAsync(headerArray, 0, headerArray.Length);
             await memStream.CopyToAsync(socketStream);
 
@@ -132,7 +130,7 @@ namespace SimpleServer.Internals
         }
 
         /// <summary>
-        /// Writes a HTTP redirect response.
+        ///     Writes a HTTP redirect response.
         /// </summary>
         /// <param name="redirectLocation"></param>
         /// <returns></returns>
@@ -144,22 +142,22 @@ namespace SimpleServer.Internals
             ReasonPhrase = "Moved permanently";
             Headers["Location"] = redirectLocation.ToString();
 
-            string header = $"{Version} {StatusCode} {ReasonPhrase}\r\n" +
-                            $"Location: {Headers["Location"]}" +
-                            $"Content-Length: 0\r\n" +
-                            "Connection: close\r\n" +
-                            "\r\n";
+            var header = $"{Version} {StatusCode} {ReasonPhrase}\r\n" +
+                         $"Location: {Headers["Location"]}" +
+                         $"Content-Length: 0\r\n" +
+                         "Connection: close\r\n" +
+                         "\r\n";
 
-            byte[] headerArray = Encoding.UTF8.GetBytes(header);
+            var headerArray = Encoding.UTF8.GetBytes(header);
             await outputStream.WriteAsync(headerArray, 0, headerArray.Length);
             await outputStream.FlushAsync();
-
         }
 
         #region IDisposable
-        private bool disposedValue = false;
 
-        void Dispose(bool disposing)
+        private bool disposedValue;
+
+        private void Dispose(bool disposing)
         {
             if (!disposedValue)
             {
@@ -172,10 +170,12 @@ namespace SimpleServer.Internals
                 disposedValue = true;
             }
         }
+
         public void Dispose()
         {
             Dispose(true);
         }
+
         #endregion
     }
 }

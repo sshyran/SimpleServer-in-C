@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SimpleServer.Exceptions
 {
@@ -8,7 +6,6 @@ namespace SimpleServer.Exceptions
     {
         public RfcViolationException(string msg) : base(msg)
         {
-
         }
     }
 }

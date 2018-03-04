@@ -1,25 +1,23 @@
-﻿using SimpleServer.Logging;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using SimpleServer.Logging;
 
 namespace SimpleServer.Internals
 {
     public class SimpleServerListener : IDisposable
     {
-        private TcpListener _tcpListener;
-        private SimpleServer _server;
-        private bool _isListening;
         private CancellationTokenSource _cts;
-        private Task _listener;
         private bool _disposed;
-        private SimpleServerEngine _engine;
+        private readonly SimpleServerEngine _engine;
+        private bool _isListening;
+        private Task _listener;
+        private readonly SimpleServer _server;
+        private TcpListener _tcpListener;
 
-        public SimpleServerListener(IPEndPoint localEndpoint,SimpleServer server,SimpleServerEngine engine)
+        public SimpleServerListener(IPEndPoint localEndpoint, SimpleServer server, SimpleServerEngine engine)
         {
             LocalEndpoint = localEndpoint;
             _engine = engine;
@@ -27,7 +25,14 @@ namespace SimpleServer.Internals
             Initialize();
         }
 
-        public IPEndPoint LocalEndpoint { get; private set; }
+        public IPEndPoint LocalEndpoint { get; }
+
+        public Socket Socket => _tcpListener.Server;
+
+        public void Dispose()
+        {
+            throw new NotImplementedException();
+        }
 
         public Task<SimpleServerConnection> Accept()
         {
@@ -42,7 +47,7 @@ namespace SimpleServer.Internals
         private async Task<SimpleServerConnection> Accept_Internal()
         {
             var tcpClient = await _tcpListener.AcceptTcpClientAsync();
-            return new SimpleServerConnection(tcpClient,_server, this);
+            return new SimpleServerConnection(tcpClient, _server, this);
         }
 
         public void Start()
@@ -58,6 +63,7 @@ namespace SimpleServer.Internals
             _tcpListener.Start();
             _listener = Task.Run(Listen, _cts.Token);
         }
+
         public async Task Listen()
         {
             while (_isListening)
@@ -113,11 +119,6 @@ namespace SimpleServer.Internals
             }
         }
 
-        public void Dispose()
-        {
-            throw new NotImplementedException();
-        }
-        public Socket Socket => _tcpListener.Server;
         public SimpleServerEngine GetEngine()
         {
             return _engine;

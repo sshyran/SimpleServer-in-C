@@ -1,15 +1,14 @@
-﻿using SimpleServer.Logging;
-using System;
-using SimpleServer;
-using SS = SimpleServer.SimpleServer;
-using SimpleServer.Internals;
+﻿using System;
 using System.Net;
+using SimpleServer;
+using SimpleServer.Logging;
+using SS = SimpleServer.SimpleServer;
 
 namespace TestApp
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             Console.WriteLine("Starting test app...");
             SS.Initialize();
@@ -19,7 +18,7 @@ namespace TestApp
             //host.Handlers.Add(new TestHandler());
             //host.Endpoint = new SimpleServerEndpoint() { Port = 11111, Scope = IPAddress.Loopback };
             //server.Hosts.Add(host);
-            var server = ServerBuilder.NewServer().NewHost(port: 11111).For(scope: IPAddress.Loopback)
+            var server = ServerBuilder.NewServer().NewHost(11111).For(IPAddress.Loopback)
                 .With(new TestHandler()).AddToServer().Build();
             server.Start();
             Console.ReadLine();

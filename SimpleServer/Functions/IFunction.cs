@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SimpleServer.Functions
+﻿namespace SimpleServer.Functions
 {
     public abstract class Function
     {

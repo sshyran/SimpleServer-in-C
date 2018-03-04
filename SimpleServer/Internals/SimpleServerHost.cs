@@ -1,8 +1,6 @@
-﻿using SimpleServer.Handlers;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using SimpleServer.Decorators;
+using SimpleServer.Handlers;
 
 namespace SimpleServer.Internals
 {
@@ -16,6 +14,7 @@ namespace SimpleServer.Internals
             AliasFQDNs = new List<string>();
             Endpoint = new SimpleServerEndpoint();
         }
+
         public List<IDecorator> Decorators { get; set; }
         public List<IHandler> Handlers { get; set; }
         public string FQDN { get; set; }

@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Net;
-using System.Text;
 using SimpleServer.Decorators;
 using SimpleServer.Handlers;
 using SimpleServer.Internals;
@@ -11,21 +8,11 @@ namespace SimpleServer
 {
     public class ServerBuilder
     {
-        #region Statics
-        public static ServerBuilder NewServer()
-        {
-            return new ServerBuilder();
-        }
-        private ServerBuilder()
-        {
-            Result = new SimpleServer();
-        }
-        #endregion
-        public SimpleServer Result { get; private set; }
+        public SimpleServer Result { get; }
 
         public HostBuilder NewHost(int port)
         {
-            return new HostBuilder(port,this);
+            return new HostBuilder(port, this);
         }
 
         public SimpleServer Build()
@@ -38,19 +25,34 @@ namespace SimpleServer
             Result.Start();
             return Result;
         }
+
+        #region Statics
+
+        public static ServerBuilder NewServer()
+        {
+            return new ServerBuilder();
+        }
+
+        private ServerBuilder()
+        {
+            Result = new SimpleServer();
+        }
+
+        #endregion
     }
 
     public class HostBuilder
     {
-        public SimpleServerHost Result { get; set; }
+        private readonly ServerBuilder builder;
 
-        private ServerBuilder builder;
-        internal HostBuilder(int port,ServerBuilder parent)
+        internal HostBuilder(int port, ServerBuilder parent)
         {
             builder = parent;
             Result = new SimpleServerHost();
-            Result.Endpoint = new SimpleServerEndpoint() { Scope = IPAddress.Loopback, Port = port};
+            Result.Endpoint = new SimpleServerEndpoint {Scope = IPAddress.Loopback, Port = port};
         }
+
+        public SimpleServerHost Result { get; set; }
 
         public HostBuilder For(IPAddress scope)
         {
@@ -82,10 +84,8 @@ namespace SimpleServer
             var aslist = fqdns.ToList();
             foreach (var fqdn in fqdns)
             {
-                if (aslist.IndexOf(fqdn) == 0)
-                {
-                    continue;
-                }
+                if (aslist.IndexOf(fqdn) == 0) continue;
+
                 Result.AliasFQDNs.Add(fqdn);
             }
 
@@ -94,20 +94,14 @@ namespace SimpleServer
 
         public HostBuilder With(params IHandler[] handlers)
         {
-            foreach (var handler in handlers)
-            {
-                Result.Handlers.Add(handler);
-            }
+            foreach (var handler in handlers) Result.Handlers.Add(handler);
 
             return this;
         }
 
         public HostBuilder With(params IDecorator[] decorators)
         {
-            foreach (var decorator in decorators)
-            {
-                Result.Decorators.Add(decorator);
-            }
+            foreach (var decorator in decorators) Result.Decorators.Add(decorator);
 
             return this;
         }

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SimpleServer.Json
+﻿namespace SimpleServer.Json
 {
     public class Class1
     {

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SimpleServer.Handlers
+﻿namespace SimpleServer.Handlers
 {
-    class FunctionHandler
+    internal class FunctionHandler
     {
     }
 }

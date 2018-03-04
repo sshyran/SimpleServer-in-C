@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SimpleServer.Framework
+﻿namespace SimpleServer.Framework
 {
     public class Class1
     {
