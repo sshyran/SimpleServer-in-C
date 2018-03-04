@@ -19,7 +19,7 @@ namespace TestApp
             //host.Handlers.Add(new TestHandler());
             //host.Endpoint = new SimpleServerEndpoint() { Port = 11111, Scope = IPAddress.Loopback };
             //server.Hosts.Add(host);
-            var server = ServerBuilder.NewServer().NewHost(port: 11111).For(IPAddress.Loopback)
+            var server = ServerBuilder.NewServer().NewHost(port: 11111).For(scope: IPAddress.Loopback)
                 .With(new TestHandler()).AddToServer().Build();
             server.Start();
             Console.ReadLine();

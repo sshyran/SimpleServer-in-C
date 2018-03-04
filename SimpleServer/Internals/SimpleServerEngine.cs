@@ -96,6 +96,8 @@ namespace SimpleServer.Internals
                 return null;
             }
         }
+        // TODO: Rewrite engine for better performance
+        
         #endregion
         public const string RequestRegex = @"^(?<method>GET|HEAD|POST|PUT|DELETE|OPTIONS|TRACE|PATCH).(?<url>.*).(?<version>(HTTP\/1\.1|HTTP\/1\.0))$";
 

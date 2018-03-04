@@ -32,6 +32,12 @@ namespace SimpleServer
         {
             return Result;
         }
+
+        public SimpleServer BuildAndStart()
+        {
+            Result.Start();
+            return Result;
+        }
     }
 
     public class HostBuilder
