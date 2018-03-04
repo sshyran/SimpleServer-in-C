@@ -14,7 +14,7 @@ namespace SimpleServer
     {
         private static bool _initialized;
 
-        private List<SimpleServerEngine> _engines;
+        internal List<SimpleServerEngine> _engines;
         private HandlerManager handler;
 
         public SimpleServer()

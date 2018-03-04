@@ -16,11 +16,12 @@ namespace SimpleServer.Internals
             _client = client;
             _listener = listener;
             _server = server;
+            Stream = _client.GetStream();
         }
 
         public IPEndPoint LocalEndPoint => (IPEndPoint) _client.Client.LocalEndPoint;
         public IPEndPoint RemoteEndPoint => (IPEndPoint) _client.Client.RemoteEndPoint;
-        public Stream Stream => _client.GetStream();
+        public Stream Stream { get; internal set; }
 
         public void Dispose()
         {

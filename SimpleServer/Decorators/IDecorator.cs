@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using SimpleServer.Internals;
 
 namespace SimpleServer.Decorators
 {
@@ -6,6 +7,7 @@ namespace SimpleServer.Decorators
     {
         void BeforeHandle();
         void AfterHandle();
-        Stream GetStream();
+        bool CanDecorate(SimpleServerRequest request);
+        Stream GetStream(Stream originalStream);
     }
 }

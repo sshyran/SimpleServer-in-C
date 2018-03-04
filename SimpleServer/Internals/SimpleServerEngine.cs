@@ -29,6 +29,13 @@ namespace SimpleServer.Internals
             _hostnames = fqdn.ToArray();
             _server = server;
             _host = host;
+            foreach (SimpleServerEngine engine in _server._engines)
+            {
+                if (engine._host.Endpoint.Port == host.Endpoint.Port)
+                {
+                    // TODO: same endpoint
+                }
+            }
             _listener = new SimpleServerListener(new IPEndPoint(host.Endpoint.Scope, host.Endpoint.Port), _server,
                 this);
         }
