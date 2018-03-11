@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
@@ -14,8 +15,8 @@ namespace SimpleServer
     {
         private static bool _initialized;
 
-        internal List<SimpleServerEngine> _engines;
-        private HandlerManager handler;
+        internal Dictionary<SimpleServerEndpoint,SimpleServerEngine> _engines;
+        private HandlerManager _handler;
 
         public SimpleServer()
         {
@@ -49,12 +50,12 @@ namespace SimpleServer
 
         internal async Task HandleRequestAsync(SimpleServerRequest request, SimpleServerResponse response)
         {
-            await handler.HandleAsync(new SimpleServerContext {Request = request, Response = response});
+            await _handler.HandleAsync(new SimpleServerContext {Request = request, Response = response});
         }
 
         public void Start()
         {
-            handler = HandlerManager.For(this);
+            _handler = HandlerManager.For(this);
             try
             {
                 var ports = new List<int>();
@@ -63,10 +64,18 @@ namespace SimpleServer
                         "Hosts were empty, please add at least 1 SimpleServerHost before you attempt to start SimpleServer. Error Code: 0x48737430");
 
                 Log.WriteLine("Checking port availability and bind permission...");
-                _engines = new List<SimpleServerEngine>();
+                _engines = new Dictionary<SimpleServerEndpoint, SimpleServerEngine>();
                 Hosts.ForEach(x =>
                 {
-                    _engines.Add(new SimpleServerEngine(x, this));
+                    if (_engines.ContainsKey(x.Endpoint))
+                    {
+                        _engines[x.Endpoint].AddHost(x);
+                    }
+                    else
+                    {
+                        _engines.Add(x.Endpoint,new SimpleServerEngine(x, this));
+                    }
+
                     ports.Add(x.Endpoint.Port);
                 });
                 foreach (var port in ports)
@@ -87,7 +96,7 @@ namespace SimpleServer
 
                 Log.WriteLine("Ports are bindable, proceeding with server start...");
                 // Everybody START YOUR ENGINES!
-                _engines.ForEach(x => x.Start());
+                _engines.Values.ToList().ForEach(x => x.Start());
                 Log.WriteLine("SimpleServer is now active.");
             }
             catch (Exception ex)
@@ -99,7 +108,7 @@ namespace SimpleServer
         public void Stop()
         {
             Log.WriteLine("Stopping server...");
-            _engines.ForEach(x => x.Stop());
+            _engines.Values.ToList().ForEach(x => x.Stop());
             Log.WriteLine("SimpleServer is no longer active.");
         }
     }

@@ -66,6 +66,7 @@ namespace SimpleServer.Logging
 
         public static ILog GetLogger()
         {
+            SimpleServer.Initialize();
             var frame = new StackFrame(1);
             var method = frame.GetMethod();
             var type = method.DeclaringType;
@@ -75,11 +76,13 @@ namespace SimpleServer.Logging
 
         public static void AddWriter(TextWriter writer)
         {
+            SimpleServer.Initialize();
             Writers.Add(writer);
         }
 
         internal static ILog GetLogger(SimpleServerHost host)
         {
+            SimpleServer.Initialize();
             return new Log(host.FQDN);
         }
 

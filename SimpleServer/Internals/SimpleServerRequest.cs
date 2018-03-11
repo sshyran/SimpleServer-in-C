@@ -71,5 +71,8 @@ namespace SimpleServer.Internals
             await InputStream.ReadAsync(buffer, 0, (int) length);
             return Encoding.UTF8.GetString(buffer);
         }
+        
+        
+        public SimpleServerHost Host { get; set; }
     }
 }

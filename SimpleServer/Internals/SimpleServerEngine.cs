@@ -13,10 +13,10 @@ namespace SimpleServer.Internals
 {
     public class SimpleServerEngine
     {
-        public const string RequestRegex =
-            @"^(?<method>GET|HEAD|POST|PUT|DELETE|OPTIONS|TRACE|PATCH).(?<url>.*).(?<version>(HTTP\/1\.1|HTTP\/1\.0))$";
+        internal List<SimpleServerMethod> _methods;
 
         private readonly SimpleServerHost _host;
+        private List<SimpleServerHost> _additionalHosts;
         private string[] _hostnames;
 
         private readonly SimpleServerListener _listener;
@@ -29,33 +29,35 @@ namespace SimpleServer.Internals
             _hostnames = fqdn.ToArray();
             _server = server;
             _host = host;
-            foreach (SimpleServerEngine engine in _server._engines)
-            {
-                if (engine._host.Endpoint.Port == host.Endpoint.Port)
-                {
-                    // TODO: same endpoint
-                }
-            }
+            _additionalHosts = new List<SimpleServerHost>();
             _listener = new SimpleServerListener(new IPEndPoint(host.Endpoint.Scope, host.Endpoint.Port), _server,
                 this);
         }
 
+        public void AddHost(SimpleServerHost host)
+        {
+            if (host.Endpoint.Port != _host.Endpoint.Port)
+            {
+                throw new ArgumentException("Additional hosts must have the same endpoint as the host used to create the engine (port)");
+            }
+            if (host.Endpoint.Scope.Equals(_host.Endpoint.Scope))
+            {
+                throw new ArgumentException("Additional hosts must have the same endpoint as the host used to create the engine (scope)");
+            }
+            _additionalHosts.Add(host);
+        }
+        
         #region Statics
 
         public static async Task<SimpleServerRequest> ProcessRequestAsync(SimpleServerConnection connection)
         {
             try
             {
-                var parsedRequest = new SimpleServerRequest();
                 var reader = new StreamReader(connection.Stream);
-                var request = new StringBuilder();
                 string line = null;
                 var lines = new List<string>();
                 while (!string.IsNullOrWhiteSpace(line = await reader.ReadLineAsync())) lines.Add(line);
 
-                var localEndpoint = connection.LocalEndPoint;
-                var remoteEnpoint = connection.RemoteEndPoint;
-                var headerLines = lines.Skip(1);
                 var headers = new Dictionary<string, string>();
                 foreach (var headerLine in lines)
                 {
@@ -66,24 +68,24 @@ namespace SimpleServer.Internals
                     var value = parts[1].Trim();
                     headers.Add(key, value);
                 }
+                
 
                 var rline = lines.ElementAt(0);
-                var regex = new Regex(RequestRegex);
-                var m = regex.Match(rline);
-                if (!m.Success) throw new BadRequestException("The request line provided could not be parsed.");
-
+                var rparts = rline.Split(' ');
+                var method = rparts[0];
+                var version = rparts.Last();
+                var path = rparts.Where(urlPart => urlPart != method).TakeWhile(urlPart => urlPart != version).Aggregate("", (current, urlPart) => current + urlPart);
+                
                 var wildcard = false;
                 if (!headers.ContainsKey("Host"))
-                    if (m.Groups["version"].Value == "HTTP/1.1")
+                    if (version == "HTTP/1.1")
                         throw new RfcViolationException("rfc2616-s14.23");
                     else if (!connection._server.HasWildcardHost())
                         throw new Exception("404");
                     else
                         wildcard = true;
-
-                var url = new UriBuilder(wildcard ? "" : headers["Host"] + m.Groups["url"]).Uri;
-                var httpMethod = m.Groups["method"];
-                var method = httpMethod.Value;
+                
+                var url = new UriBuilder(wildcard ? "" : headers["Host"] + path).Uri;
                 //Version = m.Groups["version"].Value;
                 //Method = httpMethod.Value;
                 //RequestUri = url;
@@ -100,8 +102,8 @@ namespace SimpleServer.Internals
                 else
                 {
                     stream = null;
-                }
-
+                }                
+                
                 return new SimpleServerRequest
                 {
                     Headers = headers,
@@ -110,9 +112,10 @@ namespace SimpleServer.Internals
                     Method = method,
                     RemoteEndpoint = connection.RemoteEndPoint,
                     RequestUri = url,
-                    Version = m.Groups["version"].Value,
+                    Version = version,
                     Connection = connection,
-                    RawUrl = m.Groups["url"].Value
+                    RawUrl = m.Groups["url"].Value,
+                    Host = connection._listener.GetEngine().GetHost()
                 };
             }
             catch (Exception ex)
@@ -138,9 +141,24 @@ namespace SimpleServer.Internals
             _listener.Stop();
         }
 
-        public SimpleServerHost GetHost()
+        public SimpleServerHost GetHost(string fqdn)
         {
-            return _host;
+            SimpleServerHost wildcard;
+            SimpleServerHost result;
+            foreach (var host in GetHosts())
+            {
+                if (host.FQDN == "*")
+                {
+                    wildcard = host;
+                }
+            }
+        }
+
+        public IEnumerable<SimpleServerHost> GetHosts()
+        {
+            var hosts = new List<SimpleServerHost> {_host};
+            hosts.AddRange(_additionalHosts);
+            return hosts.ToArray();
         }
     }
 }

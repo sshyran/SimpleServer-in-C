@@ -17,6 +17,11 @@
         /// </summary>
         public static bool IgnoreSendExceptions { get; set; }
 
+        /// <summary>
+        ///     When true, exceptions will not be thrown, but logged.
+        /// </summary>
+        public static bool LogOnly { get; set; }
+
         internal static void InitializeDefault()
         {
         }

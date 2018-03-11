@@ -54,7 +54,7 @@ namespace SimpleServer
 
         public SimpleServerHost Result { get; set; }
 
-        public HostBuilder For(IPAddress scope)
+        public HostBuilder At(IPAddress scope)
         {
             Result.Endpoint.Scope = scope;
             return this;

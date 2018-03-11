@@ -38,7 +38,7 @@ namespace SimpleServer.Managers
 
         public async Task HandleAsync(SimpleServerContext ctx)
         {
-            await ctx.Request.Connection.GetListener().GetEngine().GetHost().Handlers.ForEachAsync(async x =>
+            await ctx.Request.Host.Handlers.ForEachAsync(async x =>
             {
                 if (x.CanHandle(ctx.Request)) await Task.Factory.StartNew(() => { x.Handle(ctx); });
             });

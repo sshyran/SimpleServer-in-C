@@ -16,7 +16,4 @@
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="IDecorator.cs" />
-  </ItemGroup>
 </Project>
