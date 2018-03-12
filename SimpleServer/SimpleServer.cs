@@ -15,7 +15,7 @@ namespace SimpleServer
     {
         private static bool _initialized;
 
-        internal Dictionary<SimpleServerEndpoint,SimpleServerEngine> _engines;
+        internal Dictionary<SimpleServerEndpoint, SimpleServerEngine> _engines;
         private HandlerManager _handler;
 
         public SimpleServer()
@@ -48,6 +48,16 @@ namespace SimpleServer
             return result;
         }
 
+        public SimpleServerHost GetWildcardHost()
+        {
+            SimpleServerHost result = null;
+            Hosts.ForEach(x =>
+            {
+                if (x.FQDN == "*" || x.AliasFQDNs.Contains("*")) result = x;
+            });
+            return result;
+        }
+
         internal async Task HandleRequestAsync(SimpleServerRequest request, SimpleServerResponse response)
         {
             await _handler.HandleAsync(new SimpleServerContext {Request = request, Response = response});
@@ -73,7 +83,7 @@ namespace SimpleServer
                     }
                     else
                     {
-                        _engines.Add(x.Endpoint,new SimpleServerEngine(x, this));
+                        _engines.Add(x.Endpoint, new SimpleServerEngine(x, this));
                     }
 
                     ports.Add(x.Endpoint.Port);

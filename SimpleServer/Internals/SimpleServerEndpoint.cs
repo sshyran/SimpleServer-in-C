@@ -1,13 +1,11 @@
-﻿using System;
-using System.Data.Common;
-using System.Net;
-using System.Xml;
+﻿using System.Net;
 
 namespace SimpleServer.Internals
 {
     public class SimpleServerEndpoint
     {
         #region Equality Operators
+
         public bool Equals(SimpleServerEndpoint other)
         {
             return Equals(Scope, other.Scope) && Port == other.Port;
@@ -21,7 +19,7 @@ namespace SimpleServer.Internals
             }
         }
 
-        public static bool operator ==(SimpleServerEndpoint endpoint1,SimpleServerEndpoint endpoint2)
+        public static bool operator ==(SimpleServerEndpoint endpoint1, SimpleServerEndpoint endpoint2)
         {
             return endpoint1 != null && endpoint1.Equals(endpoint2);
         }
@@ -30,6 +28,7 @@ namespace SimpleServer.Internals
         {
             return !(endpoint1 == endpoint2);
         }
+
         #endregion
 
         public IPAddress Scope { get; set; }

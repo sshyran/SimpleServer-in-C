@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using SimpleServer.Exceptions;
 using SimpleServer.Logging;
@@ -38,15 +37,19 @@ namespace SimpleServer.Internals
         {
             if (host.Endpoint.Port != _host.Endpoint.Port)
             {
-                throw new ArgumentException("Additional hosts must have the same endpoint as the host used to create the engine (port)");
+                throw new ArgumentException(
+                    "Additional hosts must have the same endpoint as the host used to create the engine (port)");
             }
+
             if (host.Endpoint.Scope.Equals(_host.Endpoint.Scope))
             {
-                throw new ArgumentException("Additional hosts must have the same endpoint as the host used to create the engine (scope)");
+                throw new ArgumentException(
+                    "Additional hosts must have the same endpoint as the host used to create the engine (scope)");
             }
+
             _additionalHosts.Add(host);
         }
-        
+
         #region Statics
 
         public static async Task<SimpleServerRequest> ProcessRequestAsync(SimpleServerConnection connection)
@@ -68,23 +71,28 @@ namespace SimpleServer.Internals
                     var value = parts[1].Trim();
                     headers.Add(key, value);
                 }
-                
+
 
                 var rline = lines.ElementAt(0);
                 var rparts = rline.Split(' ');
                 var method = rparts[0];
                 var version = rparts.Last();
-                var path = rparts.Where(urlPart => urlPart != method).TakeWhile(urlPart => urlPart != version).Aggregate("", (current, urlPart) => current + urlPart);
-                
+                var path = rparts.Where(urlPart => urlPart != method).TakeWhile(urlPart => urlPart != version)
+                    .Aggregate("", (current, urlPart) => current + urlPart);
+
                 var wildcard = false;
                 if (!headers.ContainsKey("Host"))
                     if (version == "HTTP/1.1")
                         throw new RfcViolationException("rfc2616-s14.23");
                     else if (!connection._server.HasWildcardHost())
-                        throw new Exception("404");
+                        throw new Exception("SS-HOST-404");
                     else
                         wildcard = true;
-                
+
+                var host = (wildcard
+                               ? connection._server.GetWildcardHost()
+                               : connection.GetListener().GetEngine().GetHost(headers["Host"])) ??
+                           connection._server.GetWildcardHost();
                 var url = new UriBuilder(wildcard ? "" : headers["Host"] + path).Uri;
                 //Version = m.Groups["version"].Value;
                 //Method = httpMethod.Value;
@@ -102,8 +110,8 @@ namespace SimpleServer.Internals
                 else
                 {
                     stream = null;
-                }                
-                
+                }
+
                 return new SimpleServerRequest
                 {
                     Headers = headers,
@@ -114,8 +122,8 @@ namespace SimpleServer.Internals
                     RequestUri = url,
                     Version = version,
                     Connection = connection,
-                    RawUrl = m.Groups["url"].Value,
-                    Host = connection._listener.GetEngine().GetHost()
+                    RawUrl = path,
+                    Host = host
                 };
             }
             catch (Exception ex)
@@ -144,7 +152,7 @@ namespace SimpleServer.Internals
         public SimpleServerHost GetHost(string fqdn)
         {
             SimpleServerHost wildcard;
-            SimpleServerHost result;
+            SimpleServerHost result = null;
             foreach (var host in GetHosts())
             {
                 if (host.FQDN == "*")
@@ -152,6 +160,8 @@ namespace SimpleServer.Internals
                     wildcard = host;
                 }
             }
+
+            return result;
         }
 
         public IEnumerable<SimpleServerHost> GetHosts()
