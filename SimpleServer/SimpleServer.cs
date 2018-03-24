@@ -60,7 +60,7 @@ namespace SimpleServer
 
         internal async Task HandleRequestAsync(SimpleServerRequest request, SimpleServerResponse response)
         {
-            await _handler.HandleAsync(new SimpleServerContext {Request = request, Response = response});
+            await _handler.HandleAsync(new SimpleServerContext {Request = request, Response = response, Connection = request.Connection });
         }
 
         public void Start()
@@ -77,14 +77,14 @@ namespace SimpleServer
                 _engines = new Dictionary<SimpleServerEndpoint, SimpleServerEngine>();
                 Hosts.ForEach(x =>
                 {
-                    if (_engines.ContainsKey(x.Endpoint))
+                    foreach (var engn in _engines)
                     {
-                        _engines[x.Endpoint].AddHost(x);
+                        if (engn.Key != x.Endpoint) continue;
+                        engn.Value.AddHost(x);
+                        return;
                     }
-                    else
-                    {
-                        _engines.Add(x.Endpoint, new SimpleServerEngine(x, this));
-                    }
+
+                    _engines.Add(x.Endpoint, new SimpleServerEngine(x, this));
 
                     ports.Add(x.Endpoint.Port);
                 });

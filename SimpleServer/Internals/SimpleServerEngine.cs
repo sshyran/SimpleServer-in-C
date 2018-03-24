@@ -72,14 +72,12 @@ namespace SimpleServer.Internals
                     headers.Add(key, value);
                 }
 
-
                 var rline = lines.ElementAt(0);
                 var rparts = rline.Split(' ');
-                var method = rparts[0];
+                var smethod = rparts[0];
                 var version = rparts.Last();
-                var path = rparts.Where(urlPart => urlPart != method).TakeWhile(urlPart => urlPart != version)
+                var path = rparts.Where(urlPart => urlPart != smethod).TakeWhile(urlPart => urlPart != version)
                     .Aggregate("", (current, urlPart) => current + urlPart);
-
                 var wildcard = false;
                 if (!headers.ContainsKey("Host"))
                     if (version == "HTTP/1.1")
@@ -93,15 +91,11 @@ namespace SimpleServer.Internals
                                ? connection._server.GetWildcardHost()
                                : connection.GetListener().GetEngine().GetHost(headers["Host"])) ??
                            connection._server.GetWildcardHost();
+                var method = host.Methods.Get(smethod);
                 var url = new UriBuilder(wildcard ? "" : headers["Host"] + path).Uri;
-                //Version = m.Groups["version"].Value;
-                //Method = httpMethod.Value;
-                //RequestUri = url;
                 Stream stream;
-                if (method == "POST" || method == "PUT" || method == "PATCH")
+                if (method.HasInputStream)
                 {
-                    //stream = new MemoryStream();
-                    //await reader.BaseStream.CopyToAsync(stream);
                     var contentLength = long.Parse(headers["Content-Length"]);
                     var buffer = new char[contentLength];
                     await reader.ReadAsync(buffer, 0, (int) contentLength);

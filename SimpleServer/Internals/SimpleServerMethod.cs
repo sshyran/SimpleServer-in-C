@@ -4,6 +4,16 @@ namespace SimpleServer.Internals
 {
     public class SimpleServerMethod
     {
+        public static bool operator ==(SimpleServerMethod ssmethod, string smethod)
+        {
+            return ssmethod.Name.ToUpper() == smethod;
+        }
+
+        public static bool operator !=(SimpleServerMethod ssmethod, string smethod)
+        {
+            return ssmethod.Name.ToUpper() != smethod;
+        }
+        
         public static SimpleServerMethod Get
         {
             get { return new SimpleServerMethod() {Name = "GET", HasInputStream = false}; }

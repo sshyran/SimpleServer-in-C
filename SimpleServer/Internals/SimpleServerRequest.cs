@@ -33,7 +33,7 @@ namespace SimpleServer.Internals
         /// <summary>
         ///     Gets the HTTP method.
         /// </summary>
-        public string Method { get; internal set; }
+        public SimpleServerMethod Method { get; internal set; }
 
         /// <summary>
         ///     Gets the headers of the HTTP request.
