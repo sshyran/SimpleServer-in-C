@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>0.1.0</Version>
+    <Version>0.1.1</Version>
     <Authors>Ultz</Authors>
     <Company>Ultz</Company>
     <RepositoryUrl>https://hub.ultz.co.uk/code/projects/SS/repos/simpleserver</RepositoryUrl>
@@ -10,9 +10,10 @@
     <PackageLicenseUrl>https://hub.ultz.co.uk/code/projects/SS/repos/simpleserver/browse/LICENSE.MD</PackageLicenseUrl>
     <PackageProjectUrl>https://hub.ultz.co.uk/code/projects/SS/</PackageProjectUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageIconUrl>https://ultz.co.uk/ss.png</PackageIconUrl>
+    <PackageIconUrl>https://ultz.co.uk/ss2.png</PackageIconUrl>
     <PackageReleaseNotes>The first release of SimpleServer is here! Right now, all SimpleServer offers is a not-so-simple HTTP server, however wrappers will be written to make implementing SimpleServer even easier. Report bugs here: https://hub.ultz.co.uk/jira/projects/SS/</PackageReleaseNotes>
     <Description>SimpleServer offers an easy-to-use HTTP server library built with an extendable architecture.</Description>
+    <PackageId>Ultz.SimpleServer</PackageId>
   </PropertyGroup>
 
   <ItemGroup>
