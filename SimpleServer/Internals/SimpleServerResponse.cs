@@ -101,15 +101,23 @@ namespace SimpleServer.Internals
             var socketStream = client.Stream;
 
 
-            string header = $"{Version} {StatusCode} {ReasonPhrase}\r\n" +
+            /*string header = $"{Version} {StatusCode} {ReasonPhrase}\r\n" +
                             Headers +
                             $"Content-Length: {memStream.Length}\r\n" +
                             "\r\n";
 
             byte[] headerArray = Encoding.UTF8.GetBytes(header);
-            await socketStream.WriteAsync(headerArray, 0, headerArray.Length);
+            await socketStream.WriteAsync(headerArray, 0, headerArray.Length);*/
+            var sw = new StreamWriter(socketStream,Encoding.UTF8);
+            sw.WriteLine(Version + " " + StatusCode + " " +ReasonPhrase);
+            foreach (var kvp in Headers)
+            {
+                sw.WriteLine(kvp.Key + ": "+kvp.Value);
+            }
+            sw.WriteLine("Content-Length: "+memStream.Length);
+            sw.WriteLine();
+            sw.Flush();
             await memStream.CopyToAsync(socketStream);
-
             await socketStream.FlushAsync();
             //}
             //catch (Exception ex)
@@ -123,6 +131,7 @@ namespace SimpleServer.Internals
             //        Log.Error(ex);
             //    }
             //}
+            sw.Close();
             CloseSocket();
         }
 
