@@ -26,14 +26,6 @@ namespace SimpleServer.Internals
         }
 
         public IPEndPoint LocalEndpoint { get; }
-
-        public Socket Socket => _tcpListener.Server;
-
-        public void Dispose()
-        {
-            throw new NotImplementedException();
-        }
-
         public Task<SimpleServerConnection> Accept()
         {
             return Accept_Internal();
