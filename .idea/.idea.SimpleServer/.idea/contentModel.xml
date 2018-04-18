@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\Users\Dylan Perks\.Rider2017.3\system\resharper-host\local\Transient\ReSharperHost\v11\SolutionCaches\_SimpleServer.-1049022049.00" t="ExcludeRecursive" />
+    <e p="C:\Users\Dylan Perks\Documents\_Important Documents\SimpleServer" t="IncludeFlat">
+      <e p="Devkit" t="Include" />
+      <e p="Framework" t="Include" />
+      <e p="GUI" t="Include" />
+      <e p="Httpd" t="Include" />
+      <e p="Internal Tools" t="Include" />
+      <e p="packages" t="ExcludeRecursive" />
+      <e p="SimpleServer" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Exceptions" t="Include">
+          <e p="BadRequestException.cs" t="Include" />
+          <e p="FunctionNotSupportedException.cs" t="Include" />
+          <e p="JsonParseException.cs" t="Include" />
+          <e p="RfcViolationException.cs" t="Include" />
+        </e>
+        <e p="Functions" t="Include">
+          <e p="IFunction.cs" t="Include" />
+        </e>
+        <e p="Handlers" t="Include">
+          <e p="FunctionHandler.cs" t="Include" />
+          <e p="Handler.cs" t="Include" />
+          <e p="MultiFunctionHandler.cs" t="Include" />
+        </e>
+        <e p="Internals" t="Include">
+          <e p="SimpleServerConnection.cs" t="Include" />
+          <e p="SimpleServerContext.cs" t="Include" />
+          <e p="SimpleServerDecorator.cs" t="Include" />
+          <e p="SimpleServerEndpoint.cs" t="Include" />
+          <e p="SimpleServerEngine.cs" t="Include" />
+          <e p="SimpleServerHost.cs" t="Include" />
+          <e p="SimpleServerListener.cs" t="Include" />
+          <e p="SimpleServerRequest.cs" t="Include" />
+          <e p="SimpleServerResponse.cs" t="Include" />
+        </e>
+        <e p="Logging" t="Include">
+          <e p="ILog.cs" t="Include" />
+          <e p="Log.cs" t="Include" />
+        </e>
+        <e p="Managers" t="Include">
+          <e p="ErrorManager.cs" t="Include" />
+          <e p="FunctionManager.cs" t="Include" />
+          <e p="HandlerManager.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="SimpleServer.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Providers" t="Include">
+          <e p="ErrorPageProvider.cs" t="Include" />
+          <e p="ErrorPages" t="Include">
+            <e p="ErrorPage.html" t="Include" />
+          </e>
+        </e>
+        <e p="SimpleServer.cs" t="Include" />
+        <e p="SimpleServer.csproj" t="IncludeRecursive" />
+        <e p="SimpleServerBuilder.cs" t="Include" />
+        <e p="SimpleServerConfig.cs" t="Include" />
+        <e p="SsExt.cs" t="Include" />
+      </e>
+      <e p="SimpleServer.Daemon" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp2.0" t="Include">
+              <e p="SimpleServer.Daemon.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Program.cs" t="Include" />
+        <e p="SimpleServer.Daemon.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="SimpleServer.Framework" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Class1.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="SimpleServer.Framework.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="SimpleServer.Framework.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="SimpleServer.Framework.Gui" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Class1.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="SimpleServer.Framework.Gui.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="SimpleServer.Framework.Gui.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="SimpleServer.GSS" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Class1.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="SimpleServer.GSS.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="SimpleServer.GSS.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="SimpleServer.Json" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Class1.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="SimpleServer.Json.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="SimpleServer.Json.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="SimpleServer.Sdk" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp2.0" t="Include">
+              <e p="SimpleServer.Sdk.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Program.cs" t="Include" />
+        <e p="SimpleServer.Sdk.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="SimpleServer.sln" t="IncludeFlat" />
+      <e p="TestApp" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp2.0" t="Include">
+              <e p="TestApp.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Program.cs" t="Include" />
+        <e p="TestApp.csproj" t="IncludeRecursive" />
+        <e p="TestHandler.cs" t="Include" />
+      </e>
+    </e>
+  </component>
+</project>

@@ -1,0 +1,13 @@
+C:\Users\Dylan Perks\Documents\_Important Documents\SimpleServer\TestApp\bin\Debug\netcoreapp2.0\TestApp.deps.json
+C:\Users\Dylan Perks\Documents\_Important Documents\SimpleServer\TestApp\bin\Debug\netcoreapp2.0\TestApp.runtimeconfig.json
+C:\Users\Dylan Perks\Documents\_Important Documents\SimpleServer\TestApp\bin\Debug\netcoreapp2.0\TestApp.runtimeconfig.dev.json
+C:\Users\Dylan Perks\Documents\_Important Documents\SimpleServer\TestApp\bin\Debug\netcoreapp2.0\TestApp.dll
+C:\Users\Dylan Perks\Documents\_Important Documents\SimpleServer\TestApp\bin\Debug\netcoreapp2.0\TestApp.pdb
+C:\Users\Dylan Perks\Documents\_Important Documents\SimpleServer\TestApp\bin\Debug\netcoreapp2.0\SimpleServer.dll
+C:\Users\Dylan Perks\Documents\_Important Documents\SimpleServer\TestApp\bin\Debug\netcoreapp2.0\SimpleServer.pdb
+C:\Users\Dylan Perks\Documents\_Important Documents\SimpleServer\TestApp\obj\Debug\netcoreapp2.0\TestApp.csprojResolveAssemblyReference.cache
+C:\Users\Dylan Perks\Documents\_Important Documents\SimpleServer\TestApp\obj\Debug\netcoreapp2.0\TestApp.csproj.CoreCompileInputs.cache
+C:\Users\Dylan Perks\Documents\_Important Documents\SimpleServer\TestApp\obj\Debug\netcoreapp2.0\TestApp.AssemblyInfoInputs.cache
+C:\Users\Dylan Perks\Documents\_Important Documents\SimpleServer\TestApp\obj\Debug\netcoreapp2.0\TestApp.AssemblyInfo.cs
+C:\Users\Dylan Perks\Documents\_Important Documents\SimpleServer\TestApp\obj\Debug\netcoreapp2.0\TestApp.dll
+C:\Users\Dylan Perks\Documents\_Important Documents\SimpleServer\TestApp\obj\Debug\netcoreapp2.0\TestApp.pdb

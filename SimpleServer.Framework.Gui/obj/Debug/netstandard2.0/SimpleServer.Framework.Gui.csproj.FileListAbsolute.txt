@@ -1,0 +1,9 @@
+C:\Users\Dylan Perks\Documents\_Important Documents\SimpleServer\SimpleServer.Framework.Gui\bin\Debug\netstandard2.0\SimpleServer.Framework.Gui.deps.json
+C:\Users\Dylan Perks\Documents\_Important Documents\SimpleServer\SimpleServer.Framework.Gui\bin\Debug\netstandard2.0\SimpleServer.Framework.Gui.dll
+C:\Users\Dylan Perks\Documents\_Important Documents\SimpleServer\SimpleServer.Framework.Gui\bin\Debug\netstandard2.0\SimpleServer.Framework.Gui.pdb
+C:\Users\Dylan Perks\Documents\_Important Documents\SimpleServer\SimpleServer.Framework.Gui\obj\Debug\netstandard2.0\SimpleServer.Framework.Gui.csprojResolveAssemblyReference.cache
+C:\Users\Dylan Perks\Documents\_Important Documents\SimpleServer\SimpleServer.Framework.Gui\obj\Debug\netstandard2.0\SimpleServer.Framework.Gui.csproj.CoreCompileInputs.cache
+C:\Users\Dylan Perks\Documents\_Important Documents\SimpleServer\SimpleServer.Framework.Gui\obj\Debug\netstandard2.0\SimpleServer.Framework.Gui.AssemblyInfoInputs.cache
+C:\Users\Dylan Perks\Documents\_Important Documents\SimpleServer\SimpleServer.Framework.Gui\obj\Debug\netstandard2.0\SimpleServer.Framework.Gui.AssemblyInfo.cs
+C:\Users\Dylan Perks\Documents\_Important Documents\SimpleServer\SimpleServer.Framework.Gui\obj\Debug\netstandard2.0\SimpleServer.Framework.Gui.dll
+C:\Users\Dylan Perks\Documents\_Important Documents\SimpleServer\SimpleServer.Framework.Gui\obj\Debug\netstandard2.0\SimpleServer.Framework.Gui.pdb

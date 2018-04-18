@@ -34,7 +34,11 @@ namespace SimpleServer.Managers
         }
         public async Task HandleAsync(SimpleServerContext ctx)
         {
-            await ctx.Request.Connection.GetListener().GetEngine().GetHost().Handlers.ForEachAsync(async x => { if (x.CanHandle(ctx.Request)) { await Task.Factory.StartNew(() => { x.Handle(ctx); }); } });
+            await ctx.Request.Connection.GetListener().GetEngine().GetHost().Handlers.ForEachAsync(async x => { if (x.CanHandle(ctx.Request) && !ctx.Handled) { await Task.Factory.StartNew(() => { x.Handle(ctx);
+                ctx.Handled = true;
+            }); } });
+            if (!ctx.Handled)
+                ErrorManager.Error404(ctx);
         }
     }
 }

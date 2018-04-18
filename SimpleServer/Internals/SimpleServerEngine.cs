@@ -19,7 +19,6 @@ namespace SimpleServer.Internals
         {
             try
             {
-                SimpleServerRequest parsedRequest = new SimpleServerRequest();
                 var reader = new StreamReader(connection.Stream);
                 var request = new StringBuilder();
                 string line = null;
@@ -41,7 +40,17 @@ namespace SimpleServer.Internals
                     var value = parts[1].Trim();
                     headers.Add(key, value);
                 }
-                var rline = lines.ElementAt(0);
+
+                string rline;
+                try
+                {
+                    rline = lines.ElementAt(0);
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    return SimpleServerRequest.Empty;
+                }
+
                 Regex regex = new Regex(RequestRegex);
                 Match m = regex.Match(rline);
                 if (!m.Success)
@@ -85,7 +94,7 @@ namespace SimpleServer.Internals
                 {
                     stream = null;
                 }
-                return new SimpleServerRequest() { Headers = headers, InputStream = stream, LocalEndpoint = connection.LocalEndPoint, Method = method, RemoteEndpoint = connection.RemoteEndPoint, RequestUri = url, Version = m.Groups["version"].Value, Connection = connection, RawUrl = m.Groups["url"].Value };
+                return new SimpleServerRequest() { empty = false,Headers = headers, InputStream = stream, LocalEndpoint = connection.LocalEndPoint, Method = method, RemoteEndpoint = connection.RemoteEndPoint, RequestUri = url, Version = m.Groups["version"].Value, Connection = connection, RawUrl = m.Groups["url"].Value };
             }
             catch (Exception ex)
             {
@@ -93,7 +102,7 @@ namespace SimpleServer.Internals
                 Log.Error(ex);
                 connection.Dispose();
                 Log.Error("The clients connection will be terminated.");
-                return null;
+                return SimpleServerRequest.Empty;
             }
         }
         #endregion

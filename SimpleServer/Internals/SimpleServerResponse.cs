@@ -52,27 +52,6 @@ namespace SimpleServer.Internals
         /// </summary>
         public string ReasonPhrase { get; set; }
 
-        private async Task Send()
-        {
-            var outputStream = OutputStream as MemoryStream;
-            outputStream.Seek(0, SeekOrigin.Begin);
-
-            var socketStream = client.Stream;
-            
-
-            string header = $"{Version} {StatusCode} {ReasonPhrase}\r\n" +
-                            Headers +
-                            $"Content-Length: {outputStream.Length}\r\n" +
-                            "\r\n";
-
-            byte[] headerArray = Encoding.UTF8.GetBytes(header);
-            await socketStream.WriteAsync(headerArray, 0, headerArray.Length);
-            await outputStream.CopyToAsync(socketStream);
-
-            await socketStream.FlushAsync();
-
-        }
-
         /// <summary>
         /// Writes a string to OutputStream.
         /// </summary>
@@ -87,38 +66,38 @@ namespace SimpleServer.Internals
         /// <summary>
         /// Closes this response and sends it.
         /// </summary>
-        public async void Close()
+        public void Close()
         {
             //try
             //{
-                //await Send();
+            //await Send();
 
             var outputStream = OutputStream as MemoryStream;
-            MemoryStream memStream = new MemoryStream(outputStream.ToArray());
-            
+            var memStream = new MemoryStream(outputStream.ToArray());
+
             memStream.Seek(0, SeekOrigin.Begin);
 
             var socketStream = client.Stream;
 
 
-            /*string header = $"{Version} {StatusCode} {ReasonPhrase}\r\n" +
-                            Headers +
-                            $"Content-Length: {memStream.Length}\r\n" +
-                            "\r\n";
-
-            byte[] headerArray = Encoding.UTF8.GetBytes(header);
-            await socketStream.WriteAsync(headerArray, 0, headerArray.Length);*/
-            var sw = new StreamWriter(socketStream,Encoding.UTF8);
-            sw.WriteLine(Version + " " + StatusCode + " " +ReasonPhrase);
-            foreach (var kvp in Headers)
+            /*var header = $"{Version} {StatusCode} {ReasonPhrase}\r\n" +
+                         Headers +
+                         $"Content-Length: {memStream.Length}\r\n" +
+                         "\r\n";*/
+            var header = new StringBuilder();
+            header.Append(Version + " " + StatusCode +" " + ReasonPhrase + "\r\n");
+            Headers["Content-Length"] = memStream.Length.ToString();
+            foreach (var h in Headers)
             {
-                sw.WriteLine(kvp.Key + ": "+kvp.Value);
+                header.Append(h.Key+": "+h.Value+"\r\n");
             }
-            sw.WriteLine("Content-Length: "+memStream.Length);
-            sw.WriteLine();
-            sw.Flush();
-            await memStream.CopyToAsync(socketStream);
-            await socketStream.FlushAsync();
+
+            header.Append("\r\n");
+            var headerArray = Encoding.UTF8.GetBytes(header.ToString());
+            socketStream.Write(headerArray, 0, headerArray.Length);
+            memStream.CopyTo(socketStream);
+
+            socketStream.Flush();
             //}
             //catch (Exception ex)
             //{
@@ -131,7 +110,6 @@ namespace SimpleServer.Internals
             //        Log.Error(ex);
             //    }
             //}
-            sw.Close();
             CloseSocket();
         }
 

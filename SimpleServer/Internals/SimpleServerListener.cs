@@ -67,7 +67,7 @@ namespace SimpleServer.Internals
                 var client = await _tcpListener.AcceptTcpClientAsync().ConfigureAwait(false);
                 var conn = new SimpleServerConnection(client, _server, this);
                 var request = await SimpleServerEngine.ProcessRequestAsync(conn);
-                if (request == null)
+                if (SimpleServerRequest.IsNullOrEmpty(request))
                     continue;
                 // Handle request in a separate thread.
 
@@ -115,7 +115,6 @@ namespace SimpleServer.Internals
 
         public void Dispose()
         {
-            throw new NotImplementedException();
         }
         public Socket Socket => _tcpListener.Server;
         public SimpleServerEngine GetEngine()

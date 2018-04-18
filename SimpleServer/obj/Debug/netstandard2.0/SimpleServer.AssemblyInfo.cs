@@ -11,8 +11,8 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyDescriptionAttribute("SimpleServer offers an easy-to-use HTTP server library built with an extendable a" +
 "rchitecture.")]
-[assembly: System.Reflection.AssemblyFileVersionAttribute("0.1.2.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("0.1.2")]
+[assembly: System.Reflection.AssemblyFileVersionAttribute("0.1.3.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("0.1.3")]
 [assembly: System.Reflection.AssemblyProductAttribute("SimpleServer")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SimpleServer")]
-[assembly: System.Reflection.AssemblyVersionAttribute("0.1.2.0")]
+[assembly: System.Reflection.AssemblyVersionAttribute("0.1.3.0")]
