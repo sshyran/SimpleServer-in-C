@@ -4,6 +4,9 @@ namespace SimpleServer.Internals
 {
     public class SimpleServerEndpoint
     {
+        public IPAddress Scope { get; set; }
+        public int Port { get; set; }
+
         #region Equality Operators
 
         public bool Equals(SimpleServerEndpoint other)
@@ -30,8 +33,5 @@ namespace SimpleServer.Internals
         }
 
         #endregion
-
-        public IPAddress Scope { get; set; }
-        public int Port { get; set; }
     }
 }

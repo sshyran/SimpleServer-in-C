@@ -41,13 +41,11 @@ namespace SimpleServer.Managers
             await ctx.Request.Host.Handlers.ForEachAsync(async x =>
             {
                 if (x.CanHandle(ctx.Request) && !ctx.Handled)
-                {
                     await Task.Factory.StartNew(() =>
                     {
                         x.Handle(ctx);
                         ctx.Handled = true;
                     });
-                }
             });
             if (!ctx.Handled)
                 ErrorManager.Error404(ctx);

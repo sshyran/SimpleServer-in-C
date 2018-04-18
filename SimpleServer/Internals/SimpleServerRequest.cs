@@ -9,20 +9,15 @@ namespace SimpleServer.Internals
 {
     public class SimpleServerRequest
     {
-        public static SimpleServerRequest Empty => new SimpleServerRequest();
-
-        public static bool IsNullOrEmpty(SimpleServerRequest request)
-        {
-            return request == null || request.empty;
-        }
-        
         private SimpleServerConnection client;
-        internal bool empty = false;
+        internal bool empty;
 
         internal SimpleServerRequest()
         {
             empty = true;
         }
+
+        public static SimpleServerRequest Empty => new SimpleServerRequest();
 
         /// <summary>
         ///     Gets the endpoint of the listener that received the request.
@@ -69,6 +64,14 @@ namespace SimpleServer.Internals
 
         public string FormattedUrl => RawUrl.UrlFormat();
 
+
+        public SimpleServerHost Host { get; set; }
+
+        public static bool IsNullOrEmpty(SimpleServerRequest request)
+        {
+            return request == null || request.empty;
+        }
+
         /// <summary>
         ///     Reads the content of the request as a string.
         /// </summary>
@@ -80,8 +83,5 @@ namespace SimpleServer.Internals
             await InputStream.ReadAsync(buffer, 0, (int) length);
             return Encoding.UTF8.GetString(buffer);
         }
-
-
-        public SimpleServerHost Host { get; set; }
     }
 }

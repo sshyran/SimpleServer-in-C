@@ -12,14 +12,13 @@ namespace SimpleServer.Internals
 {
     public class SimpleServerEngine
     {
-        internal List<SimpleServerMethod> _methods;
-
         private readonly SimpleServerHost _host;
-        private List<SimpleServerHost> _additionalHosts;
-        private string[] _hostnames;
 
         private readonly SimpleServerListener _listener;
         private readonly SimpleServer _server;
+        private readonly List<SimpleServerHost> _additionalHosts;
+        private string[] _hostnames;
+        internal List<SimpleServerMethod> _methods;
 
         public SimpleServerEngine(SimpleServerHost host, SimpleServer server)
         {
@@ -36,16 +35,12 @@ namespace SimpleServer.Internals
         public void AddHost(SimpleServerHost host)
         {
             if (host.Endpoint.Port != _host.Endpoint.Port)
-            {
                 throw new ArgumentException(
                     "Additional hosts must have the same endpoint as the host used to create the engine (port)");
-            }
 
             if (host.Endpoint.Scope.Equals(_host.Endpoint.Scope))
-            {
                 throw new ArgumentException(
                     "Additional hosts must have the same endpoint as the host used to create the engine (scope)");
-            }
 
             _additionalHosts.Add(host);
         }
@@ -148,12 +143,8 @@ namespace SimpleServer.Internals
             SimpleServerHost wildcard;
             SimpleServerHost result = null;
             foreach (var host in GetHosts())
-            {
                 if (host.FQDN == "*")
-                {
                     wildcard = host;
-                }
-            }
 
             return result;
         }

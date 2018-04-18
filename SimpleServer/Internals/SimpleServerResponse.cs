@@ -84,12 +84,9 @@ namespace SimpleServer.Internals
                          $"Content-Length: {memStream.Length}\r\n" +
                          "\r\n";*/
             var header = new StringBuilder();
-            header.Append(Version + " " + StatusCode +" " + ReasonPhrase + "\r\n");
+            header.Append(Version + " " + StatusCode + " " + ReasonPhrase + "\r\n");
             Headers["Content-Length"] = memStream.Length.ToString();
-            foreach (var h in Headers)
-            {
-                header.Append(h.Key+": "+h.Value+"\r\n");
-            }
+            foreach (var h in Headers) header.Append(h.Key + ": " + h.Value + "\r\n");
 
             header.Append("\r\n");
             var headerArray = Encoding.UTF8.GetBytes(header.ToString());

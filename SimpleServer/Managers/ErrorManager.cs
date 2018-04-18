@@ -7,7 +7,7 @@ namespace SimpleServer.Managers
 {
     public class ErrorManager
     {
-        public static ErrorPage ErrorPage { get; set; } = new ErrorPage()
+        public static ErrorPage ErrorPage { get; set; } = new ErrorPage
         {
             TypeInAssembly = typeof(ErrorManager),
             NamespaceUrlOfType = "SimpleServer.Providers.ErrorPages.ErrorPage.html"
@@ -32,12 +32,12 @@ namespace SimpleServer.Managers
     public class ErrorPage
     {
         /// <summary>
-        /// A type in the target assembly where the error page is stored.
+        ///     A type in the target assembly where the error page is stored.
         /// </summary>
         public Type TypeInAssembly { get; set; }
 
         /// <summary>
-        /// The namespace and filename of the error page template. Example: SimpleServer.Providers.ErrorPages.ErrorPage.html
+        ///     The namespace and filename of the error page template. Example: SimpleServer.Providers.ErrorPages.ErrorPage.html
         /// </summary>
         public string NamespaceUrlOfType { get; set; }
     }

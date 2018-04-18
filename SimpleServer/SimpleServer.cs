@@ -60,7 +60,12 @@ namespace SimpleServer
 
         internal async Task HandleRequestAsync(SimpleServerRequest request, SimpleServerResponse response)
         {
-            await _handler.HandleAsync(new SimpleServerContext {Request = request, Response = response, Connection = request.Connection });
+            await _handler.HandleAsync(new SimpleServerContext
+            {
+                Request = request,
+                Response = response,
+                Connection = request.Connection
+            });
         }
 
         public void Start()

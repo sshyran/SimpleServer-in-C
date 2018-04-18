@@ -9,12 +9,12 @@ namespace SimpleServer.Internals
 {
     public class SimpleServerListener : IDisposable
     {
+        private readonly SimpleServerEngine _engine;
+        private readonly SimpleServer _server;
         private CancellationTokenSource _cts;
         private bool _disposed;
-        private readonly SimpleServerEngine _engine;
         private bool _isListening;
         private Task _listener;
-        private readonly SimpleServer _server;
         private TcpListener _tcpListener;
 
         public SimpleServerListener(IPEndPoint localEndpoint, SimpleServer server, SimpleServerEngine engine)
@@ -26,6 +26,12 @@ namespace SimpleServer.Internals
         }
 
         public IPEndPoint LocalEndpoint { get; }
+        public Socket Socket => _tcpListener.Server;
+
+        public void Dispose()
+        {
+        }
+
         public Task<SimpleServerConnection> Accept()
         {
             return Accept_Internal();
@@ -111,10 +117,6 @@ namespace SimpleServer.Internals
             }
         }
 
-        public void Dispose()
-        {
-        }
-        public Socket Socket => _tcpListener.Server;
         public SimpleServerEngine GetEngine()
         {
             return _engine;
