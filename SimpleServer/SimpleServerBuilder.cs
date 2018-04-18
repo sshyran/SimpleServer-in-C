@@ -1,6 +1,8 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
-using SimpleServer.Decorators;
+using System.Text;
 using SimpleServer.Handlers;
 using SimpleServer.Internals;
 
@@ -95,13 +97,6 @@ namespace SimpleServer
         public HostBuilder With(params IHandler[] handlers)
         {
             foreach (var handler in handlers) Result.Handlers.Add(handler);
-
-            return this;
-        }
-
-        public HostBuilder With(params IDecorator[] decorators)
-        {
-            foreach (var decorator in decorators) Result.Decorators.Add(decorator);
 
             return this;
         }

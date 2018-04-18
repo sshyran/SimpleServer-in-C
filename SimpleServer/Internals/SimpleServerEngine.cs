@@ -126,7 +126,7 @@ namespace SimpleServer.Internals
                 Log.Error(ex);
                 connection.Dispose();
                 Log.Error("The clients connection will be terminated.");
-                return null;
+                return SimpleServerRequest.Empty;
             }
         }
         // TODO: Rewrite engine for better performance

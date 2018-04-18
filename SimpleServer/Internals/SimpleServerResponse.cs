@@ -51,26 +51,6 @@ namespace SimpleServer.Internals
         /// </summary>
         public string ReasonPhrase { get; set; }
 
-        private async Task Send()
-        {
-            var outputStream = OutputStream as MemoryStream;
-            outputStream.Seek(0, SeekOrigin.Begin);
-
-            var socketStream = client.Stream;
-
-
-            var header = $"{Version} {StatusCode} {ReasonPhrase}\r\n" +
-                         Headers +
-                         $"Content-Length: {outputStream.Length}\r\n" +
-                         "\r\n";
-
-            var headerArray = Encoding.UTF8.GetBytes(header);
-            await socketStream.WriteAsync(headerArray, 0, headerArray.Length);
-            await outputStream.CopyToAsync(socketStream);
-
-            await socketStream.FlushAsync();
-        }
-
         /// <summary>
         ///     Writes a string to OutputStream.
         /// </summary>
@@ -85,7 +65,7 @@ namespace SimpleServer.Internals
         /// <summary>
         ///     Closes this response and sends it.
         /// </summary>
-        public async void Close()
+        public void Close()
         {
             //try
             //{
@@ -99,16 +79,24 @@ namespace SimpleServer.Internals
             var socketStream = client.Stream;
 
 
-            var header = $"{Version} {StatusCode} {ReasonPhrase}\r\n" +
+            /*var header = $"{Version} {StatusCode} {ReasonPhrase}\r\n" +
                          Headers +
                          $"Content-Length: {memStream.Length}\r\n" +
-                         "\r\n";
+                         "\r\n";*/
+            var header = new StringBuilder();
+            header.Append(Version + " " + StatusCode +" " + ReasonPhrase + "\r\n");
+            Headers["Content-Length"] = memStream.Length.ToString();
+            foreach (var h in Headers)
+            {
+                header.Append(h.Key+": "+h.Value+"\r\n");
+            }
 
-            var headerArray = Encoding.UTF8.GetBytes(header);
-            await socketStream.WriteAsync(headerArray, 0, headerArray.Length);
-            await memStream.CopyToAsync(socketStream);
+            header.Append("\r\n");
+            var headerArray = Encoding.UTF8.GetBytes(header.ToString());
+            socketStream.Write(headerArray, 0, headerArray.Length);
+            memStream.CopyTo(socketStream);
 
-            await socketStream.FlushAsync();
+            socketStream.Flush();
             //}
             //catch (Exception ex)
             //{

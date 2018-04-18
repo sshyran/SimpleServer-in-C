@@ -1,0 +1,1281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="d22f044c-c92b-4abb-b053-54f6848400c1" name="Default" comment="">
+      <change beforePath="" afterPath="$PROJECT_DIR$/SimpleServer/Managers/ErrorManager.cs" />
+      <change beforePath="$PROJECT_DIR$/.vs/SimpleServer/v15/.suo" afterPath="$PROJECT_DIR$/.vs/SimpleServer/v15/.suo" />
+      <change beforePath="$PROJECT_DIR$/.vs/SimpleServer/v15/Server/sqlite3/storage.ide" afterPath="$PROJECT_DIR$/.vs/SimpleServer/v15/Server/sqlite3/storage.ide" />
+      <change beforePath="$PROJECT_DIR$/.vs/SimpleServer/v15/Server/sqlite3/storage.ide-shm" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/.vs/SimpleServer/v15/Server/sqlite3/storage.ide-wal" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/SimpleServer/Internals/SimpleServerContext.cs" afterPath="$PROJECT_DIR$/SimpleServer/Internals/SimpleServerContext.cs" />
+      <change beforePath="$PROJECT_DIR$/SimpleServer/Internals/SimpleServerEngine.cs" afterPath="$PROJECT_DIR$/SimpleServer/Internals/SimpleServerEngine.cs" />
+      <change beforePath="$PROJECT_DIR$/SimpleServer/Internals/SimpleServerListener.cs" afterPath="$PROJECT_DIR$/SimpleServer/Internals/SimpleServerListener.cs" />
+      <change beforePath="$PROJECT_DIR$/SimpleServer/Internals/SimpleServerRequest.cs" afterPath="$PROJECT_DIR$/SimpleServer/Internals/SimpleServerRequest.cs" />
+      <change beforePath="$PROJECT_DIR$/SimpleServer/Internals/SimpleServerResponse.cs" afterPath="$PROJECT_DIR$/SimpleServer/Internals/SimpleServerResponse.cs" />
+      <change beforePath="$PROJECT_DIR$/SimpleServer/Managers/HandlerManager.cs" afterPath="$PROJECT_DIR$/SimpleServer/Managers/HandlerManager.cs" />
+      <change beforePath="$PROJECT_DIR$/SimpleServer/SimpleServer.csproj" afterPath="$PROJECT_DIR$/SimpleServer/SimpleServer.csproj" />
+      <change beforePath="$PROJECT_DIR$/SimpleServer/obj/Debug/netstandard2.0/SimpleServer.AssemblyInfo.cs" afterPath="$PROJECT_DIR$/SimpleServer/obj/Debug/netstandard2.0/SimpleServer.AssemblyInfo.cs" />
+      <change beforePath="$PROJECT_DIR$/SimpleServer/obj/Debug/netstandard2.0/SimpleServer.AssemblyInfoInputs.cache" afterPath="$PROJECT_DIR$/SimpleServer/obj/Debug/netstandard2.0/SimpleServer.AssemblyInfoInputs.cache" />
+      <change beforePath="$PROJECT_DIR$/SimpleServer/obj/Debug/netstandard2.0/SimpleServer.csproj.CoreCompileInputs.cache" afterPath="$PROJECT_DIR$/SimpleServer/obj/Debug/netstandard2.0/SimpleServer.csproj.CoreCompileInputs.cache" />
+      <change beforePath="$PROJECT_DIR$/SimpleServer/obj/SimpleServer.csproj.nuget.cache" afterPath="$PROJECT_DIR$/SimpleServer/obj/SimpleServer.csproj.nuget.cache" />
+      <change beforePath="$PROJECT_DIR$/SimpleServer/obj/project.assets.json" afterPath="$PROJECT_DIR$/SimpleServer/obj/project.assets.json" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="Program.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/TestApp/Program.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="18" column="49" lean-forward="false" selection-start-line="18" selection-start-column="49" selection-end-line="18" selection-end-column="49" />
+              <folding>
+                <marker date="1523385624402" expanded="false" signature="6:7" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SimpleServer.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SimpleServer/SimpleServer.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="513">
+              <caret line="84" column="9" lean-forward="false" selection-start-line="84" selection-start-column="9" selection-end-line="84" selection-end-column="9" />
+              <folding>
+                <marker date="1523385624215" expanded="false" signature="6:256" ph="..." />
+                <marker date="1523385624215" expanded="true" signature="280:3397" ph="{...}" />
+                <marker date="1523385624215" expanded="true" signature="312:3395" ph="{...}" />
+                <marker date="1523385624215" expanded="true" signature="348:507" ph="{...}" />
+                <marker date="1523385624215" expanded="true" signature="389:447" ph="{...}" />
+                <marker date="1523385624215" expanded="true" signature="597:930" ph="{...}" />
+                <marker date="1523385624215" expanded="true" signature="1101:1286" ph="{...}" />
+                <marker date="1523385624215" expanded="true" signature="1392:1521" ph="{...}" />
+                <marker date="1523385624215" expanded="true" signature="1549:3184" ph="{...}" />
+                <marker date="1523385624215" expanded="true" signature="1623:3082" ph="{...}" />
+                <marker date="1523385624215" expanded="true" signature="1726:1944" ph="{...}" />
+                <marker date="1523385624215" expanded="true" signature="2247:2821" ph="{...}" />
+                <marker date="1523385624215" expanded="true" signature="2377:2594" ph="{...}" />
+                <marker date="1523385624215" expanded="true" signature="2641:2803" ph="{...}" />
+                <marker date="1523385624215" expanded="true" signature="3115:3174" ph="{...}" />
+                <marker date="1523385624215" expanded="true" signature="3211:3389" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ErrorManager.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SimpleServer/Managers/ErrorManager.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="179">
+              <caret line="33" column="21" lean-forward="false" selection-start-line="33" selection-start-column="21" selection-end-line="33" selection-end-column="21" />
+              <folding>
+                <marker date="1523641581190" expanded="false" signature="6:85" ph="..." />
+                <marker date="1523641581190" expanded="true" signature="118:1712" ph="{...}" />
+                <marker date="1523641581190" expanded="true" signature="150:1276" ph="{...}" />
+                <marker date="1523641581190" expanded="true" signature="239:385" ph="{...}" />
+                <marker date="1523641581190" expanded="true" signature="452:1270" ph="{...}" />
+                <marker date="1523641581190" expanded="true" signature="1304:1710" ph="{...}" />
+                <marker date="1523641581190" expanded="true" signature="1319:1429" ph="/// A type in the target assembly where the error page is stored. ... " />
+                <marker date="1523641581190" expanded="true" signature="1488:1649" ph="/// The namespace and filename of the error page template. Example: SimpleServer.Providers.ErrorPages.ErrorPage.h ... " />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SimpleServer.csproj" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/SimpleServer/SimpleServer.csproj">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="180">
+              <caret line="12" column="161" lean-forward="false" selection-start-line="12" selection-start-column="161" selection-end-line="12" selection-end-column="161" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SimpleServerBuilder.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SimpleServer/SimpleServerBuilder.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="153">
+              <caret line="71" column="9" lean-forward="false" selection-start-line="71" selection-start-column="9" selection-end-line="71" selection-end-column="9" />
+              <folding>
+                <marker date="1523386111713" expanded="false" signature="6:162" ph="..." />
+                <marker date="1523386111713" expanded="true" signature="186:2310" ph="{...}" />
+                <marker date="1523386111713" expanded="true" signature="219:841" ph="{...}" />
+                <marker date="1523386111713" expanded="true" signature="315:383" ph="{...}" />
+                <marker date="1523386111713" expanded="true" signature="420:467" ph="{...}" />
+                <marker date="1523386111713" expanded="true" signature="512:587" ph="{...}" />
+                <marker date="1523386111713" expanded="true" signature="597:835" ph="Statics" />
+                <marker date="1523386111713" expanded="true" signature="661:721" ph="{...}" />
+                <marker date="1523386111713" expanded="true" signature="754:815" ph="{...}" />
+                <marker date="1523386111713" expanded="true" signature="871:2308" ph="{...}" />
+                <marker date="1523386111713" expanded="true" signature="987:1180" ph="{...}" />
+                <marker date="1523386111713" expanded="true" signature="1282:1370" ph="{...}" />
+                <marker date="1523386111713" expanded="true" signature="1414:1508" ph="{...}" />
+                <marker date="1523386111713" expanded="true" signature="1553:1630" ph="{...}" />
+                <marker date="1523386111713" expanded="true" signature="1679:1765" ph="{...}" />
+                <marker date="1523386111713" expanded="true" signature="1820:2119" ph="{...}" />
+                <marker date="1523386111713" expanded="true" signature="1952:2083" ph="{...}" />
+                <marker date="1523386111713" expanded="true" signature="2180:2302" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SimpleServerEngine.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SimpleServer/Internals/SimpleServerEngine.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="105">
+              <caret line="17" column="64" lean-forward="false" selection-start-line="17" selection-start-column="64" selection-end-line="17" selection-end-column="64" />
+              <folding>
+                <marker date="1523627336332" expanded="false" signature="6:273" ph="..." />
+                <marker date="1523627336332" expanded="true" signature="307:5260" ph="{...}" />
+                <marker date="1523627336332" expanded="true" signature="345:5258" ph="{...}" />
+                <marker date="1523627336332" expanded="true" signature="360:4306" ph="Statics" />
+                <marker date="1523627336332" expanded="true" signature="484:4287" ph="{...}" />
+                <marker date="1523627336332" expanded="true" signature="510:3949" ph="{...}" />
+                <marker date="1523627336332" expanded="true" signature="822:895" ph="{...}" />
+                <marker date="1523627336332" expanded="true" signature="1183:1498" ph="{...}" />
+                <marker date="1523627336332" expanded="true" signature="1549:1633" ph="{...}" />
+                <marker date="1523627336332" expanded="true" signature="1685:1775" ph="{...}" />
+                <marker date="1523627336332" expanded="true" signature="1909:2046" ph="{...}" />
+                <marker date="1523627336332" expanded="true" signature="2135:2629" ph="{...}" />
+                <marker date="1523627336332" expanded="true" signature="2218:2337" ph="{...}" />
+                <marker date="1523627336332" expanded="true" signature="2405:2501" ph="{...}" />
+                <marker date="1523627336332" expanded="true" signature="2526:2611" ph="{...}" />
+                <marker date="1523627336332" expanded="true" signature="2844:2963" ph="/* Version = m.Groups[&quot;version&quot;].Value; ... */" />
+                <marker date="1523627336332" expanded="true" signature="3072:3520" ph="{...}" />
+                <marker date="1523627336332" expanded="true" signature="3111:3208" ph="/* stream = new MemoryStream(); ... */" />
+                <marker date="1523627336332" expanded="true" signature="3541:3612" ph="{...}" />
+                <marker date="1523627336332" expanded="true" signature="3982:4277" ph="{...}" />
+                <marker date="1523627336332" expanded="true" signature="4668:5008" ph="{...}" />
+                <marker date="1523627336332" expanded="true" signature="5036:5087" ph="{...}" />
+                <marker date="1523627336332" expanded="true" signature="5114:5164" ph="{...}" />
+                <marker date="1523627336332" expanded="true" signature="5206:5252" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SimpleServerListener.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SimpleServer/Internals/SimpleServerListener.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="831">
+              <caret line="116" column="9" lean-forward="false" selection-start-line="116" selection-start-column="9" selection-end-line="116" selection-end-column="9" />
+              <folding>
+                <marker date="1523628122651" expanded="false" signature="6:192" ph="..." />
+                <marker date="1523628122651" expanded="true" signature="226:3803" ph="{...}" />
+                <marker date="1523628122651" expanded="true" signature="280:3801" ph="{...}" />
+                <marker date="1523628122651" expanded="true" signature="664:813" ph="{...}" />
+                <marker date="1523628122651" expanded="true" signature="930:988" ph="{...}" />
+                <marker date="1523628122651" expanded="true" signature="1023:1102" ph="{...}" />
+                <marker date="1523628122651" expanded="true" signature="1172:1335" ph="{...}" />
+                <marker date="1523628122651" expanded="true" signature="1364:1783" ph="{...}" />
+                <marker date="1523628122651" expanded="true" signature="1818:3119" ph="{...}" />
+                <marker date="1523628122651" expanded="true" signature="1861:3109" ph="{...}" />
+                <marker date="1523628122651" expanded="true" signature="2491:2954" ph="{...}" />
+                <marker date="1523628122651" expanded="true" signature="2651:2772" ph="{...}" />
+                <marker date="1523628122651" expanded="true" signature="2813:2936" ph="{...}" />
+                <marker date="1523628122651" expanded="true" signature="3147:3597" ph="{...}" />
+                <marker date="1523628122651" expanded="true" signature="3410:3529" ph="{...}" />
+                <marker date="1523628122651" expanded="true" signature="3559:3587" ph="{...}" />
+                <marker date="1523628122651" expanded="true" signature="3628:3648" ph="{...}" />
+                <marker date="1523628122651" expanded="true" signature="3747:3795" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SimpleServerResponse.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SimpleServer/Internals/SimpleServerResponse.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="183">
+              <caret line="77" column="48" lean-forward="false" selection-start-line="77" selection-start-column="48" selection-end-line="77" selection-end-column="48" />
+              <folding>
+                <marker date="1523626879799" expanded="false" signature="6:141" ph="..." />
+                <marker date="1523626879799" expanded="true" signature="175:4957" ph="{...}" />
+                <marker date="1523626879799" expanded="true" signature="215:4955" ph="{...}" />
+                <marker date="1523626879799" expanded="true" signature="367:659" ph="{...}" />
+                <marker date="1523626879799" expanded="true" signature="729:816" ph="/// Gets the headers of the HTTP response. ... " />
+                <marker date="1523626879799" expanded="true" signature="897:1002" ph="/// Gets the stream containing the content of this response. ... " />
+                <marker date="1523626879799" expanded="true" signature="1069:1148" ph="/// Gets or sets the HTTP version. ... " />
+                <marker date="1523626879799" expanded="true" signature="1202:1285" ph="/// Gets or sets the HTTP status code. ... " />
+                <marker date="1523626879799" expanded="true" signature="1339:1424" ph="/// Gets or sets the HTTP reason phrase. ... " />
+                <marker date="1523626879799" expanded="true" signature="1483:1636" ph="/// Writes a string to OutputStream. ... " />
+                <marker date="1523626879799" expanded="true" signature="1687:1832" ph="{...}" />
+                <marker date="1523626879799" expanded="true" signature="1842:1925" ph="/// Closes this response and sends it. ... " />
+                <marker date="1523626879799" expanded="true" signature="1953:3521" ph="{...}" />
+                <marker date="1523626879799" expanded="true" signature="1976:2025" ph="/* try ... */" />
+                <marker date="1523626879799" expanded="true" signature="2269:2469" ph="/* var header = $&quot;{Version} {StatusCode} {ReasonPhrase}\r\n&quot; + ... */" />
+                <marker date="1523626879799" expanded="true" signature="2707:2793" ph="{...}" />
+                <marker date="1523626879799" expanded="true" signature="3062:3484" ph="/* } ... */" />
+                <marker date="1523626879799" expanded="true" signature="3558:3608" ph="{...}" />
+                <marker date="1523626879799" expanded="true" signature="3618:3783" ph="/// Writes a HTTP redirect response. ... " />
+                <marker date="1523626879799" expanded="true" signature="3845:4530" ph="{...}" />
+                <marker date="1523626879799" expanded="true" signature="4540:4949" ph="IDisposable" />
+                <marker date="1523626879799" expanded="true" signature="4641:4853" ph="{...}" />
+                <marker date="1523626879799" expanded="true" signature="4683:4843" ph="{...}" />
+                <marker date="1523626879799" expanded="true" signature="4728:4764" ph="{...}" />
+                <marker date="1523626879799" expanded="true" signature="4883:4930" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SimpleServerConnection.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SimpleServer/Internals/SimpleServerConnection.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="255">
+              <caret line="22" column="24" lean-forward="false" selection-start-line="22" selection-start-column="24" selection-end-line="22" selection-end-column="24" />
+              <folding>
+                <marker date="1523566352201" expanded="false" signature="6:127" ph="..." />
+                <marker date="1523566352201" expanded="true" signature="161:1239" ph="{...}" />
+                <marker date="1523566352201" expanded="true" signature="217:1237" ph="{...}" />
+                <marker date="1523566352201" expanded="true" signature="446:560" ph="{...}" />
+                <marker date="1523566352201" expanded="true" signature="824:872" ph="{...}" />
+                <marker date="1523566352201" expanded="true" signature="905:960" ph="{...}" />
+                <marker date="1523566352201" expanded="true" signature="991:1042" ph="{...}" />
+                <marker date="1523566352201" expanded="true" signature="1083:1131" ph="{...}" />
+                <marker date="1523566352201" expanded="true" signature="1181:1231" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SimpleServerHost.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SimpleServer/Internals/SimpleServerHost.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="330">
+              <caret line="22" column="5" lean-forward="false" selection-start-line="22" selection-start-column="5" selection-end-line="22" selection-end-column="5" />
+              <folding>
+                <marker date="1523385624053" expanded="false" signature="6:7" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>0.1.1</find>
+    </findStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/SimpleServer/SsExt.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/SimpleServer/Logging/Log.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/TestApp/Program.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/SimpleServer/SimpleServerBuilder.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/SimpleServer/SimpleServer.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/SimpleServer/Managers/HandlerManager.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/SimpleServer/Managers/ErrorManager.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/SimpleServer/Internals/SimpleServerRequest.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/SimpleServer/SimpleServerConfig.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/SimpleServer/Internals/SimpleServerContext.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/SimpleServer/Internals/SimpleServerListener.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/SimpleServer/Internals/SimpleServerHost.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/SimpleServer/Internals/SimpleServerResponse.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/SimpleServer/Internals/SimpleServerEndpoint.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/SimpleServer/Internals/SimpleServerConnection.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/SimpleServer/Internals/SimpleServerEngine.cs" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/SimpleServer/Decorators/IDecorator.cs" />
+        <option value="$PROJECT_DIR$/SimpleServer/Internals/SimpleServerEndpoint.cs" />
+        <option value="$PROJECT_DIR$/SimpleServer/SimpleServerConfig.cs" />
+        <option value="$PROJECT_DIR$/SimpleServer/Logging/Log.cs" />
+        <option value="$PROJECT_DIR$/SimpleServer/Internals/SimpleServerHost.cs" />
+        <option value="$PROJECT_DIR$/SimpleServer/Internals/SimpleServerMethod.cs" />
+        <option value="$PROJECT_DIR$/SimpleServer/SsExt.cs" />
+        <option value="$PROJECT_DIR$/TestApp/TestHandler2.cs" />
+        <option value="$PROJECT_DIR$/TestApp/Program.cs" />
+        <option value="$PROJECT_DIR$/SimpleServer/SimpleServer.cs" />
+        <option value="$PROJECT_DIR$/SimpleServer/SimpleServerBuilder.cs" />
+        <option value="$PROJECT_DIR$/SimpleServer/Internals/SimpleServerConnection.cs" />
+        <option value="$PROJECT_DIR$/SimpleServer/Internals/SimpleServerResponse.cs" />
+        <option value="$PROJECT_DIR$/SimpleServer/Internals/SimpleServerRequest.cs" />
+        <option value="$PROJECT_DIR$/SimpleServer/Internals/SimpleServerEngine.cs" />
+        <option value="$PROJECT_DIR$/SimpleServer/Internals/SimpleServerListener.cs" />
+        <option value="$PROJECT_DIR$/SimpleServer/Internals/SimpleServerContext.cs" />
+        <option value="$PROJECT_DIR$/SimpleServer/Managers/HandlerManager.cs" />
+        <option value="$PROJECT_DIR$/SimpleServer/Managers/ErrorManager.cs" />
+        <option value="$PROJECT_DIR$/SimpleServer/SimpleServer.csproj" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="100" />
+    <option name="y" value="20" />
+    <option name="width" value="1400" />
+    <option name="height" value="820" />
+  </component>
+  <component name="ProjectInspectionProfilesVisibleTreeState">
+    <entry key="Project Default">
+      <profile-state>
+        <expanded-state>
+          <State>
+            <id />
+          </State>
+        </expanded-state>
+        <selected-state>
+          <State>
+            <id>AngularJS</id>
+          </State>
+        </selected-state>
+      </profile-state>
+    </entry>
+  </component>
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="SolutionExplorer" proportions="" version="1">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+      <manualOrder />
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Scratches" />
+      <pane id="SolutionExplorer">
+        <subPane>
+          <expand>
+            <path>
+              <item name="" type="13324e5d:SolutionExplorerViewPane$ProjectViewPaneTreeStructure$createRoot$1" />
+              <item name="SimpleServer (8 projects)" type="977d5f41:SolutionExplorerNodeRider" />
+            </path>
+            <path>
+              <item name="" type="13324e5d:SolutionExplorerViewPane$ProjectViewPaneTreeStructure$createRoot$1" />
+              <item name="SimpleServer (8 projects)" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="Internal Tools" type="977d5f41:SolutionExplorerNodeRider" />
+            </path>
+            <path>
+              <item name="" type="13324e5d:SolutionExplorerViewPane$ProjectViewPaneTreeStructure$createRoot$1" />
+              <item name="SimpleServer (8 projects)" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="Internal Tools" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="TestApp" type="977d5f41:SolutionExplorerNodeRider" />
+            </path>
+            <path>
+              <item name="" type="13324e5d:SolutionExplorerViewPane$ProjectViewPaneTreeStructure$createRoot$1" />
+              <item name="SimpleServer (8 projects)" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="Internal Tools" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="TestApp" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="Dependencies" type="977d5f41:SolutionExplorerNodeRider" />
+            </path>
+            <path>
+              <item name="" type="13324e5d:SolutionExplorerViewPane$ProjectViewPaneTreeStructure$createRoot$1" />
+              <item name="SimpleServer (8 projects)" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="Internal Tools" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="TestApp" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="Dependencies" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name=".NETCoreApp 2" type="977d5f41:SolutionExplorerNodeRider" />
+            </path>
+            <path>
+              <item name="" type="13324e5d:SolutionExplorerViewPane$ProjectViewPaneTreeStructure$createRoot$1" />
+              <item name="SimpleServer (8 projects)" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="SimpleServer" type="977d5f41:SolutionExplorerNodeRider" />
+            </path>
+            <path>
+              <item name="" type="13324e5d:SolutionExplorerViewPane$ProjectViewPaneTreeStructure$createRoot$1" />
+              <item name="SimpleServer (8 projects)" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="SimpleServer" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="Internals" type="977d5f41:SolutionExplorerNodeRider" />
+            </path>
+            <path>
+              <item name="" type="13324e5d:SolutionExplorerViewPane$ProjectViewPaneTreeStructure$createRoot$1" />
+              <item name="SimpleServer (8 projects)" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="SimpleServer" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="Managers" type="977d5f41:SolutionExplorerNodeRider" />
+            </path>
+            <path>
+              <item name="" type="13324e5d:SolutionExplorerViewPane$ProjectViewPaneTreeStructure$createRoot$1" />
+              <item name="SimpleServer (8 projects)" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="SimpleServer" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="Providers" type="977d5f41:SolutionExplorerNodeRider" />
+            </path>
+            <path>
+              <item name="" type="13324e5d:SolutionExplorerViewPane$ProjectViewPaneTreeStructure$createRoot$1" />
+              <item name="SimpleServer (8 projects)" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="SimpleServer" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="Providers" type="977d5f41:SolutionExplorerNodeRider" />
+              <item name="ErrorPages" type="977d5f41:SolutionExplorerNodeRider" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+        <option name="show-file-system" value="false" />
+        <option name="show-all-items" value="false" />
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="settings.editor.selected.configurable" value="editing.templates" />
+    <property name="HbShouldOpenHtmlAsHb" value="" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected=".NET Project.Internal Tools\TestApp">
+    <configuration name="Default" type="DotNetProject" factoryName=".NET Project">
+      <option name="EXE_PATH" value="" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="PASS_PARENT_ENVS" value="1" />
+      <envs />
+      <option name="USE_MONO" value="0" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <option name="PROJECT_PATH" value="" />
+      <option name="PROJECT_EXE_PATH_TRACKING" value="1" />
+      <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
+      <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="1" />
+      <option name="PROJECT_KIND" value="None" />
+      <option name="PROJECT_TFM" value="" />
+    </configuration>
+    <configuration name="Internal Tools\TestApp" type="DotNetProject" factoryName=".NET Project" temporary="true">
+      <option name="EXE_PATH" value="$PROJECT_DIR$/TestApp/bin/Debug/netcoreapp2.0/TestApp.dll" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/TestApp" />
+      <option name="PASS_PARENT_ENVS" value="1" />
+      <envs />
+      <option name="USE_MONO" value="0" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <option name="PROJECT_PATH" value="$PROJECT_DIR$/TestApp/TestApp.csproj" />
+      <option name="PROJECT_EXE_PATH_TRACKING" value="1" />
+      <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
+      <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="1" />
+      <option name="PROJECT_KIND" value="DotNetCore" />
+      <option name="PROJECT_TFM" value=".NETCoreApp,Version=v2.0" />
+    </configuration>
+    <list size="2">
+      <item index="0" class="java.lang.String" itemvalue=".NET Project.Default" />
+      <item index="1" class="java.lang.String" itemvalue=".NET Project.Internal Tools\TestApp" />
+    </list>
+    <recent_temporary>
+      <list size="1">
+        <item index="0" class="java.lang.String" itemvalue=".NET Project.Internal Tools\TestApp" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false">
+    <option name="remove_strategy" value="false" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="d22f044c-c92b-4abb-b053-54f6848400c1" name="Default" comment="" />
+      <created>1519670860674</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1519670860674</updated>
+      <workItem from="1519670862946" duration="13820000" />
+      <workItem from="1520193267584" duration="22489000" />
+      <workItem from="1521293606368" duration="2967000" />
+      <workItem from="1521302630626" duration="2599000" />
+      <workItem from="1523385183616" duration="1002000" />
+      <workItem from="1523562483890" duration="9413000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="52290000" />
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-8" y="-8" width="1616" height="876" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Errors In Solution" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Unit Tests" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32896462" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="NuGet" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Build" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32896462" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32896462" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.39973786" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager />
+    <watches-manager />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/TestApp/Program.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="18" column="49" lean-forward="false" selection-start-line="18" selection-start-column="49" selection-end-line="18" selection-end-column="49" />
+          <folding>
+            <marker date="1523385624402" expanded="false" signature="6:7" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SimpleServer/SimpleServer.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="870">
+          <caret line="58" column="58" lean-forward="false" selection-start-line="58" selection-start-column="58" selection-end-line="58" selection-end-column="58" />
+          <folding>
+            <marker date="1523385624215" expanded="false" signature="6:256" ph="..." />
+            <marker date="1523385624215" expanded="true" signature="280:3397" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="312:3395" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="348:507" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="389:447" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="597:930" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="1101:1286" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="1392:1521" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="1549:3184" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="1623:3082" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="1726:1944" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="2247:2821" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="2377:2594" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="2641:2803" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="3115:3174" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="3211:3389" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SimpleServer/Internals/SimpleServerEngine.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="16" column="13" lean-forward="false" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="13" />
+          <folding>
+            <marker date="1523627336332" expanded="false" signature="6:273" ph="..." />
+            <marker date="1523627336332" expanded="true" signature="307:5260" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="345:5258" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="360:4306" ph="Statics" />
+            <marker date="1523627336332" expanded="true" signature="484:4287" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="510:3949" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="822:895" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="1183:1498" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="1549:1633" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="1685:1775" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="1909:2046" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="2135:2629" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="2218:2337" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="2405:2501" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="2526:2611" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="2844:2963" ph="/* Version = m.Groups[&quot;version&quot;].Value; ... */" />
+            <marker date="1523627336332" expanded="true" signature="3072:3520" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="3111:3208" ph="/* stream = new MemoryStream(); ... */" />
+            <marker date="1523627336332" expanded="true" signature="3541:3612" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="3982:4277" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="4668:5008" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="5036:5087" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="5114:5164" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="5206:5252" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SimpleServer/Internals/SimpleServerConnection.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="645">
+          <caret line="44" column="9" lean-forward="false" selection-start-line="44" selection-start-column="9" selection-end-line="44" selection-end-column="9" />
+          <folding>
+            <marker date="1523566352201" expanded="false" signature="6:127" ph="..." />
+            <marker date="1523566352201" expanded="true" signature="161:1239" ph="{...}" />
+            <marker date="1523566352201" expanded="true" signature="217:1237" ph="{...}" />
+            <marker date="1523566352201" expanded="true" signature="446:560" ph="{...}" />
+            <marker date="1523566352201" expanded="true" signature="824:872" ph="{...}" />
+            <marker date="1523566352201" expanded="true" signature="905:960" ph="{...}" />
+            <marker date="1523566352201" expanded="true" signature="991:1042" ph="{...}" />
+            <marker date="1523566352201" expanded="true" signature="1083:1131" ph="{...}" />
+            <marker date="1523566352201" expanded="true" signature="1181:1231" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SimpleServer/Internals/SimpleServerHost.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="22" column="5" lean-forward="false" selection-start-line="22" selection-start-column="5" selection-end-line="22" selection-end-column="5" />
+          <folding>
+            <marker date="1523385624053" expanded="false" signature="6:7" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SimpleServer/SimpleServerBuilder.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1065">
+          <caret line="71" column="9" lean-forward="true" selection-start-line="71" selection-start-column="9" selection-end-line="71" selection-end-column="9" />
+          <folding>
+            <marker date="1523386111713" expanded="false" signature="6:162" ph="..." />
+            <marker date="1523386111713" expanded="true" signature="186:2310" ph="{...}" />
+            <marker date="1523386111713" expanded="true" signature="219:841" ph="{...}" />
+            <marker date="1523386111713" expanded="true" signature="315:383" ph="{...}" />
+            <marker date="1523386111713" expanded="true" signature="420:467" ph="{...}" />
+            <marker date="1523386111713" expanded="true" signature="512:587" ph="{...}" />
+            <marker date="1523386111713" expanded="true" signature="597:835" ph="Statics" />
+            <marker date="1523386111713" expanded="true" signature="661:721" ph="{...}" />
+            <marker date="1523386111713" expanded="true" signature="754:815" ph="{...}" />
+            <marker date="1523386111713" expanded="true" signature="871:2308" ph="{...}" />
+            <marker date="1523386111713" expanded="true" signature="987:1180" ph="{...}" />
+            <marker date="1523386111713" expanded="true" signature="1282:1370" ph="{...}" />
+            <marker date="1523386111713" expanded="true" signature="1414:1508" ph="{...}" />
+            <marker date="1523386111713" expanded="true" signature="1553:1630" ph="{...}" />
+            <marker date="1523386111713" expanded="true" signature="1679:1765" ph="{...}" />
+            <marker date="1523386111713" expanded="true" signature="1820:2119" ph="{...}" />
+            <marker date="1523386111713" expanded="true" signature="1952:2083" ph="{...}" />
+            <marker date="1523386111713" expanded="true" signature="2180:2302" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TestApp/Program.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="17" column="51" lean-forward="false" selection-start-line="17" selection-start-column="51" selection-end-line="17" selection-end-column="51" />
+          <folding>
+            <marker date="1523385624402" expanded="false" signature="6:7" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SimpleServer/Internals/SimpleServerEngine.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="540">
+          <caret line="44" column="13" lean-forward="false" selection-start-line="44" selection-start-column="13" selection-end-line="44" selection-end-column="13" />
+          <folding>
+            <marker date="1523627336332" expanded="false" signature="6:273" ph="..." />
+            <marker date="1523627336332" expanded="true" signature="307:5260" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="345:5258" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="360:4306" ph="Statics" />
+            <marker date="1523627336332" expanded="true" signature="484:4287" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="510:3949" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="822:895" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="1183:1498" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="1549:1633" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="1685:1775" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="1909:2046" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="2135:2629" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="2218:2337" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="2405:2501" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="2526:2611" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="2844:2963" ph="/* Version = m.Groups[&quot;version&quot;].Value; ... */" />
+            <marker date="1523627336332" expanded="true" signature="3072:3520" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="3111:3208" ph="/* stream = new MemoryStream(); ... */" />
+            <marker date="1523627336332" expanded="true" signature="3541:3612" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="3982:4277" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="4668:5008" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="5036:5087" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="5114:5164" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="5206:5252" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SimpleServer/Internals/SimpleServerConnection.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="675">
+          <caret line="48" column="9" lean-forward="false" selection-start-line="48" selection-start-column="9" selection-end-line="48" selection-end-column="9" />
+          <folding>
+            <marker date="1523566352201" expanded="false" signature="6:127" ph="..." />
+            <marker date="1523566352201" expanded="true" signature="161:1239" ph="{...}" />
+            <marker date="1523566352201" expanded="true" signature="217:1237" ph="{...}" />
+            <marker date="1523566352201" expanded="true" signature="446:560" ph="{...}" />
+            <marker date="1523566352201" expanded="true" signature="824:872" ph="{...}" />
+            <marker date="1523566352201" expanded="true" signature="905:960" ph="{...}" />
+            <marker date="1523566352201" expanded="true" signature="991:1042" ph="{...}" />
+            <marker date="1523566352201" expanded="true" signature="1083:1131" ph="{...}" />
+            <marker date="1523566352201" expanded="true" signature="1181:1231" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SimpleServer/Internals/SimpleServerHost.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="23" column="61" lean-forward="false" selection-start-line="23" selection-start-column="61" selection-end-line="23" selection-end-column="61" />
+          <folding>
+            <marker date="1523385624053" expanded="false" signature="6:7" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SimpleServer/SimpleServer.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1110">
+          <caret line="83" column="31" lean-forward="false" selection-start-line="83" selection-start-column="31" selection-end-line="83" selection-end-column="31" />
+          <folding>
+            <marker date="1523385624215" expanded="false" signature="6:256" ph="..." />
+            <marker date="1523385624215" expanded="true" signature="280:3397" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="312:3395" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="348:507" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="389:447" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="597:930" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="1101:1286" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="1392:1521" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="1549:3184" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="1623:3082" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="1726:1944" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="2247:2821" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="2377:2594" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="2641:2803" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="3115:3174" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="3211:3389" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TestApp/Program.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="21" column="27" lean-forward="false" selection-start-line="21" selection-start-column="27" selection-end-line="21" selection-end-column="27" />
+          <folding>
+            <marker date="1523385624402" expanded="false" signature="6:7" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SimpleServer/SimpleServer.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="795">
+          <caret line="62" column="132" lean-forward="false" selection-start-line="62" selection-start-column="132" selection-end-line="62" selection-end-column="132" />
+          <folding>
+            <marker date="1523385624215" expanded="false" signature="6:256" ph="..." />
+            <marker date="1523385624215" expanded="true" signature="280:3397" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="312:3395" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="348:507" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="389:447" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="597:930" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="1101:1286" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="1392:1521" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="1549:3184" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="1623:3082" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="1726:1944" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="2247:2821" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="2377:2594" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="2641:2803" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="3115:3174" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="3211:3389" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SimpleServer/Internals/SimpleServerConnection.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="675">
+          <caret line="48" column="9" lean-forward="false" selection-start-line="48" selection-start-column="9" selection-end-line="48" selection-end-column="9" />
+          <folding>
+            <marker date="1523566352201" expanded="false" signature="6:127" ph="..." />
+            <marker date="1523566352201" expanded="true" signature="161:1239" ph="{...}" />
+            <marker date="1523566352201" expanded="true" signature="217:1237" ph="{...}" />
+            <marker date="1523566352201" expanded="true" signature="446:560" ph="{...}" />
+            <marker date="1523566352201" expanded="true" signature="824:872" ph="{...}" />
+            <marker date="1523566352201" expanded="true" signature="905:960" ph="{...}" />
+            <marker date="1523566352201" expanded="true" signature="991:1042" ph="{...}" />
+            <marker date="1523566352201" expanded="true" signature="1083:1131" ph="{...}" />
+            <marker date="1523566352201" expanded="true" signature="1181:1231" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SimpleServer/Internals/SimpleServerListener.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SimpleServer/Internals/SimpleServerHost.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="24" column="36" lean-forward="true" selection-start-line="24" selection-start-column="36" selection-end-line="24" selection-end-column="36" />
+          <folding>
+            <marker date="1523385624053" expanded="false" signature="6:7" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TestApp/Program.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="24" column="5" lean-forward="false" selection-start-line="24" selection-start-column="5" selection-end-line="24" selection-end-column="5" />
+          <folding>
+            <marker date="1523385624402" expanded="false" signature="6:7" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SimpleServer/Internals/SimpleServerEndpoint.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="36" column="1" lean-forward="false" selection-start-line="36" selection-start-column="1" selection-end-line="36" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SimpleServer/Internals/SimpleServerContext.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="60" lean-forward="false" selection-start-line="6" selection-start-column="60" selection-end-line="6" selection-end-column="60" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SimpleServer/Internals/SimpleServerMethod.cs" />
+    <entry file="file://$PROJECT_DIR$/SimpleServer/Internals/SimpleServerListener.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SimpleServer/Decorators/IDecorator.cs" />
+    <entry file="file://$PROJECT_DIR$/SimpleServer/Internals/SimpleServerEngine.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1395">
+          <caret line="101" column="17" lean-forward="false" selection-start-line="101" selection-start-column="17" selection-end-line="101" selection-end-column="17" />
+          <folding>
+            <marker date="1523627336332" expanded="false" signature="6:273" ph="..." />
+            <marker date="1523627336332" expanded="true" signature="307:5260" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="345:5258" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="360:4306" ph="Statics" />
+            <marker date="1523627336332" expanded="true" signature="484:4287" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="510:3949" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="822:895" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="1183:1498" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="1549:1633" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="1685:1775" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="1909:2046" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="2135:2629" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="2218:2337" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="2405:2501" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="2526:2611" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="2844:2963" ph="/* Version = m.Groups[&quot;version&quot;].Value; ... */" />
+            <marker date="1523627336332" expanded="true" signature="3072:3520" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="3111:3208" ph="/* stream = new MemoryStream(); ... */" />
+            <marker date="1523627336332" expanded="true" signature="3541:3612" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="3982:4277" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="4668:5008" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="5036:5087" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="5114:5164" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="5206:5252" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SimpleServer/SimpleServerBuilder.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="31" column="9" lean-forward="false" selection-start-line="31" selection-start-column="9" selection-end-line="31" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TestApp/Program.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="21" column="86" lean-forward="false" selection-start-line="21" selection-start-column="86" selection-end-line="21" selection-end-column="86" />
+          <folding>
+            <marker date="1523385624402" expanded="false" signature="6:7" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SimpleServer/Internals/SimpleServerEngine.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="107" column="73" lean-forward="false" selection-start-line="107" selection-start-column="73" selection-end-line="107" selection-end-column="73" />
+          <folding>
+            <marker date="1523627336332" expanded="false" signature="6:273" ph="..." />
+            <marker date="1523627336332" expanded="true" signature="307:5260" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="345:5258" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="360:4306" ph="Statics" />
+            <marker date="1523627336332" expanded="true" signature="484:4287" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="510:3949" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="822:895" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="1183:1498" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="1549:1633" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="1685:1775" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="1909:2046" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="2135:2629" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="2218:2337" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="2405:2501" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="2526:2611" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="2844:2963" ph="/* Version = m.Groups[&quot;version&quot;].Value; ... */" />
+            <marker date="1523627336332" expanded="true" signature="3072:3520" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="3111:3208" ph="/* stream = new MemoryStream(); ... */" />
+            <marker date="1523627336332" expanded="true" signature="3541:3612" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="3982:4277" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="4668:5008" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="5036:5087" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="5114:5164" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="5206:5252" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SimpleServer/Internals/SimpleServerHost.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="18" column="30" lean-forward="false" selection-start-line="18" selection-start-column="30" selection-end-line="18" selection-end-column="30" />
+          <folding>
+            <marker date="1523385624053" expanded="false" signature="6:7" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SimpleServer/Decorators/IDecorator.cs" />
+    <entry file="file://$PROJECT_DIR$/SimpleServer/Internals/SimpleServerDecorator.cs" />
+    <entry file="file://$PROJECT_DIR$/SimpleServer/SimpleServerConfig.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="20" column="69" lean-forward="false" selection-start-line="20" selection-start-column="69" selection-end-line="20" selection-end-column="69" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SimpleServer/Logging/Log.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="363">
+          <caret line="68" column="38" lean-forward="false" selection-start-line="68" selection-start-column="38" selection-end-line="68" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SimpleServer/Internals/SimpleServerEndpoint.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="21" column="0" lean-forward="false" selection-start-line="21" selection-start-column="0" selection-end-line="29" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SimpleServer/SsExt.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="405">
+          <caret line="27" column="12" lean-forward="true" selection-start-line="27" selection-start-column="12" selection-end-line="27" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SimpleServer/Decorators/IDecorator.cs" />
+    <entry file="file://$PROJECT_DIR$/SimpleServer/Internals/SimpleServerMethod.cs" />
+    <entry file="file://$PROJECT_DIR$/SimpleServer/Internals/SimpleServerHost.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="22" column="5" lean-forward="false" selection-start-line="22" selection-start-column="5" selection-end-line="22" selection-end-column="5" />
+          <folding>
+            <marker date="1523385624053" expanded="false" signature="6:7" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TestApp/TestHandler2.cs" />
+    <entry file="file://$PROJECT_DIR$/TestApp/Program.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="18" column="49" lean-forward="false" selection-start-line="18" selection-start-column="49" selection-end-line="18" selection-end-column="49" />
+          <folding>
+            <marker date="1523385624402" expanded="false" signature="6:7" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SimpleServer/SimpleServerBuilder.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="71" column="9" lean-forward="false" selection-start-line="71" selection-start-column="9" selection-end-line="71" selection-end-column="9" />
+          <folding>
+            <marker date="1523386111713" expanded="false" signature="6:162" ph="..." />
+            <marker date="1523386111713" expanded="true" signature="186:2310" ph="{...}" />
+            <marker date="1523386111713" expanded="true" signature="219:841" ph="{...}" />
+            <marker date="1523386111713" expanded="true" signature="315:383" ph="{...}" />
+            <marker date="1523386111713" expanded="true" signature="420:467" ph="{...}" />
+            <marker date="1523386111713" expanded="true" signature="512:587" ph="{...}" />
+            <marker date="1523386111713" expanded="true" signature="597:835" ph="Statics" />
+            <marker date="1523386111713" expanded="true" signature="661:721" ph="{...}" />
+            <marker date="1523386111713" expanded="true" signature="754:815" ph="{...}" />
+            <marker date="1523386111713" expanded="true" signature="871:2308" ph="{...}" />
+            <marker date="1523386111713" expanded="true" signature="987:1180" ph="{...}" />
+            <marker date="1523386111713" expanded="true" signature="1282:1370" ph="{...}" />
+            <marker date="1523386111713" expanded="true" signature="1414:1508" ph="{...}" />
+            <marker date="1523386111713" expanded="true" signature="1553:1630" ph="{...}" />
+            <marker date="1523386111713" expanded="true" signature="1679:1765" ph="{...}" />
+            <marker date="1523386111713" expanded="true" signature="1820:2119" ph="{...}" />
+            <marker date="1523386111713" expanded="true" signature="1952:2083" ph="{...}" />
+            <marker date="1523386111713" expanded="true" signature="2180:2302" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SimpleServer/Internals/SimpleServerConnection.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="22" column="24" lean-forward="false" selection-start-line="22" selection-start-column="24" selection-end-line="22" selection-end-column="24" />
+          <folding>
+            <marker date="1523566352201" expanded="false" signature="6:127" ph="..." />
+            <marker date="1523566352201" expanded="true" signature="161:1239" ph="{...}" />
+            <marker date="1523566352201" expanded="true" signature="217:1237" ph="{...}" />
+            <marker date="1523566352201" expanded="true" signature="446:560" ph="{...}" />
+            <marker date="1523566352201" expanded="true" signature="824:872" ph="{...}" />
+            <marker date="1523566352201" expanded="true" signature="905:960" ph="{...}" />
+            <marker date="1523566352201" expanded="true" signature="991:1042" ph="{...}" />
+            <marker date="1523566352201" expanded="true" signature="1083:1131" ph="{...}" />
+            <marker date="1523566352201" expanded="true" signature="1181:1231" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SimpleServer/Internals/SimpleServerRequest.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="21" column="17" lean-forward="false" selection-start-line="21" selection-start-column="17" selection-end-line="21" selection-end-column="17" />
+          <folding>
+            <marker date="1523627291402" expanded="false" signature="6:188" ph="..." />
+            <marker date="1523627291402" expanded="true" signature="222:2699" ph="{...}" />
+            <marker date="1523627291402" expanded="true" signature="261:2697" ph="{...}" />
+            <marker date="1523627291402" expanded="true" signature="416:489" ph="{...}" />
+            <marker date="1523627291402" expanded="true" signature="622:668" ph="{...}" />
+            <marker date="1523627291402" expanded="true" signature="678:787" ph="/// Gets the endpoint of the listener that received the request. ... " />
+            <marker date="1523627291402" expanded="true" signature="860:949" ph="/// Gets the endpoint that sent the request. ... " />
+            <marker date="1523627291402" expanded="true" signature="1023:1107" ph="/// Gets the URI send with the request. ... " />
+            <marker date="1523627291402" expanded="true" signature="1170:1240" ph="/// Gets the HTTP method. ... " />
+            <marker date="1523627291402" expanded="true" signature="1302:1388" ph="/// Gets the headers of the HTTP request. ... " />
+            <marker date="1523627291402" expanded="true" signature="1470:1580" ph="/// Gets the stream containing the content sent with the request. ... " />
+            <marker date="1523627291402" expanded="true" signature="1647:1718" ph="/// Gets the HTTP version. ... " />
+            <marker date="1523627291402" expanded="true" signature="1781:1898" ph="/// Gets a value indicating whether the request was sent locally or not. ... " />
+            <marker date="1523627291402" expanded="true" signature="1926:2067" ph="{...}" />
+            <marker date="1523627291402" expanded="true" signature="1952:2057" ph="{...}" />
+            <marker date="1523627291402" expanded="true" signature="2077:2203" ph="/// Reads the content of the request as a string. ... " />
+            <marker date="1523627291402" expanded="true" signature="2264:2492" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SimpleServer/Internals/SimpleServerEngine.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="17" column="64" lean-forward="false" selection-start-line="17" selection-start-column="64" selection-end-line="17" selection-end-column="64" />
+          <folding>
+            <marker date="1523627336332" expanded="false" signature="6:273" ph="..." />
+            <marker date="1523627336332" expanded="true" signature="307:5260" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="345:5258" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="360:4306" ph="Statics" />
+            <marker date="1523627336332" expanded="true" signature="484:4287" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="510:3949" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="822:895" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="1183:1498" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="1549:1633" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="1685:1775" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="1909:2046" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="2135:2629" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="2218:2337" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="2405:2501" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="2526:2611" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="2844:2963" ph="/* Version = m.Groups[&quot;version&quot;].Value; ... */" />
+            <marker date="1523627336332" expanded="true" signature="3072:3520" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="3111:3208" ph="/* stream = new MemoryStream(); ... */" />
+            <marker date="1523627336332" expanded="true" signature="3541:3612" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="3982:4277" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="4668:5008" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="5036:5087" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="5114:5164" ph="{...}" />
+            <marker date="1523627336332" expanded="true" signature="5206:5252" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SimpleServer/Internals/SimpleServerListener.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="831">
+          <caret line="116" column="9" lean-forward="false" selection-start-line="116" selection-start-column="9" selection-end-line="116" selection-end-column="9" />
+          <folding>
+            <marker date="1523628122651" expanded="false" signature="6:192" ph="..." />
+            <marker date="1523628122651" expanded="true" signature="226:3803" ph="{...}" />
+            <marker date="1523628122651" expanded="true" signature="280:3801" ph="{...}" />
+            <marker date="1523628122651" expanded="true" signature="664:813" ph="{...}" />
+            <marker date="1523628122651" expanded="true" signature="930:988" ph="{...}" />
+            <marker date="1523628122651" expanded="true" signature="1023:1102" ph="{...}" />
+            <marker date="1523628122651" expanded="true" signature="1172:1335" ph="{...}" />
+            <marker date="1523628122651" expanded="true" signature="1364:1783" ph="{...}" />
+            <marker date="1523628122651" expanded="true" signature="1818:3119" ph="{...}" />
+            <marker date="1523628122651" expanded="true" signature="1861:3109" ph="{...}" />
+            <marker date="1523628122651" expanded="true" signature="2491:2954" ph="{...}" />
+            <marker date="1523628122651" expanded="true" signature="2651:2772" ph="{...}" />
+            <marker date="1523628122651" expanded="true" signature="2813:2936" ph="{...}" />
+            <marker date="1523628122651" expanded="true" signature="3147:3597" ph="{...}" />
+            <marker date="1523628122651" expanded="true" signature="3410:3529" ph="{...}" />
+            <marker date="1523628122651" expanded="true" signature="3559:3587" ph="{...}" />
+            <marker date="1523628122651" expanded="true" signature="3628:3648" ph="{...}" />
+            <marker date="1523628122651" expanded="true" signature="3747:3795" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SimpleServer/Internals/SimpleServerResponse.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="183">
+          <caret line="77" column="48" lean-forward="false" selection-start-line="77" selection-start-column="48" selection-end-line="77" selection-end-column="48" />
+          <folding>
+            <marker date="1523626879799" expanded="false" signature="6:141" ph="..." />
+            <marker date="1523626879799" expanded="true" signature="175:4957" ph="{...}" />
+            <marker date="1523626879799" expanded="true" signature="215:4955" ph="{...}" />
+            <marker date="1523626879799" expanded="true" signature="367:659" ph="{...}" />
+            <marker date="1523626879799" expanded="true" signature="729:816" ph="/// Gets the headers of the HTTP response. ... " />
+            <marker date="1523626879799" expanded="true" signature="897:1002" ph="/// Gets the stream containing the content of this response. ... " />
+            <marker date="1523626879799" expanded="true" signature="1069:1148" ph="/// Gets or sets the HTTP version. ... " />
+            <marker date="1523626879799" expanded="true" signature="1202:1285" ph="/// Gets or sets the HTTP status code. ... " />
+            <marker date="1523626879799" expanded="true" signature="1339:1424" ph="/// Gets or sets the HTTP reason phrase. ... " />
+            <marker date="1523626879799" expanded="true" signature="1483:1636" ph="/// Writes a string to OutputStream. ... " />
+            <marker date="1523626879799" expanded="true" signature="1687:1832" ph="{...}" />
+            <marker date="1523626879799" expanded="true" signature="1842:1925" ph="/// Closes this response and sends it. ... " />
+            <marker date="1523626879799" expanded="true" signature="1953:3521" ph="{...}" />
+            <marker date="1523626879799" expanded="true" signature="1976:2025" ph="/* try ... */" />
+            <marker date="1523626879799" expanded="true" signature="2269:2469" ph="/* var header = $&quot;{Version} {StatusCode} {ReasonPhrase}\r\n&quot; + ... */" />
+            <marker date="1523626879799" expanded="true" signature="2707:2793" ph="{...}" />
+            <marker date="1523626879799" expanded="true" signature="3062:3484" ph="/* } ... */" />
+            <marker date="1523626879799" expanded="true" signature="3558:3608" ph="{...}" />
+            <marker date="1523626879799" expanded="true" signature="3618:3783" ph="/// Writes a HTTP redirect response. ... " />
+            <marker date="1523626879799" expanded="true" signature="3845:4530" ph="{...}" />
+            <marker date="1523626879799" expanded="true" signature="4540:4949" ph="IDisposable" />
+            <marker date="1523626879799" expanded="true" signature="4641:4853" ph="{...}" />
+            <marker date="1523626879799" expanded="true" signature="4683:4843" ph="{...}" />
+            <marker date="1523626879799" expanded="true" signature="4728:4764" ph="{...}" />
+            <marker date="1523626879799" expanded="true" signature="4883:4930" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SimpleServer/Internals/SimpleServerContext.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="8" column="52" lean-forward="false" selection-start-line="8" selection-start-column="52" selection-end-line="8" selection-end-column="52" />
+          <folding>
+            <marker date="1523628451302" expanded="false" signature="6:66" ph="..." />
+            <marker date="1523628451302" expanded="true" signature="100:322" ph="{...}" />
+            <marker date="1523628451302" expanded="true" signature="139:320" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SimpleServer/Managers/HandlerManager.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="24" column="50" lean-forward="true" selection-start-line="24" selection-start-column="50" selection-end-line="24" selection-end-column="50" />
+          <folding>
+            <marker date="1523636148854" expanded="false" signature="6:155" ph="..." />
+            <marker date="1523636148854" expanded="true" signature="188:1551" ph="{...}" />
+            <marker date="1523636148854" expanded="true" signature="222:1549" ph="{...}" />
+            <marker date="1523636148854" expanded="true" signature="550:751" ph="{...}" />
+            <marker date="1523636148854" expanded="true" signature="610:701" ph="{...}" />
+            <marker date="1523636148854" expanded="true" signature="837:997" ph="{...}" />
+            <marker date="1523636148854" expanded="true" signature="898:962" ph="{...}" />
+            <marker date="1523636148854" expanded="true" signature="1062:1117" ph="{...}" />
+            <marker date="1523636148854" expanded="true" signature="1180:1543" ph="{...}" />
+            <marker date="1523636148854" expanded="true" signature="1301:1457" ph="{...}" />
+            <marker date="1523636148854" expanded="true" signature="1349:1455" ph="{...}" />
+            <marker date="1523636148854" expanded="true" signature="1385:1451" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SimpleServer/SimpleServer.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="513">
+          <caret line="84" column="9" lean-forward="false" selection-start-line="84" selection-start-column="9" selection-end-line="84" selection-end-column="9" />
+          <folding>
+            <marker date="1523385624215" expanded="false" signature="6:256" ph="..." />
+            <marker date="1523385624215" expanded="true" signature="280:3397" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="312:3395" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="348:507" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="389:447" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="597:930" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="1101:1286" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="1392:1521" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="1549:3184" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="1623:3082" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="1726:1944" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="2247:2821" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="2377:2594" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="2641:2803" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="3115:3174" ph="{...}" />
+            <marker date="1523385624215" expanded="true" signature="3211:3389" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SimpleServer/Managers/ErrorManager.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="179">
+          <caret line="33" column="21" lean-forward="false" selection-start-line="33" selection-start-column="21" selection-end-line="33" selection-end-column="21" />
+          <folding>
+            <marker date="1523641581190" expanded="false" signature="6:85" ph="..." />
+            <marker date="1523641581190" expanded="true" signature="118:1712" ph="{...}" />
+            <marker date="1523641581190" expanded="true" signature="150:1276" ph="{...}" />
+            <marker date="1523641581190" expanded="true" signature="239:385" ph="{...}" />
+            <marker date="1523641581190" expanded="true" signature="452:1270" ph="{...}" />
+            <marker date="1523641581190" expanded="true" signature="1304:1710" ph="{...}" />
+            <marker date="1523641581190" expanded="true" signature="1319:1429" ph="/// A type in the target assembly where the error page is stored. ... " />
+            <marker date="1523641581190" expanded="true" signature="1488:1649" ph="/// The namespace and filename of the error page template. Example: SimpleServer.Providers.ErrorPages.ErrorPage.h ... " />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SimpleServer/SimpleServer.csproj">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="12" column="161" lean-forward="false" selection-start-line="12" selection-start-column="161" selection-end-line="12" selection-end-column="161" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>

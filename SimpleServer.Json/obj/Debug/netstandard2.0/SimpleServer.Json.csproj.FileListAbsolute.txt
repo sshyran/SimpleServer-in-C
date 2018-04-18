@@ -1,0 +1,9 @@
+C:\Users\Dylan Perks\Documents\_Important Documents\SimpleServer\SimpleServer.Json\bin\Debug\netstandard2.0\SimpleServer.Json.deps.json
+C:\Users\Dylan Perks\Documents\_Important Documents\SimpleServer\SimpleServer.Json\bin\Debug\netstandard2.0\SimpleServer.Json.dll
+C:\Users\Dylan Perks\Documents\_Important Documents\SimpleServer\SimpleServer.Json\bin\Debug\netstandard2.0\SimpleServer.Json.pdb
+C:\Users\Dylan Perks\Documents\_Important Documents\SimpleServer\SimpleServer.Json\obj\Debug\netstandard2.0\SimpleServer.Json.csprojResolveAssemblyReference.cache
+C:\Users\Dylan Perks\Documents\_Important Documents\SimpleServer\SimpleServer.Json\obj\Debug\netstandard2.0\SimpleServer.Json.csproj.CoreCompileInputs.cache
+C:\Users\Dylan Perks\Documents\_Important Documents\SimpleServer\SimpleServer.Json\obj\Debug\netstandard2.0\SimpleServer.Json.AssemblyInfoInputs.cache
+C:\Users\Dylan Perks\Documents\_Important Documents\SimpleServer\SimpleServer.Json\obj\Debug\netstandard2.0\SimpleServer.Json.AssemblyInfo.cs
+C:\Users\Dylan Perks\Documents\_Important Documents\SimpleServer\SimpleServer.Json\obj\Debug\netstandard2.0\SimpleServer.Json.dll
+C:\Users\Dylan Perks\Documents\_Important Documents\SimpleServer\SimpleServer.Json\obj\Debug\netstandard2.0\SimpleServer.Json.pdb
