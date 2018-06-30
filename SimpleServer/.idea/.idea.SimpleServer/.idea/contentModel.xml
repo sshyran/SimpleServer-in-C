@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\Users\Dylan Perks\.Rider2018.1\system\resharper-host\local\Transient\ReSharperHost\v12\SolutionCaches\_SimpleServer.-704188686.00" t="ExcludeRecursive" />
+    <e p="C:\Users\Dylan Perks\Documents\_Important Documents\7_) SimpleServer 1.0\SimpleServer" t="IncludeFlat">
+      <e p="DemoProject" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="DemoProject.csproj" t="IncludeRecursive" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp2.0" t="Include">
+              <e p="DemoProject.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Program.cs" t="Include" />
+      </e>
+      <e p="packages" t="ExcludeRecursive" />
+      <e p="SimpleServer.sln" t="IncludeFlat" />
+      <e p="Ultz.SimpleServer" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Common" t="Include">
+          <e p="SimpleServer.cs" t="Include" />
+        </e>
+        <e p="Handlers" t="Include">
+          <e p="HttpHandler.cs" t="Include" />
+          <e p="IHandler.cs" t="Include" />
+        </e>
+        <e p="Hosts" t="Include">
+          <e p="Host.cs" t="Include" />
+          <e p="IDecorator.cs" t="Include" />
+          <e p="Priority.cs" t="Include" />
+          <e p="RegisteredDecorator.cs" t="Include" />
+        </e>
+        <e p="Internals" t="Include">
+          <e p="Http" t="Include">
+            <e p="DefaultMethodResolver.cs" t="Include" />
+            <e p="DualUpgradeStream.cs" t="Include" />
+            <e p="HttpContext.cs" t="Include" />
+            <e p="HttpMethod.cs" t="Include" />
+            <e p="HttpServer.cs" t="Include" />
+            <e p="IHttpEngine.cs" t="Include" />
+            <e p="IHttpMethodResolver.cs" t="Include" />
+            <e p="IHttpRequest.cs" t="Include" />
+            <e p="IHttpResponse.cs" t="Include" />
+            <e p="TcpListenerPool.cs" t="Include" />
+          </e>
+          <e p="Http1" t="Include">
+            <e p="Exceptions.cs" t="Include" />
+            <e p="Http1Engine.cs" t="Include" />
+            <e p="Http1Request.cs" t="Include" />
+            <e p="Http1Response.cs" t="Include" />
+          </e>
+          <e p="Http2" t="Include">
+            <e p="DualEngine.cs" t="Include" />
+            <e p="Hpack" t="Include">
+              <e p=".gitignore" t="Include" />
+              <e p="Decoder.cs" t="Include" />
+              <e p="Defaults.cs" t="Include" />
+              <e p="DynamicTable.cs" t="Include" />
+              <e p="Encoder.cs" t="Include" />
+              <e p="HeaderField.cs" t="Include" />
+              <e p="HeaderTable.cs" t="Include" />
+              <e p="Huffman.cs" t="Include" />
+              <e p="HuffmanTable.cs" t="Include" />
+              <e p="IntDecoder.cs" t="Include" />
+              <e p="IntEncoder.cs" t="Include" />
+              <e p="StaticTable.cs" t="Include" />
+              <e p="StringDecoder.cs" t="Include" />
+              <e p="StringEncoder.cs" t="Include" />
+              <e p="TableEntry.cs" t="Include" />
+            </e>
+            <e p="Http2" t="Include">
+              <e p=".gitignore" t="Include" />
+              <e p="ByteStreamExtensions.cs" t="Include" />
+              <e p="ByteStreams.cs" t="Include" />
+              <e p="ClientPreface.cs" t="Include" />
+              <e p="ClientUpgradeRequest.cs" t="Include" />
+              <e p="Connection.cs" t="Include" />
+              <e p="ConnectionConfiguration.cs" t="Include" />
+              <e p="ConnectionWriter.cs" t="Include" />
+              <e p="Constants.cs" t="Include" />
+              <e p="Defaults.cs" t="Include" />
+              <e p="Error.cs" t="Include" />
+              <e p="Frame.cs" t="Include" />
+              <e p="FramePrinter.cs" t="Include" />
+              <e p="HeaderReader.cs" t="Include" />
+              <e p="HeaderUtils.cs" t="Include" />
+              <e p="HeaderValidator.cs" t="Include" />
+              <e p="Internal" t="Include">
+                <e p="Events.cs" t="Include" />
+              </e>
+              <e p="IoStreamExtensions.cs" t="Include" />
+              <e p="IStream.cs" t="Include" />
+              <e p="ServerUpgradeRequest.cs" t="Include" />
+              <e p="Settings.cs" t="Include" />
+              <e p="SocketExtensions.cs" t="Include" />
+              <e p="StreamImpl.cs" t="Include" />
+            </e>
+            <e p="PriMethodResolver.cs" t="Include" />
+          </e>
+          <e p="IConnection.cs" t="Include" />
+          <e p="IConnector.cs" t="Include" />
+          <e p="IContext.cs" t="Include" />
+          <e p="IListener.cs" t="Include" />
+          <e p="IMethod.cs" t="Include" />
+          <e p="IRequest.cs" t="Include" />
+          <e p="IResponse.cs" t="Include" />
+          <e p="IServer.cs" t="Include" />
+          <e p="TcpConnection.cs" t="Include" />
+          <e p="TcpConnectionListener.cs" t="Include" />
+        </e>
+        <e p="Methods" t="Include" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="Ultz.SimpleServer.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Ultz.SimpleServer.csproj" t="IncludeRecursive" />
+      </e>
+    </e>
+  </component>
+</project>
