@@ -1,244 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0bd2d231-32f9-4941-a844-b191fcfa6fd8" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.SimpleServer/.idea/contentModel.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.SimpleServer/.idea/indexLayout.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.SimpleServer/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.SimpleServer/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.SimpleServer/riderModule.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ultz.SimpleServer/Common/SimpleServer.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ultz.SimpleServer/Handlers/HttpHandler.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ultz.SimpleServer/Handlers/IHandler.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ultz.SimpleServer/Hosts/Host.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ultz.SimpleServer/Hosts/IDecorator.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ultz.SimpleServer/Hosts/Priority.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ultz.SimpleServer/Hosts/RegisteredDecorator.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ultz.SimpleServer/Internals/Http/DefaultMethodResolver.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ultz.SimpleServer/Internals/Http/DualUpgradeStream.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ultz.SimpleServer/Internals/Http/HttpContext.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ultz.SimpleServer/Internals/Http/HttpMethod.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ultz.SimpleServer/Internals/Http/HttpServer.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ultz.SimpleServer/Internals/Http/IHttpEngine.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ultz.SimpleServer/Internals/Http/IHttpMethodResolver.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ultz.SimpleServer/Internals/Http/IHttpRequest.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ultz.SimpleServer/Internals/Http/IHttpResponse.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ultz.SimpleServer/Internals/Http/TcpListenerPool.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ultz.SimpleServer/Internals/Http1/Http1Engine.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ultz.SimpleServer/Internals/Http1/Http1Request.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ultz.SimpleServer/Internals/Http1/Http1Response.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ultz.SimpleServer/Internals/Http2/DualEngine.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ultz.SimpleServer/Internals/Http2/Http2Request.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ultz.SimpleServer/Internals/Http2/PriMethodResolver.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ultz.SimpleServer/Internals/IConnection.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ultz.SimpleServer/Internals/IConnector.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ultz.SimpleServer/Internals/IContext.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ultz.SimpleServer/Internals/IListener.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ultz.SimpleServer/Internals/IMethod.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ultz.SimpleServer/Internals/IRequest.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ultz.SimpleServer/Internals/IResponse.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ultz.SimpleServer/Internals/IServer.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ultz.SimpleServer/Internals/TcpConnection.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Ultz.SimpleServer/Internals/TcpConnectionListener.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/.idea.SimpleServer/.idea/contentModel.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/.idea.SimpleServer/.idea/indexLayout.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/.idea.SimpleServer/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/.idea.SimpleServer/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/.idea.SimpleServer/.idea/workspace.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/.idea.SimpleServer/riderModule.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.vs/SimpleServer/v15/.suo" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.vs/SimpleServer/v15/Server/sqlite3/db.lock" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.vs/SimpleServer/v15/Server/sqlite3/storage.ide" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../LICENSE.MD" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Daemon/Program.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Daemon/SimpleServer.Daemon.csproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Daemon/bin/Debug/netcoreapp2.0/SimpleServer.Daemon.deps.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Daemon/bin/Debug/netcoreapp2.0/SimpleServer.Daemon.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Daemon/bin/Debug/netcoreapp2.0/SimpleServer.Daemon.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Daemon/bin/Debug/netcoreapp2.0/SimpleServer.Daemon.runtimeconfig.dev.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Daemon/bin/Debug/netcoreapp2.0/SimpleServer.Daemon.runtimeconfig.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Daemon/obj/Debug/netcoreapp2.0/SimpleServer.Daemon.AssemblyInfo.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Daemon/obj/Debug/netcoreapp2.0/SimpleServer.Daemon.AssemblyInfoInputs.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Daemon/obj/Debug/netcoreapp2.0/SimpleServer.Daemon.csproj.CoreCompileInputs.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Daemon/obj/Debug/netcoreapp2.0/SimpleServer.Daemon.csproj.FileListAbsolute.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Daemon/obj/Debug/netcoreapp2.0/SimpleServer.Daemon.csprojResolveAssemblyReference.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Daemon/obj/Debug/netcoreapp2.0/SimpleServer.Daemon.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Daemon/obj/Debug/netcoreapp2.0/SimpleServer.Daemon.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Daemon/obj/SimpleServer.Daemon.csproj.nuget.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Daemon/obj/SimpleServer.Daemon.csproj.nuget.g.props" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Daemon/obj/SimpleServer.Daemon.csproj.nuget.g.targets" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Daemon/obj/project.assets.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Daemon/obj/project.packagespec.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Framework.Gui/Class1.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Framework.Gui/SimpleServer.Framework.Gui.csproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Framework.Gui/bin/Debug/netstandard2.0/SimpleServer.Framework.Gui.deps.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Framework.Gui/bin/Debug/netstandard2.0/SimpleServer.Framework.Gui.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Framework.Gui/bin/Debug/netstandard2.0/SimpleServer.Framework.Gui.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Framework.Gui/obj/Debug/netstandard2.0/SimpleServer.Framework.Gui.AssemblyInfo.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Framework.Gui/obj/Debug/netstandard2.0/SimpleServer.Framework.Gui.AssemblyInfoInputs.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Framework.Gui/obj/Debug/netstandard2.0/SimpleServer.Framework.Gui.csproj.CoreCompileInputs.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Framework.Gui/obj/Debug/netstandard2.0/SimpleServer.Framework.Gui.csproj.FileListAbsolute.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Framework.Gui/obj/Debug/netstandard2.0/SimpleServer.Framework.Gui.csprojResolveAssemblyReference.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Framework.Gui/obj/Debug/netstandard2.0/SimpleServer.Framework.Gui.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Framework.Gui/obj/Debug/netstandard2.0/SimpleServer.Framework.Gui.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Framework.Gui/obj/SimpleServer.Framework.Gui.csproj.nuget.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Framework.Gui/obj/SimpleServer.Framework.Gui.csproj.nuget.g.props" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Framework.Gui/obj/SimpleServer.Framework.Gui.csproj.nuget.g.targets" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Framework.Gui/obj/project.assets.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Framework.Gui/obj/project.packagespec.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Framework/Class1.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Framework/SimpleServer.Framework.csproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Framework/bin/Debug/netstandard2.0/SimpleServer.Framework.deps.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Framework/bin/Debug/netstandard2.0/SimpleServer.Framework.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Framework/bin/Debug/netstandard2.0/SimpleServer.Framework.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Framework/obj/Debug/netstandard2.0/SimpleServer.Framework.AssemblyInfo.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Framework/obj/Debug/netstandard2.0/SimpleServer.Framework.AssemblyInfoInputs.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Framework/obj/Debug/netstandard2.0/SimpleServer.Framework.csproj.CoreCompileInputs.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Framework/obj/Debug/netstandard2.0/SimpleServer.Framework.csproj.FileListAbsolute.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Framework/obj/Debug/netstandard2.0/SimpleServer.Framework.csprojResolveAssemblyReference.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Framework/obj/Debug/netstandard2.0/SimpleServer.Framework.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Framework/obj/Debug/netstandard2.0/SimpleServer.Framework.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Framework/obj/SimpleServer.Framework.csproj.nuget.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Framework/obj/SimpleServer.Framework.csproj.nuget.g.props" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Framework/obj/SimpleServer.Framework.csproj.nuget.g.targets" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Framework/obj/project.assets.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Framework/obj/project.packagespec.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.GSS/Class1.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.GSS/SimpleServer.GSS.csproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.GSS/bin/Debug/netstandard2.0/SimpleServer.GSS.deps.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.GSS/bin/Debug/netstandard2.0/SimpleServer.GSS.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.GSS/bin/Debug/netstandard2.0/SimpleServer.GSS.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.GSS/obj/Debug/netstandard2.0/SimpleServer.GSS.AssemblyInfo.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.GSS/obj/Debug/netstandard2.0/SimpleServer.GSS.AssemblyInfoInputs.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.GSS/obj/Debug/netstandard2.0/SimpleServer.GSS.csproj.CoreCompileInputs.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.GSS/obj/Debug/netstandard2.0/SimpleServer.GSS.csproj.FileListAbsolute.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.GSS/obj/Debug/netstandard2.0/SimpleServer.GSS.csprojResolveAssemblyReference.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.GSS/obj/Debug/netstandard2.0/SimpleServer.GSS.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.GSS/obj/Debug/netstandard2.0/SimpleServer.GSS.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.GSS/obj/SimpleServer.GSS.csproj.nuget.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.GSS/obj/SimpleServer.GSS.csproj.nuget.g.props" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.GSS/obj/SimpleServer.GSS.csproj.nuget.g.targets" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.GSS/obj/project.assets.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.GSS/obj/project.packagespec.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Json/Class1.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Json/SimpleServer.Json.csproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Json/bin/Debug/netstandard2.0/SimpleServer.Json.deps.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Json/bin/Debug/netstandard2.0/SimpleServer.Json.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Json/bin/Debug/netstandard2.0/SimpleServer.Json.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Json/obj/Debug/netstandard2.0/SimpleServer.Json.AssemblyInfo.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Json/obj/Debug/netstandard2.0/SimpleServer.Json.AssemblyInfoInputs.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Json/obj/Debug/netstandard2.0/SimpleServer.Json.csproj.CoreCompileInputs.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Json/obj/Debug/netstandard2.0/SimpleServer.Json.csproj.FileListAbsolute.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Json/obj/Debug/netstandard2.0/SimpleServer.Json.csprojResolveAssemblyReference.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Json/obj/Debug/netstandard2.0/SimpleServer.Json.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Json/obj/Debug/netstandard2.0/SimpleServer.Json.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Json/obj/SimpleServer.Json.csproj.nuget.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Json/obj/SimpleServer.Json.csproj.nuget.g.props" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Json/obj/SimpleServer.Json.csproj.nuget.g.targets" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Json/obj/project.assets.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Json/obj/project.packagespec.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Sdk/Program.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Sdk/SimpleServer.Sdk.csproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Sdk/bin/Debug/netcoreapp2.0/SimpleServer.Sdk.deps.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Sdk/bin/Debug/netcoreapp2.0/SimpleServer.Sdk.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Sdk/bin/Debug/netcoreapp2.0/SimpleServer.Sdk.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Sdk/bin/Debug/netcoreapp2.0/SimpleServer.Sdk.runtimeconfig.dev.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Sdk/bin/Debug/netcoreapp2.0/SimpleServer.Sdk.runtimeconfig.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Sdk/obj/Debug/netcoreapp2.0/SimpleServer.Sdk.AssemblyInfo.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Sdk/obj/Debug/netcoreapp2.0/SimpleServer.Sdk.AssemblyInfoInputs.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Sdk/obj/Debug/netcoreapp2.0/SimpleServer.Sdk.csproj.CoreCompileInputs.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Sdk/obj/Debug/netcoreapp2.0/SimpleServer.Sdk.csproj.FileListAbsolute.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Sdk/obj/Debug/netcoreapp2.0/SimpleServer.Sdk.csprojResolveAssemblyReference.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Sdk/obj/Debug/netcoreapp2.0/SimpleServer.Sdk.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Sdk/obj/Debug/netcoreapp2.0/SimpleServer.Sdk.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Sdk/obj/SimpleServer.Sdk.csproj.nuget.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Sdk/obj/SimpleServer.Sdk.csproj.nuget.g.props" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Sdk/obj/SimpleServer.Sdk.csproj.nuget.g.targets" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Sdk/obj/project.assets.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.Sdk/obj/project.packagespec.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SimpleServer.sln" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Decorators/IDecorator.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Exceptions/BadRequestException.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Exceptions/FunctionNotSupportedException.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Exceptions/JsonParseException.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Exceptions/RfcViolationException.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Functions/IFunction.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Handlers/FunctionHandler.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Handlers/Handler.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Handlers/MultiFunctionHandler.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Internals/SimpleServerConnection.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Internals/SimpleServerContext.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Internals/SimpleServerEndpoint.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Internals/SimpleServerEngine.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Internals/SimpleServerHost.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Internals/SimpleServerListener.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Internals/SimpleServerMethod.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Internals/SimpleServerRequest.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Internals/SimpleServerResponse.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Logging/ILog.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Logging/Log.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Managers/ErrorManager.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Managers/FunctionManager.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Managers/HandlerManager.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Providers/ErrorPageProvider.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Providers/ErrorPages/ErrorPage.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SimpleServer.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SimpleServer.csproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SimpleServerBuilder.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SimpleServerConfig.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SsExt.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/Debug/SimpleServer.0.1.0.nupkg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/Debug/SimpleServer.1.0.0.nupkg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/Debug/Ultz.SimpleServer.0.1.1.nupkg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/Debug/Ultz.SimpleServer.0.1.2.nupkg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/Debug/Ultz.SimpleServer.0.1.3.nupkg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/Debug/netstandard2.0/SimpleServer.deps.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/Debug/netstandard2.0/SimpleServer.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/Debug/netstandard2.0/SimpleServer.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/SimpleServer.0.1.0.nuspec" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/SimpleServer.1.0.0.nuspec" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/Ultz.SimpleServer.0.1.1.nuspec" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/Ultz.SimpleServer.0.1.2.nuspec" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/Ultz.SimpleServer.0.1.3.nuspec" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/netstandard2.0/SimpleServer.AssemblyInfo.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/netstandard2.0/SimpleServer.AssemblyInfoInputs.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/netstandard2.0/SimpleServer.csproj.CoreCompileInputs.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/netstandard2.0/SimpleServer.csproj.FileListAbsolute.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/netstandard2.0/SimpleServer.csprojResolveAssemblyReference.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/netstandard2.0/SimpleServer.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/netstandard2.0/SimpleServer.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/SimpleServer.csproj.nuget.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/SimpleServer.csproj.nuget.g.props" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/SimpleServer.csproj.nuget.g.targets" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/project.assets.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/project.packagespec.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../TestApp/Program.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../TestApp/TestApp.csproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../TestApp/TestHandler.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../TestApp/TestHandler2.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../TestApp/bin/Debug/netcoreapp2.0/SimpleServer.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../TestApp/bin/Debug/netcoreapp2.0/SimpleServer.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../TestApp/bin/Debug/netcoreapp2.0/TestApp.deps.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../TestApp/bin/Debug/netcoreapp2.0/TestApp.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../TestApp/bin/Debug/netcoreapp2.0/TestApp.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../TestApp/bin/Debug/netcoreapp2.0/TestApp.runtimeconfig.dev.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../TestApp/bin/Debug/netcoreapp2.0/TestApp.runtimeconfig.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../TestApp/obj/Debug/netcoreapp2.0/TestApp.AssemblyInfo.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../TestApp/obj/Debug/netcoreapp2.0/TestApp.AssemblyInfoInputs.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../TestApp/obj/Debug/netcoreapp2.0/TestApp.csproj.CopyComplete" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../TestApp/obj/Debug/netcoreapp2.0/TestApp.csproj.CoreCompileInputs.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../TestApp/obj/Debug/netcoreapp2.0/TestApp.csproj.FileListAbsolute.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../TestApp/obj/Debug/netcoreapp2.0/TestApp.csprojResolveAssemblyReference.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../TestApp/obj/Debug/netcoreapp2.0/TestApp.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../TestApp/obj/Debug/netcoreapp2.0/TestApp.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../TestApp/obj/TestApp.csproj.nuget.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../TestApp/obj/TestApp.csproj.nuget.g.props" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../TestApp/obj/TestApp.csproj.nuget.g.targets" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../TestApp/obj/project.assets.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../TestApp/obj/project.packagespec.json" beforeDir="false" />
-    </list>
+    <list default="true" id="0bd2d231-32f9-4941-a844-b191fcfa6fd8" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -248,42 +11,43 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="DualEngine.cs" pinned="false" current-in-tab="true">
+      <file leaf-file-name="DualEngine.cs" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Ultz.SimpleServer/Internals/Http2/DualEngine.cs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="660">
-              <caret line="47" column="17" lean-forward="true" selection-start-line="47" selection-start-column="17" selection-end-line="47" selection-end-column="17" />
+            <state relative-caret-position="315">
+              <caret line="24" column="12" selection-start-line="24" selection-start-column="12" selection-end-line="24" selection-end-column="12" />
               <folding>
-                <marker date="1530368599057" expanded="true" signature="6:290" ph="..." />
-                <marker date="1530368599057" expanded="true" signature="335:6977" ph="{...}" />
-                <marker date="1530368599057" expanded="true" signature="379:6975" ph="{...}" />
-                <marker date="1530368599057" expanded="true" signature="759:828" ph="{...}" />
-                <marker date="1530368599057" expanded="true" signature="900:6831" ph="{...}" />
-                <marker date="1530368599057" expanded="true" signature="1274:5873" ph="{...}" />
-                <marker date="1530368599057" expanded="true" signature="1543:1888" ph="{...}" />
-                <marker date="1530368599057" expanded="true" signature="1582:1812" ph="/* This seems to be a HTTP/2 request ... */" />
-                <marker date="1530368599057" expanded="true" signature="1909:5859" ph="{...}" />
-                <marker date="1530368599057" expanded="true" signature="1948:2058" ph="/* This seems to be a HTTP/1 request ... */" />
-                <marker date="1530368599057" expanded="true" signature="2760:3023" ph="{...}" />
-                <marker date="1530368599057" expanded="true" signature="3662:3731" ph="{...}" />
-                <marker date="1530368599057" expanded="true" signature="4273:4539" ph="{...}" />
-                <marker date="1530368599057" expanded="true" signature="4597:5107" ph="{...}" />
-                <marker date="1530368599057" expanded="true" signature="4965:5083" ph="{...}" />
-                <marker date="1530368599057" expanded="true" signature="5411:5674" ph="{...}" />
-                <marker date="1530368599057" expanded="true" signature="5905:6092" ph="{...}" />
-                <marker date="1530368599057" expanded="true" signature="6330:6484" ph="{...}" />
-                <marker date="1530368599057" expanded="true" signature="6682:6819" ph="{...}" />
-                <marker date="1530368599057" expanded="true" signature="6893:6969" ph="{...}" />
+                <marker date="1530369082157" expanded="true" signature="6:290" ph="..." />
+                <marker date="1530369082157" expanded="true" signature="335:7045" ph="{...}" />
+                <marker date="1530369082157" expanded="true" signature="379:7043" ph="{...}" />
+                <marker date="1530369082157" expanded="true" signature="741:774" ph="{...}" />
+                <marker date="1530369082157" expanded="true" signature="827:896" ph="{...}" />
+                <marker date="1530369082157" expanded="true" signature="968:6899" ph="{...}" />
+                <marker date="1530369082157" expanded="true" signature="1342:5941" ph="{...}" />
+                <marker date="1530369082157" expanded="true" signature="1611:1956" ph="{...}" />
+                <marker date="1530369082157" expanded="true" signature="1650:1880" ph="/* This seems to be a HTTP/2 request ... */" />
+                <marker date="1530369082157" expanded="true" signature="1977:5927" ph="{...}" />
+                <marker date="1530369082157" expanded="true" signature="2016:2126" ph="/* This seems to be a HTTP/1 request ... */" />
+                <marker date="1530369082157" expanded="true" signature="2828:3091" ph="{...}" />
+                <marker date="1530369082157" expanded="true" signature="3730:3799" ph="{...}" />
+                <marker date="1530369082157" expanded="true" signature="4341:4607" ph="{...}" />
+                <marker date="1530369082157" expanded="true" signature="4665:5175" ph="{...}" />
+                <marker date="1530369082157" expanded="true" signature="5033:5151" ph="{...}" />
+                <marker date="1530369082157" expanded="true" signature="5479:5742" ph="{...}" />
+                <marker date="1530369082157" expanded="true" signature="5973:6160" ph="{...}" />
+                <marker date="1530369082157" expanded="true" signature="6398:6552" ph="{...}" />
+                <marker date="1530369082157" expanded="true" signature="6750:6887" ph="{...}" />
+                <marker date="1530369082157" expanded="true" signature="6961:7037" ph="{...}" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DualUpgradeStream.cs" pinned="false" current-in-tab="false">
+      <file leaf-file-name="DualUpgradeStream.cs" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Ultz.SimpleServer/Internals/Http/DualUpgradeStream.cs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1290">
-              <caret line="86" column="42" selection-start-line="86" selection-start-column="42" selection-end-line="86" selection-end-column="42" />
+            <state relative-caret-position="345">
+              <caret line="23" lean-forward="true" selection-start-line="23" selection-end-line="24" selection-end-column="48" />
               <folding>
                 <marker date="1530365474423" expanded="true" signature="6:109" ph="..." />
                 <marker date="1530365474423" expanded="true" signature="153:4326" ph="{...}" />
@@ -305,19 +69,6 @@
                 <marker date="1530365474423" expanded="true" signature="3850:3964" ph="{...}" />
                 <marker date="1530365474423" expanded="true" signature="3981:4096" ph="{...}" />
                 <marker date="1530365474423" expanded="true" signature="4205:4305" ph="{...}" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Http2Request.cs" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Ultz.SimpleServer/Internals/Http2/Http2Request.cs">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="90">
-              <caret line="6" column="107" selection-start-line="6" selection-start-column="107" selection-end-line="6" selection-end-column="107" />
-              <folding>
-                <marker date="1530364945773" expanded="true" signature="84:253" ph="{...}" />
-                <marker date="1530364945773" expanded="true" signature="131:251" ph="{...}" />
               </folding>
             </state>
           </provider>
@@ -384,7 +135,6 @@
     <setting file="file://$PROJECT_DIR$/Ultz.SimpleServer/Internals/Http2/Hpack/Decoder.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Ultz.SimpleServer/Internals/Http2/DualEngine.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Ultz.SimpleServer/Internals/Http/DualUpgradeStream.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Ultz.SimpleServer/Internals/Http2/Http2Request.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Ultz.SimpleServer/Handlers/HttpHandler.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Ultz.SimpleServer/Internals/Http2/PriMethodResolver.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Ultz.SimpleServer/Internals/Http1/Http1Response.cs" root0="FORCE_HIGHLIGHTING" />
@@ -601,12 +351,12 @@
       <workItem from="1530117528507" duration="2583000" />
       <workItem from="1530127867574" duration="8189000" />
       <workItem from="1530289316864" duration="735000" />
-      <workItem from="1530294639413" duration="12877000" />
+      <workItem from="1530294639413" duration="13418000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="55688000" />
+    <option name="totallyTimeSpent" value="56229000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -619,7 +369,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1616" height="886" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="right" id="Errors In Solution" order="3" />
@@ -1894,17 +1643,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Ultz.SimpleServer/Internals/Http2/Http2Request.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="6" column="107" selection-start-line="6" selection-start-column="107" selection-end-line="6" selection-end-column="107" />
-          <folding>
-            <marker date="1530364945773" expanded="true" signature="84:253" ph="{...}" />
-            <marker date="1530364945773" expanded="true" signature="131:251" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Ultz.SimpleServer/Internals/Http1/Http1Request.cs">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="116">
@@ -1924,10 +1662,58 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Ultz.SimpleServer/Internals/Http/IHttpEngine.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="31" selection-start-line="7" selection-start-column="31" selection-end-line="7" selection-end-column="31" />
+          <folding>
+            <marker date="1530367782958" expanded="true" signature="73:227" ph="{...}" />
+            <marker date="1530367782958" expanded="true" signature="108:225" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Ultz.SimpleServer/Internals/Http2/DualEngine.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="24" column="12" selection-start-line="24" selection-start-column="12" selection-end-line="24" selection-end-column="12" />
+          <folding>
+            <marker date="1530369082157" expanded="true" signature="6:290" ph="..." />
+            <marker date="1530369082157" expanded="true" signature="335:7045" ph="{...}" />
+            <marker date="1530369082157" expanded="true" signature="379:7043" ph="{...}" />
+            <marker date="1530369082157" expanded="true" signature="741:774" ph="{...}" />
+            <marker date="1530369082157" expanded="true" signature="827:896" ph="{...}" />
+            <marker date="1530369082157" expanded="true" signature="968:6899" ph="{...}" />
+            <marker date="1530369082157" expanded="true" signature="1342:5941" ph="{...}" />
+            <marker date="1530369082157" expanded="true" signature="1611:1956" ph="{...}" />
+            <marker date="1530369082157" expanded="true" signature="1650:1880" ph="/* This seems to be a HTTP/2 request ... */" />
+            <marker date="1530369082157" expanded="true" signature="1977:5927" ph="{...}" />
+            <marker date="1530369082157" expanded="true" signature="2016:2126" ph="/* This seems to be a HTTP/1 request ... */" />
+            <marker date="1530369082157" expanded="true" signature="2828:3091" ph="{...}" />
+            <marker date="1530369082157" expanded="true" signature="3730:3799" ph="{...}" />
+            <marker date="1530369082157" expanded="true" signature="4341:4607" ph="{...}" />
+            <marker date="1530369082157" expanded="true" signature="4665:5175" ph="{...}" />
+            <marker date="1530369082157" expanded="true" signature="5033:5151" ph="{...}" />
+            <marker date="1530369082157" expanded="true" signature="5479:5742" ph="{...}" />
+            <marker date="1530369082157" expanded="true" signature="5973:6160" ph="{...}" />
+            <marker date="1530369082157" expanded="true" signature="6398:6552" ph="{...}" />
+            <marker date="1530369082157" expanded="true" signature="6750:6887" ph="{...}" />
+            <marker date="1530369082157" expanded="true" signature="6961:7037" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Ultz.SimpleServer/Internals/Http2/Http2Request.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="107" selection-start-line="6" selection-start-column="107" selection-end-line="6" selection-end-column="107" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Ultz.SimpleServer/Internals/Http/DualUpgradeStream.cs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1290">
-          <caret line="86" column="42" selection-start-line="86" selection-start-column="42" selection-end-line="86" selection-end-column="42" />
+        <state relative-caret-position="345">
+          <caret line="23" lean-forward="true" selection-start-line="23" selection-end-line="24" selection-end-column="48" />
           <folding>
             <marker date="1530365474423" expanded="true" signature="6:109" ph="..." />
             <marker date="1530365474423" expanded="true" signature="153:4326" ph="{...}" />
@@ -1949,46 +1735,6 @@
             <marker date="1530365474423" expanded="true" signature="3850:3964" ph="{...}" />
             <marker date="1530365474423" expanded="true" signature="3981:4096" ph="{...}" />
             <marker date="1530365474423" expanded="true" signature="4205:4305" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Ultz.SimpleServer/Internals/Http/IHttpEngine.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" column="31" selection-start-line="7" selection-start-column="31" selection-end-line="7" selection-end-column="31" />
-          <folding>
-            <marker date="1530367782958" expanded="true" signature="73:227" ph="{...}" />
-            <marker date="1530367782958" expanded="true" signature="108:225" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Ultz.SimpleServer/Internals/Http2/DualEngine.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="660">
-          <caret line="47" column="17" lean-forward="true" selection-start-line="47" selection-start-column="17" selection-end-line="47" selection-end-column="17" />
-          <folding>
-            <marker date="1530368599057" expanded="true" signature="6:290" ph="..." />
-            <marker date="1530368599057" expanded="true" signature="335:6977" ph="{...}" />
-            <marker date="1530368599057" expanded="true" signature="379:6975" ph="{...}" />
-            <marker date="1530368599057" expanded="true" signature="759:828" ph="{...}" />
-            <marker date="1530368599057" expanded="true" signature="900:6831" ph="{...}" />
-            <marker date="1530368599057" expanded="true" signature="1274:5873" ph="{...}" />
-            <marker date="1530368599057" expanded="true" signature="1543:1888" ph="{...}" />
-            <marker date="1530368599057" expanded="true" signature="1582:1812" ph="/* This seems to be a HTTP/2 request ... */" />
-            <marker date="1530368599057" expanded="true" signature="1909:5859" ph="{...}" />
-            <marker date="1530368599057" expanded="true" signature="1948:2058" ph="/* This seems to be a HTTP/1 request ... */" />
-            <marker date="1530368599057" expanded="true" signature="2760:3023" ph="{...}" />
-            <marker date="1530368599057" expanded="true" signature="3662:3731" ph="{...}" />
-            <marker date="1530368599057" expanded="true" signature="4273:4539" ph="{...}" />
-            <marker date="1530368599057" expanded="true" signature="4597:5107" ph="{...}" />
-            <marker date="1530368599057" expanded="true" signature="4965:5083" ph="{...}" />
-            <marker date="1530368599057" expanded="true" signature="5411:5674" ph="{...}" />
-            <marker date="1530368599057" expanded="true" signature="5905:6092" ph="{...}" />
-            <marker date="1530368599057" expanded="true" signature="6330:6484" ph="{...}" />
-            <marker date="1530368599057" expanded="true" signature="6682:6819" ph="{...}" />
-            <marker date="1530368599057" expanded="true" signature="6893:6969" ph="{...}" />
           </folding>
         </state>
       </provider>
