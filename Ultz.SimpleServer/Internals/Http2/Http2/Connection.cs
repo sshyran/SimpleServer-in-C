@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Ultz.SimpleServer.Logging;
+using Microsoft.Extensions.Logging;
 
 namespace Ultz.SimpleServer.Internals.Http2.Http2
 {

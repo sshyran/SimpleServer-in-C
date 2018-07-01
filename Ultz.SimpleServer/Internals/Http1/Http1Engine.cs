@@ -5,12 +5,12 @@ namespace Ultz.SimpleServer.Internals.Http1
 {
     public class Http1Engine : IHttpEngine
     {
-        public Task<HttpContext> ProvideAsync()
+        public void ConfigureFor(HttpServer server)
         {
             throw new System.NotImplementedException();
         }
 
-        public HttpContext Provide()
+        public Task GotConnectionAsync(TcpConnection connection)
         {
             throw new System.NotImplementedException();
         }

@@ -13,29 +13,22 @@ namespace Ultz.SimpleServer.Internals.Http1
     {
         private StreamReader _reader;
         private TcpConnection _connection;
-        private List<IHttpMethodResolver> _methodResolvers;
-
+        private HttpServer _server;
         private Http1Request(){}
         
-        public Http1Request(TcpConnection connection)
+        public Http1Request(TcpConnection connection,HttpServer server)
         {
+            _server = server;
             _connection = connection;
             _reader = new StreamReader(_connection.Stream, Encoding.UTF8);
-            _methodResolvers = new List<IHttpMethodResolver>(){new DefaultMethodResolver()};
         }
 
         public string Protocol { get; set; }
         public string Url { get; set; }
         public IMethod Method { get; set; }
         public string MethodName { get; set; }
-        public byte[] Data { get; }
+        public Stream Data { get; }
         public Dictionary<string,string> Headers { get; set; }
-
-        public Http1Request With(params IHttpMethodResolver[] resolvers)
-        {
-            _methodResolvers.AddRange(resolvers);
-            return this;
-        }
         
         public Http1Request ParseRequestLine()
         {
@@ -43,7 +36,8 @@ namespace Ultz.SimpleServer.Internals.Http1
             if (parts == null)
                 throw new RequestException("Failed to read a line from the connection");
             Url = parts.Where(part => part != parts.First() && part != parts.Last()).Aggregate("", (current, part) => current + (part + " ")).Trim();
-            Method = _methodResolvers.First(x => x.GetMethod(parts.First().ToUpper()) != null).GetMethod(parts.First());
+            Method = _server.GetMethod(parts.First());
+            MethodName = parts.First();
             Protocol = parts.Last();
             return this;
         }

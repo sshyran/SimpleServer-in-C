@@ -12,6 +12,10 @@ namespace Ultz.SimpleServer.Internals.Http2
 {
     public class DualEngine : IHttpEngine
     {
+        public static readonly ArraySegment<byte> Http2Preface = new ArraySegment<byte>(new byte[]{
+            0x50, 0x52, 0x49, 0x20, 0x2a, 0x20, 0x48, 0x54, 0x54, 0x50, 0x2f, 0x32, 0x2e, 0x30, 0x0d, 0x0a, 0x0d, 0x0a,
+            0x53, 0x4d, 0x0d, 0x0a, 0x0d, 0x0a
+        });
         private Http1Engine _engine;
         
         private static ConnectionConfiguration Config => new ConnectionConfigurationBuilder(true)
@@ -22,7 +26,32 @@ namespace Ultz.SimpleServer.Internals.Http2
 
         private static bool Accept(IStream arg)
         {
-            
+            Task.Run(async () =>
+            {
+                try
+                {
+                    // Read the header
+
+                    // Read the request body and write it to console
+                    
+
+                    // Send a response which consists of headers and a payload
+                    var responseHeaders = new HeaderField[]
+                    {
+                        new HeaderField {Name = ":status", Value = "200"},
+                        new HeaderField {Name = "content-type", Value = "text/html"},
+                    };
+                    await arg.WriteHeadersAsync(responseHeaders, false);
+                    await arg.WriteAsync(new ArraySegment<byte>(
+                        Encoding.ASCII.GetBytes("Hello World!")), true);
+
+                    // Request is fully handled here
+                }
+                catch
+                {
+                    arg.Cancel();
+                }
+            });
         }
 
         public void ConfigureFor(HttpServer server)
@@ -43,7 +72,7 @@ namespace Ultz.SimpleServer.Internals.Http2
                 // Wait for either HTTP/1 upgrade header or HTTP/2 magic header
                 await upgradeReadStream.WaitForHttpHeader();
                 var headerBytes = upgradeReadStream.HeaderBytes;
-                if (MaybeHttpStart(headerBytes))
+                if (headerBytes == Http2Preface)
                 {
                     // This seems to be a HTTP/2 request
                     // No upgrade necessary
@@ -61,9 +90,18 @@ namespace Ultz.SimpleServer.Internals.Http2
                     // Assure that the HTTP/2 library does not get passed the HTTP/1 request
                     upgradeReadStream.ConsumeHttpHeader();
 
-                    if (request.Protocol != "HTTP/1.1")
+                    if (!request.Protocol.StartsWith("HTTP/1"))
                         throw new Exception("Invalid upgrade request");
 
+                    if (!request.Headers.TryGetValue("connection", out var connectionHeader) ||
+                        !request.Headers.TryGetValue("host", out var hostHeader) ||
+                        !request.Headers.TryGetValue("upgrade", out var upgradeHeader) ||
+                        !request.Headers.TryGetValue("http2-settings", out var http2SettingsHeader) ||
+                        upgradeHeader != "h2c" ||
+                        http2SettingsHeader.Length == 0)
+                    {
+                        
+                    }
                     // If the request has some payload we can't process it in this demo
                     string contentLength;
                     if (request.Headers.TryGetValue("content-length", out contentLength))
@@ -72,20 +110,6 @@ namespace Ultz.SimpleServer.Internals.Http2
                             new ArraySegment<byte>(UpgradeErrorResponse));
                         await outputStream.CloseAsync();
                         return;
-                    }
-
-                    string connectionHeader;
-                    string hostHeader;
-                    string upgradeHeader;
-                    string http2SettingsHeader;
-                    if (!request.Headers.TryGetValue("connection", out connectionHeader) ||
-                        !request.Headers.TryGetValue("host", out hostHeader) ||
-                        !request.Headers.TryGetValue("upgrade", out upgradeHeader) ||
-                        !request.Headers.TryGetValue("http2-settings", out http2SettingsHeader) ||
-                        upgradeHeader != "h2c" ||
-                        http2SettingsHeader.Length == 0)
-                    {
-                        
                     }
 
                     var connParts =

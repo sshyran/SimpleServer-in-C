@@ -1,4 +1,7 @@
-﻿namespace Ultz.SimpleServer.Internals
+﻿using System.Collections.Generic;
+using System.IO;
+
+namespace Ultz.SimpleServer.Internals
 {
     public interface IRequest
     {
@@ -9,6 +12,6 @@
         /// <summary>
         /// The request payload.
         /// </summary>
-        byte[] Data { get; }
+        Stream Data { get; }
     }
 }

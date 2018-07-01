@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Ultz.SimpleServer.Internals.Http2.Hpack;
-using Ultz.SimpleServer.Logging;
 
 namespace Ultz.SimpleServer.Internals.Http2.Http2
 {
