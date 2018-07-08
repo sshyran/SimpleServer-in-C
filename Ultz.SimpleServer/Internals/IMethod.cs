@@ -2,6 +2,6 @@
 {
     public interface IMethod
     {
-        string Name { get; }
+        byte[] Id { get; }
     }
 }

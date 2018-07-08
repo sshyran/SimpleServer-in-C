@@ -6,9 +6,10 @@ namespace Ultz.SimpleServer.Internals
 {
     public class TcpConnection : IConnection
     {
-        public TcpConnection(TcpClient client)
+        public TcpConnection(TcpClient client,int id)
         {
             Base = client;
+            Id = id;
         }
 
         public Stream Stream => Base.GetStream();
@@ -19,6 +20,14 @@ namespace Ultz.SimpleServer.Internals
         }
 
         public EndPoint RemoteEndPoint => Base.Client.RemoteEndPoint;
+        public int Id { get; }
+
+        public bool Blocking
+        {
+            get => Base.Client.Blocking;
+            set => Base.Client.Blocking = value;
+        }
+
         public TcpClient Base { get; }
     }
 }

@@ -5,13 +5,15 @@ using System.Net;
 using System.Threading.Tasks;
 using Ultz.SimpleServer.Handlers;
 using Ultz.SimpleServer.Internals;
+using Ultz.SimpleServer.Internals.Http;
 
 namespace Ultz.SimpleServer.Hosts
 {
-    public class Host : IDisposable
+    public abstract class Host : IDisposable
     {
-        public List<RegisteredDecorator> Decorators { get; set; } = new List<RegisteredDecorator>();
+        public List<IDecorator> Decorators { get; set; } = new List<IDecorator>();
         public List<IHandler> Handlers { get; set; } = new List<IHandler>();
+        
         public IPEndPoint Endpoint { get; set; }
 
         public void Dispose()
@@ -23,11 +25,6 @@ namespace Ultz.SimpleServer.Hosts
         {
             var handler = Handlers.FirstOrDefault(x => x.CanHandle(context.Request));
             handler?.Handle(context);
-        }
-
-        public void RegisterDecorator(Priority priority, IDecorator decorator)
-        {
-            Decorators.Add(new RegisteredDecorator(priority, decorator));
         }
 
         public void Start()

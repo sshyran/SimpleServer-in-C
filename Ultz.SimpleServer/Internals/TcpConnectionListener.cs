@@ -5,19 +5,23 @@ namespace Ultz.SimpleServer.Internals
 {
     public class TcpConnectionListener : IListener
     {
+        private int _id = 0;
+        private TcpListener _listener;
+        
         public TcpConnectionListener(TcpListener listener)
         {
-            
+            _listener = listener;
         }
         
         public IConnection Accept()
         {
-            throw new System.NotImplementedException();
+            return AcceptAsync().GetAwaiter().GetResult();
         }
 
-        public Task<IConnection> AcceptAsync()
+        public async Task<IConnection> AcceptAsync()
         {
-            throw new System.NotImplementedException();
+            var client = await _listener.AcceptTcpClientAsync();
+            return new TcpConnection(client, _id);
         }
     }
 }

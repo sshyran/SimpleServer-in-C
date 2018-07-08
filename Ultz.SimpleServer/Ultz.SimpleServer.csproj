@@ -4,7 +4,12 @@
     <AssemblyName>sscorlib</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
+    <Folder Include="Internals\Http" />
+    <Folder Include="Internals\Http1" />
     <Folder Include="Methods" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Providers/ErrorPages/ErrorPage.html" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.1.1" />
@@ -12,7 +17,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Threading.Tasks.Extensions, Version=4.1.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
-      <HintPath>..\..\..\..\..\..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.netcore.app\2.0.0\ref\netcoreapp2.0\System.Threading.Tasks.Extensions.dll</HintPath>
+      <HintPath>C:\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.netcore.app\2.0.0\ref\netcoreapp2.0\System.Threading.Tasks.Extensions.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>
