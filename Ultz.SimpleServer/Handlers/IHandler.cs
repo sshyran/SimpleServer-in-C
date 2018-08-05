@@ -4,7 +4,12 @@ namespace Ultz.SimpleServer.Handlers
 {
     public interface IHandler
     {
-        bool CanHandle(IRequest request);
+        bool CanHandle(IContext context);
         void Handle(IContext context);
+    }
+    public interface IHandler<in TContext> where TContext:IContext
+    {
+        bool CanHandle(TContext context);
+        void Handle(TContext context);
     }
 }

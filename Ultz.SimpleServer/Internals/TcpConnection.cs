@@ -19,14 +19,10 @@ namespace Ultz.SimpleServer.Internals
             Base.Close();
         }
 
+        public EndPoint LocalEndPoint => Base.Client.LocalEndPoint;
+
         public EndPoint RemoteEndPoint => Base.Client.RemoteEndPoint;
         public int Id { get; }
-
-        public bool Blocking
-        {
-            get => Base.Client.Blocking;
-            set => Base.Client.Blocking = value;
-        }
 
         public TcpClient Base { get; }
     }

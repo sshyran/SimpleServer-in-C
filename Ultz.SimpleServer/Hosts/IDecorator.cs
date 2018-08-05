@@ -4,6 +4,6 @@ namespace Ultz.SimpleServer.Hosts
 {
     public interface IDecorator
     {
-        IListener Decorate(IListener child);
+        IListener Decorate(IListener @base);
     }
 }

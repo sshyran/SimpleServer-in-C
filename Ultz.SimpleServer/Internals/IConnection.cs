@@ -11,6 +11,8 @@ namespace Ultz.SimpleServer.Internals
 
         void Close();
 
+        EndPoint LocalEndPoint { get; }
+
         EndPoint RemoteEndPoint { get; }
         
         int Id { get; }

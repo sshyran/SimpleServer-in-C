@@ -21,9 +21,9 @@ namespace Ultz.SimpleServer.Providers
             var stream = Assembly.GetAssembly(ErrorPage.TypeInAssembly)
                 .GetManifestResourceStream(ErrorPage.NamespaceUrlOfType);
             var sr = new StreamReader(stream);
-            var sw = new StreamWriter(context.Response.Data);
+            var sw = new StreamWriter(context.Response.OutputStream);
             sw.WriteLine(sr.ReadToEnd().Replace("[Header]", code + " " + reason).Replace("[ErrorDetail]", errorDetail)
-                .Replace("[Method]", context.Request.MethodName).Replace("[Url]", context.Request.Url)
+                .Replace("[Method]", context.Request.Method.Id).Replace("[Url]", context.Request.Url)
                 .Replace("[Connection]", context.Connection.Id.ToString())
                 .Replace("[Exception]", ex == null ? string.Empty : ex.ToString()));
             sw.Flush();

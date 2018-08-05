@@ -5,12 +5,12 @@ namespace Ultz.SimpleServer.Handlers
 {
     public abstract class HttpHandler : IHandler
     {
-        public bool CanHandle(IRequest request)
+        public bool CanHandle(IContext request)
         {
-            return CanHandle((IHttpRequest) request);
+            return CanHandle((HttpContext) request);
         }
 
-        public abstract bool CanHandle(IHttpRequest request);
+        public abstract bool CanHandle(HttpContext request);
         public abstract bool Handle(HttpContext context);
 
         public void Handle(IContext context)
