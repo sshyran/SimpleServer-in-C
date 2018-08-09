@@ -26,6 +26,10 @@
   "frameworks": {
     "netcoreapp2.1": {
       "dependencies": {
+        "JetBrains.Annotations": {
+          "target": "Package",
+          "version": "[2018.2.1, )"
+        },
         "Microsoft.Extensions.Logging.Abstractions": {
           "target": "Package",
           "version": "[2.1.1, )"

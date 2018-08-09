@@ -7,17 +7,18 @@ using Ultz.SimpleServer.Internals.Http;
 
 namespace Ultz.SimpleServer.Common
 {
-    public class SimpleServer<T> where T:IProtocol
+    public class SimpleServer
     {
         private ILoggerProvider _loggerProvider;
         private ILogger _logger;
+        
+        public Dictionary<string,Service> Services { get; } = new Dictionary<string, Service>();
+        
         public SimpleServer(ILoggerProvider logger = null)
         {
             _loggerProvider = logger;
-            _logger = logger.CreateLogger("ssmain");
+            _logger = logger?.CreateLogger("ssmain");
         }
-        
-        public List<Host<T>> Hosts { get; set; }
 
         public void Start()
         {
@@ -28,10 +29,5 @@ namespace Ultz.SimpleServer.Common
         {
             
         }
-    }
-
-    public sealed class SimpleServer : SimpleServer<Http>
-    {
-        public static readonly string Version = Assembly.GetAssembly(typeof(SimpleServer)).GetName().Version.ToString();
     }
 }

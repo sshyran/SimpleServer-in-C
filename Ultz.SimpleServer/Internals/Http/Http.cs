@@ -17,5 +17,7 @@ namespace Ultz.SimpleServer.Internals.Http
         {
             return new TcpConnectionListener(endpoint);
         }
+
+        public IAttributeHandlerResolver AttributeHandlerResolver { get; }
     }
 }

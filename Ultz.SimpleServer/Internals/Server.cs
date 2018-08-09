@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Ultz.SimpleServer.Internals
 {
-    public class Server<T> : IDisposable where T:IProtocol
+    public class Server : IDisposable
     {
         private IProtocol _protocol;
         public IListener Listener { get; }
