@@ -5,6 +5,6 @@ namespace Ultz.SimpleServer.Internals
     public interface IResponse
     {
         Stream OutputStream { get; }
-        void Close();
+        void Close(bool force = false);
     }
 }

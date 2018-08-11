@@ -23,7 +23,7 @@ namespace Ultz.SimpleServer.Providers
             var sr = new StreamReader(stream);
             var sw = new StreamWriter(context.Response.OutputStream);
             sw.WriteLine(sr.ReadToEnd().Replace("[Header]", code + " " + reason).Replace("[ErrorDetail]", errorDetail)
-                .Replace("[Method]", context.Request.Method.Id).Replace("[Url]", context.Request.Url)
+                .Replace("[Method]", context.Request.Method.Id).Replace("[Url]", context.Request.RawUrl)
                 .Replace("[Connection]", context.Connection.Id.ToString())
                 .Replace("[Exception]", ex == null ? string.Empty : ex.ToString()));
             sw.Flush();

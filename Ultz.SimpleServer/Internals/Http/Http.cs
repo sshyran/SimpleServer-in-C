@@ -1,17 +1,31 @@
-﻿using System.Net;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Ultz.SimpleServer.Hosts;
 
 namespace Ultz.SimpleServer.Internals.Http
 {
     public abstract class Http : IProtocol
     {
-        public IContext GetContext(IConnection connection)
+        public static Dictionary<byte[], HttpMethod> DefaultMethods => new Dictionary<string, HttpMethod>()
         {
-            return GetContextAsync(connection).GetAwaiter().GetResult();
-        }
+            {"GET", new HttpMethod("GET", false)},
+            {"POST", new HttpMethod("POST", true)},
+            {"PUT", new HttpMethod("PUT", true)},
+            {"PATCH", new HttpMethod("PATCH", true)},
+            {"DELETE", new HttpMethod("DELETE", false)},
+            {"OPTIONS", new HttpMethod("OPTIONS", false)},
+            {"CONNECT", new HttpMethod("CONNECT", false)},
+            {"HEAD", new HttpMethod("HEAD", false)},
+            {"TRACE", new HttpMethod("TRACE", false)}
+        }.ToDictionary(x => Encoding.UTF8.GetBytes(x.Key),x => x.Value);
 
-        public abstract Task<IContext> GetContextAsync(IConnection connection);
+        public event EventHandler<ContextEventArgs> ContextCreated;
+        public abstract Task HandleConnectionAsync(IConnection connection, ILogger logger);
 
         public IListener CreateDefaultListener(IPEndPoint endpoint)
         {
@@ -19,5 +33,6 @@ namespace Ultz.SimpleServer.Internals.Http
         }
 
         public IAttributeHandlerResolver AttributeHandlerResolver { get; }
+        public IMethodResolver MethodResolver => new HttpMethodResolver(DefaultMethods);
     }
 }

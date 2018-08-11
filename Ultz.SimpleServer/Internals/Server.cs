@@ -33,8 +33,14 @@ namespace Ultz.SimpleServer.Internals
             _logger.LogDebug("Success.");
             _logger.LogDebug("Starting listener...");
             _cancellationToken = new CancellationTokenSource();
+            _protocol.ContextCreated += GotContext;
             _listenerTask = Task.Factory.StartNew(ListenAysnc, _cancellationToken.Token);
             _logger.LogInformation(_protocol.GetType().Name+"Listener has started!");
+        }
+
+        private void GotContext(object sender, ContextEventArgs e)
+        {
+            RequestReceived?.Invoke(this,e);
         }
 
         public void Stop()
@@ -55,7 +61,7 @@ namespace Ultz.SimpleServer.Internals
                 if (connection == null) // listener shutdown
                     continue;
 #pragma warning disable 4014
-                Task.Factory.StartNew(async () => { RequestReceived?.Invoke(this,new ContextEventArgs(await _protocol.GetContextAsync(connection))); });
+                Task.Factory.StartNew(async () => { await _protocol.HandleConnectionAsync(connection,_loggerProvider?.CreateLogger("c"+connection.Id)); });
 #pragma warning restore 4014
             }
         }

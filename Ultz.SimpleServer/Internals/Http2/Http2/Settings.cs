@@ -67,6 +67,19 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
             MaxFrameSize = 16384,
             MaxHeaderListSize = uint.MaxValue,
         };
+        
+        /// <summary>
+        /// Contains the default settings
+        /// </summary>
+        public readonly static Settings DefaultSimpleServer = new Settings
+        {
+            HeaderTableSize = 4096,
+            EnablePush = true,
+            MaxConcurrentStreams = 50,
+            InitialWindowSize = 65535,
+            MaxFrameSize = 16384,
+            MaxHeaderListSize = uint.MaxValue,
+        };
 
         /// <summary>
         /// Contains the minimum value for all settings
