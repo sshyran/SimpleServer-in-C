@@ -12,12 +12,14 @@ namespace Ultz.SimpleServer.Internals.Http
 {
     public class HttpStream : IReadableByteStream
     {
-        private const int MaxHeaderLength = 1024;
+
+        private const int MaxHeaderLength = 1024 * 1024; // 1MB
         private readonly IReadableByteStream _stream;
         private byte[] _httpBuffer = new byte[MaxHeaderLength];
+        private ArraySegment<byte> _remains;
         private int _httpBufferOffset;
 
-        private ArraySegment<byte> _remains;
+        private ArraySegment<byte> _completeRemains;
 
         public HttpStream(IReadableByteStream stream)
         {
@@ -28,26 +30,28 @@ namespace Ultz.SimpleServer.Internals.Http
 
         public ArraySegment<byte> HeaderBytes =>
             new ArraySegment<byte>(_httpBuffer, 0, HttpHeaderLength);
+        
+        public ArraySegment<byte> Payload => new ArraySegment<byte>(_httpBuffer, HttpHeaderLength, _httpBuffer.Length - HttpHeaderLength);
 
         public ValueTask<StreamReadResult> ReadAsync(ArraySegment<byte> buffer)
         {
-            if (_remains.Count != 0)
+            if (_completeRemains.Count != 0)
             {
                 // Return leftover bytes from upgrade request
-                var toCopy = Math.Min(_remains.Count, buffer.Count);
+                var toCopy = Math.Min(_completeRemains.Count, buffer.Count);
                 Array.Copy(
-                    _remains.Array, _remains.Offset,
+                    _completeRemains.Array, _completeRemains.Offset,
                     buffer.Array, buffer.Offset,
                     toCopy);
-                var newOffset = _remains.Offset + toCopy;
-                var newCount = _remains.Count - toCopy;
+                var newOffset = _completeRemains.Offset + toCopy;
+                var newCount = _completeRemains.Count - toCopy;
                 if (newCount != 0)
                 {
-                    _remains = new ArraySegment<byte>(_remains.Array, newOffset, newCount);
+                    _completeRemains = new ArraySegment<byte>(_completeRemains.Array, newOffset, newCount);
                 }
                 else
                 {
-                    _remains = new ArraySegment<byte>();
+                    _completeRemains = new ArraySegment<byte>();
                     _httpBuffer = null;
                 }
 
@@ -100,6 +104,20 @@ namespace Ultz.SimpleServer.Internals.Http
                 }
             }
         }
+        
+        public async Task WaitForPayload(int length)
+        {
+            var initLength = _httpBuffer.Length;
+            while (_httpBuffer.Length - initLength == length)
+            {
+                var res = await _stream.ReadAsync(
+                    new ArraySegment<byte>(_httpBuffer, _httpBufferOffset, _httpBuffer.Length - _httpBufferOffset));
+
+                if (res.EndOfStream)
+                    throw new EndOfStreamException();
+                _httpBufferOffset += res.BytesRead;
+            }
+        }
 
         /// <summary>
         ///     Marks the HTTP reader as unread, which means following
@@ -107,37 +125,22 @@ namespace Ultz.SimpleServer.Internals.Http
         /// </summary>
         public void UnreadHttpHeader()
         {
-            _remains = new ArraySegment<byte>(
+            _completeRemains = new ArraySegment<byte>(
                 _httpBuffer, 0, _httpBufferOffset);
         }
 
         /// <summary>Removes the received HTTP header from the input buffer</summary>
-        public void ConsumeHttpHeader()
+        public void Consume()
         {
             if (HttpHeaderLength != _httpBufferOffset)
             {
                 // Not everything was consumed
-                _remains = new ArraySegment<byte>(
+                _completeRemains = new ArraySegment<byte>(
                     _httpBuffer, HttpHeaderLength, _httpBufferOffset - HttpHeaderLength);
             }
             else
             {
-                _remains = new ArraySegment<byte>();
-                _httpBuffer = null;
-            }
-        }
-
-        public void Consume(int length)
-        {
-            if (length != _httpBufferOffset)
-            {
-                // Not everything was consumed
-                _remains = new ArraySegment<byte>(
-                    _httpBuffer, length, _httpBufferOffset - length);
-            }
-            else
-            {
-                _remains = new ArraySegment<byte>();
+                _completeRemains = new ArraySegment<byte>();
                 _httpBuffer = null;
             }
         }

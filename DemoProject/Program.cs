@@ -39,7 +39,15 @@ namespace DemoProject
                 Console.WriteLine(header.Key + ": "+header.Value);
             ctx.Response.Headers["content-type"] = "text/html";
             var sw = new StreamWriter(ctx.Response.OutputStream);
-            sw.WriteLine("<h1>Hello, world!</h1>");
+            if (ctx.Request.Method.Id != "POST")
+                sw.WriteLine("<h1>What's your name?</h1><form method=\"POST\">Name: <input type=\"text\" name=\"name\" /><input type=\"submit\"></form>");
+            else
+            {
+                var sr = new StreamReader(ctx.Request.InputStream);
+                var dat = sr.ReadToEnd();
+                Console.WriteLine(dat);
+                sw.WriteLine("<h1>Hello, "+dat?.Remove(0,5)+"!</h1><a href=\"/\">< Return</a>");
+            }
             sw.Flush();
             sw.Close();
             ctx.Response.Close();

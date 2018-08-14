@@ -85,8 +85,6 @@ namespace Ultz.SimpleServer.Internals.Http2
                         Encoding.ASCII.GetString(
                             headerBytes.Array, headerBytes.Offset, headerBytes.Count - 4),
                         (MethodResolver<HttpMethod>) MethodResolver);
-                    // Assure that the HTTP/2 library does not get passed the HTTP/1 request
-                    upgradeReadStream.ConsumeHttpHeader();
 
                     if (req.ExpectPayload && req.Headers.TryGetValue("content-length", out var contentLength))
                     {
@@ -95,7 +93,6 @@ namespace Ultz.SimpleServer.Internals.Http2
                             var arr = new ArraySegment<byte>(new byte[length]);
                             var res = await upgradeReadStream.ReadAsync(arr);
                             req.Payload = arr.ToArray();
-                            upgradeReadStream.Consume(req.Payload.Length);
                         }
                         else
                         {
@@ -114,6 +111,9 @@ namespace Ultz.SimpleServer.Internals.Http2
                         await stream.CloseAsync();
                         return;
                     }
+                    
+                    // Assure that the HTTP/2 library does not get passed the HTTP/1 request
+                    upgradeReadStream.Consume();
 
                     var request = req.Request;
 

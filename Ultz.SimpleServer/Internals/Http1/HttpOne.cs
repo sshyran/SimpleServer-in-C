@@ -23,21 +23,18 @@ namespace Ultz.SimpleServer.Internals.Http1
                 Encoding.ASCII.GetString(
                     stream.HeaderBytes.Array, stream.HeaderBytes.Offset, stream.HeaderBytes.Count - 4),
                 (MethodResolver<HttpMethod>) MethodResolver);
-            stream.ConsumeHttpHeader();
             if (req.ExpectPayload && req.Headers.TryGetValue("content-length", out var contentLength))
             {
                 if (int.TryParse(contentLength, out var length))
                 {
-                    var arr = new ArraySegment<byte>(new byte[length]);
-                    var res = await stream.ReadAsync(arr);
-                    req.Payload = arr.ToArray();
-                    stream.Consume(req.Payload.Length);
+                    await stream.WaitForPayload(length);
+                    req.Payload = stream.Payload.ToArray();
                 }
                 else
                 {
                     await outStream.WriteAsync(
                         new ArraySegment<byte>(Encoding.ASCII.GetBytes(
-                            "HTTP/1.1 400 Bad Request\r\nServer: SimpleServer/1.0 sshttp2\r\nContent-Type: text/html\r\nContent-Length: 26\r\n\r\nThe payload was too large.")));
+                            "HTTP/1.1 400 Bad Request\r\nServer: SimpleServer\r\nContent-Type: text/html\r\nContent-Length: 26\r\n\r\nThe payload was too large.")));
                     await outStream.CloseAsync();
                     return;
                 }
@@ -46,7 +43,7 @@ namespace Ultz.SimpleServer.Internals.Http1
             {
                 await outStream.WriteAsync(
                     new ArraySegment<byte>(Encoding.ASCII.GetBytes(
-                        "HTTP/1.1 400 Bad Request\r\nServer: SimpleServer/1.0 sshttp2\r\nContent-Type: text/html\r\nContent-Length: 25\r\n\r\nNo content-length header.")));
+                        "HTTP/1.1 400 Bad Request\r\nServer: SimpleServer\r\nContent-Type: text/html\r\nContent-Length: 25\r\n\r\nNo content-length header.")));
                 await outStream.CloseAsync();
                 return;
             }
