@@ -1,3 +1,5 @@
+#region
+
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -8,158 +10,98 @@ using Microsoft.Extensions.Logging;
 using Ultz.SimpleServer.Internals.Http2.Hpack;
 using Ultz.SimpleServer.Internals.Http2.Http2.Internal;
 
+#endregion
+
 namespace Ultz.SimpleServer.Internals.Http2.Http2
 {
     /// <summary>
-    /// The task that writes to the connection
+    ///     The task that writes to the connection
     /// </summary>
     internal class ConnectionWriter
     {
         /// <summary>
-        /// Configuration options for the ConnectionWriter
-        /// </summary>
-        public struct Options
-        {
-            public int MaxFrameSize;
-            public int MaxHeaderListSize;
-            public int DynamicTableSizeLimit;
-            public int InitialWindowSize;
-        }
-
-        private struct StreamData
-        {
-            public uint StreamId;
-            public int Window;
-            // TODO: Is the queue needed here?
-            // As the StreamImpl API does not allow
-            // writing concurrent header and data frames
-            // it seems superfluos
-            // It might be required if we have a client, and the client headers
-            // are sent from another method which might finish only after the
-            // stream is handed to the user.
-            public Queue<WriteRequest> WriteQueue;
-            public bool EndOfStreamQueued;
-        }
-
-        private struct SharedData
-        {
-            /// <summary>Guards the SharedData</summary>
-            public object Mutex;
-            /// <summary>
-            /// The currently set initial window size as indicated by the remote
-            /// settings.
-            /// </summary>
-            public int InitialWindowSize;
-            /// <summary>Outstanding writes the are associated to the connection</summary>
-            public Queue<WriteRequest> WriteQueue;
-            /// <summary>Streams for which data needs to be written</summary>
-            public List<StreamData> Streams;
-            /// <summary>
-            /// If this is not null the writer should apply the new settings
-            /// and send a settings ACK.
-            /// </summary>
-            public ChangeSettingsRequest ChangeSettingsRequest;
-            /// <summary>Whether the writer was requested to close after completing all writes</summary>
-            public bool CloseRequested;
-        }
-
-        /// <summary>
-        /// Signals the result of a write operation
+        ///     Signals the result of a write operation
         /// </summary>
         public enum WriteResult
         {
             /// <summary>Write is still in progress</summary>
             InProgress,
+
             /// <summary>Write succeded</summary>
             Success,
+
             /// <summary>
-            /// Write failed because the write to the underlying connection failed
+            ///     Write failed because the write to the underlying connection failed
             /// </summary>
             ConnectionError,
+
             /// <summary>
-            /// Write failed because the write to the underlying connection is closed
+            ///     Write failed because the write to the underlying connection is closed
             /// </summary>
             ConnectionClosedError,
+
             /// <summary>Write failed because the stream was reset</summary>
-            StreamResetError,
+            StreamResetError
         }
 
-        // This needs be a class in order to be mutatable
-        private class WriteRequest
-        {
-            public FrameHeader Header;
-            public WindowUpdateData WindowUpdateData;
-            public ResetFrameData ResetFrameData;
-            public GoAwayFrameData GoAwayData;
-            public IEnumerable<HeaderField> Headers;
-            public ArraySegment<byte> Data;
-            public AsyncManualResetEvent Completed;
-            public WriteResult Result;
-        }
+        /// <summary>Max amount of pooled requests</summary>
+        private const int MaxPooledWriteRequests = 10 * 1024;
 
-        private class ChangeSettingsRequest
-        {
-            public Settings NewRemoteSettings;
-            public AsyncManualResetEvent Completed;
-            public Http2Error? Result;
-        }
+        /// <summary>A pool of WriteRequest structures for reuse</summary>
+        private static readonly ConcurrentBag<WriteRequest> writeRequestPool =
+            new ConcurrentBag<WriteRequest>();
 
-        /// <summary>The associated connection</summary>
-        public Connection Connection { get; }
+        /// <summary>
+        ///     The maximum dynamictable size that should be used for header encoding
+        /// </summary>
+        private readonly int DynamicTableSizeLimit;
+
+        /// <summary>HPack encoder</summary>
+        private readonly Encoder hEncoder;
+
         /// <summary>The output stream this is utilizing</summary>
         private readonly IWriteAndCloseableByteStream outStream;
 
-        /// <summary>HPack encoder</summary>
-        private readonly Hpack.Encoder hEncoder;
+        private readonly AsyncManualResetEvent wakeupWriter = new AsyncManualResetEvent(false);
 
         /// <summary>
-        /// Whether CloseAsync() has already been called on the connection.
-        /// This variable is atomic (utilized with Interlocked operations).
+        ///     Whether CloseAsync() has already been called on the connection.
+        ///     This variable is atomic (utilized with Interlocked operations).
         /// </summary>
-        private int closeConnectionIssued = 0;
-
-        /// <summary>
-        /// Contains all data which is shared and protected between threads.
-        /// </summary>
-        private SharedData shared = new SharedData();
-        private AsyncManualResetEvent wakeupWriter = new AsyncManualResetEvent(false);
-        private Task writeTask;
-
-        private byte[] outBuf;
-
-        /// <summary>
-        /// The maximum dynamictable size that should be used for header encoding
-        /// </summary>
-        private readonly int DynamicTableSizeLimit;
+        private int closeConnectionIssued;
 
         // Current settings, which are only updated inside the write task and
         // therefore need no protection:
 
         /// <summary>Flow control window for the connection</summary>
         private int connFlowWindow = Constants.InitialConnectionWindowSize;
+
         /// <summary>The maximum frame size that should be used</summary>
         private int MaxFrameSize;
+
         /// <summary>The maximum amount of headerlist bytes that should be sent</summary>
         private int MaxHeaderListSize;
 
-        /// <summary>
-        /// Returns a task that will be completed when the write task finishes
-        /// </summary>
-        public Task Done => writeTask;
+        private byte[] outBuf;
 
         /// <summary>
-        /// Creates a new instance of the ConnectionWriter with the given options
+        ///     Contains all data which is shared and protected between threads.
+        /// </summary>
+        private SharedData shared;
+
+        /// <summary>
+        ///     Creates a new instance of the ConnectionWriter with the given options
         /// </summary>
         public ConnectionWriter(
             Connection connection, IWriteAndCloseableByteStream outStream,
-            Options options, Hpack.Encoder.Options hpackOptions)
+            Options options, Encoder.Options hpackOptions)
         {
-            this.Connection = connection;
+            Connection = connection;
             this.outStream = outStream;
-            this.DynamicTableSizeLimit = options.DynamicTableSizeLimit;
-            this.MaxFrameSize = options.MaxFrameSize;
-            this.MaxHeaderListSize = options.MaxHeaderListSize;
-            this.hEncoder = new Hpack.Encoder(hpackOptions);
+            DynamicTableSizeLimit = options.DynamicTableSizeLimit;
+            MaxFrameSize = options.MaxFrameSize;
+            MaxHeaderListSize = options.MaxHeaderListSize;
+            hEncoder = new Encoder(hpackOptions);
 
             // Initialize shared data
             shared.Mutex = new object();
@@ -169,8 +111,16 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
             shared.Streams = new List<StreamData>();
 
             // Start the task that performs the actual writing
-            this.writeTask = Task.Run(() => this.RunAsync());
+            Done = Task.Run(() => RunAsync());
         }
+
+        /// <summary>The associated connection</summary>
+        public Connection Connection { get; }
+
+        /// <summary>
+        ///     Returns a task that will be completed when the write task finishes
+        /// </summary>
+        public Task Done { get; }
 
         internal void EnsureBuffer(int minSize)
         {
@@ -193,7 +143,7 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
         }
 
         /// <summary>
-        /// The mainloop of the connection writer
+        ///     The mainloop of the connection writer
         /// </summary>
         private async Task RunAsync()
         {
@@ -208,9 +158,7 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                     await ClientPreface.WriteAsync(outStream);
                     if (Connection.logger != null &&
                         Connection.logger.IsEnabled(LogLevel.Trace))
-                    {
                         Connection.logger.LogTrace("send ClientPreface");
-                    }
                 }
 
                 // We always need to send the initial settings before
@@ -221,15 +169,15 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                 // of time then this would need to change too.
                 await WriteSettingsAsync(Connection.localSettings);
 
-                bool continueRun = true;
+                var continueRun = true;
                 while (continueRun)
                 {
                     // Wait until there is something to do for us
-                    await this.wakeupWriter;
+                    await wakeupWriter;
                     // Fetch the next task from shared information
                     WriteRequest writeRequest = null;
                     ChangeSettingsRequest changeSettings = null;
-                    bool doClose = false;
+                    var doClose = false;
 
                     lock (shared.Mutex)
                     {
@@ -246,20 +194,14 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                         {
                             writeRequest = GetNextReadyWriteRequest();
                         }
+
                         // If there's nothing to write check if we should close the connection
                         if (changeSettings == null && writeRequest == null)
                         {
                             if (shared.CloseRequested)
-                            {
                                 doClose = true;
-                            }
                             else
-                            {
-                                // There is really no task for us.
-                                // Sleep until we got one.
-                                // When we loop around we will sleep in await wakeupWriter
-                                this.wakeupWriter.Reset();
-                            }
+                                wakeupWriter.Reset();
                         }
                     }
 
@@ -274,6 +216,7 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                             EnsureBuffer(Connection.PersistentBufferSize);
                             await WriteSettingsAckAsync();
                         }
+
                         changeSettings.Result = err;
                         changeSettings.Completed.Set();
                     }
@@ -298,9 +241,7 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                 // will fail at any point of time
                 if (Connection.logger != null &&
                     Connection.logger.IsEnabled(LogLevel.Error))
-                {
                     Connection.logger.LogError("Writer error: {0}", e.Message);
-                }
             }
 
             // Close the connection if that hasn't happened yet
@@ -319,6 +260,7 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                     shared.ChangeSettingsRequest.Completed.Set();
                     shared.ChangeSettingsRequest = null;
                 }
+
                 // Fail pending writes that are still queued up
                 FinishAllOutstandingWritesLocked();
             }
@@ -333,8 +275,8 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
         }
 
         /// <summary>
-        /// Forces closing the connection immediatly.
-        /// Pending write tasks will fail.
+        ///     Forces closing the connection immediatly.
+        ///     Pending write tasks will fail.
         /// </summary>
         private async ValueTask<DoneHandle> CloseNow(bool needWakeup)
         {
@@ -364,6 +306,7 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                     {
                         shared.CloseRequested = true;
                     }
+
                     wakeupWriter.Set();
                 }
             }
@@ -372,8 +315,8 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
         }
 
         /// <summary>
-        /// Forces closing the connection immediatly.
-        /// Pending write tasks will fail.
+        ///     Forces closing the connection immediatly.
+        ///     Pending write tasks will fail.
         /// </summary>
         public ValueTask<DoneHandle> CloseNow()
         {
@@ -384,8 +327,8 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
         }
 
         /// <summary>
-        /// Retrieves the next write request from the internal queues
-        /// This may only be called within the lock
+        ///     Retrieves the next write request from the internal queues
+        ///     This may only be called within the lock
         /// </summary>
         private WriteRequest GetNextReadyWriteRequest()
         {
@@ -412,7 +355,7 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                 if (first.Header.Type == FrameType.Data)
                 {
                     // Check how much flow we have
-                    var canSend = Math.Min(this.connFlowWindow, s.Window);
+                    var canSend = Math.Min(connFlowWindow, s.Window);
                     // And also respect the maximum frame size
                     // As we don't use padding we can use the full frame
                     canSend = Math.Min(canSend, MaxFrameSize);
@@ -430,14 +373,12 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
 
                     if (Connection.logger != null &&
                         Connection.logger.IsEnabled(LogLevel.Trace))
-                    {
                         Connection.logger.LogTrace(
                             "Outgoing flow control window update:\n" +
                             "  Connection window: {0} -> {1}\n" +
                             "  Stream {2} window: {2} -> {3}",
                             connFlowWindow + toSend, connFlowWindow,
                             s.StreamId, s.Window + toSend, s.Window);
-                    }
 
                     if (canSend < first.Data.Count)
                     {
@@ -462,6 +403,7 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                         return we;
                     }
                 }
+
                 // We have not continued, so we can write this item
                 first = s.WriteQueue.Dequeue();
                 // Determine whether we can remove the stream entry
@@ -475,11 +417,10 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                     // does not contain anything after the written element.
                     // This would be a contract violation and StreamImpl should be checked.
                     if (s.WriteQueue.Count > 0)
-                    {
                         throw new Exception(
                             "Unexpected: WriteQueue for stream contains data after EndOfStream");
-                    }
                 }
+
                 return first;
             }
 
@@ -487,16 +428,14 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
         }
 
         /// <summary>
-        /// Logs the outgoing frames header
+        ///     Logs the outgoing frames header
         /// </summary>
         private void LogOutgoingFrameHeader(FrameHeader fh)
         {
             if (Connection.logger != null &&
                 Connection.logger.IsEnabled(LogLevel.Trace))
-            {
                 Connection.logger.LogTrace(
                     "send " + FramePrinter.PrintFrameHeader(fh));
-            }
         }
 
         private async Task ProcessWriteRequestAsync(WriteRequest wr)
@@ -540,6 +479,7 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                     default:
                         throw new Exception("Unknown frame type");
                 }
+
                 wr.Result = WriteResult.Success;
             }
             catch (Exception)
@@ -552,12 +492,10 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                 // If this was the end of a stream then we don't need the stream
                 // data anymore
                 if (wr.Header.HasEndOfStreamFlag)
-                {
                     lock (shared.Mutex)
                     {
                         RemoveStreamLocked(wr.Header.StreamId);
                     }
-                }
 
                 wr.Completed.Set();
             }
@@ -577,7 +515,7 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
             var data = new ArraySegment<byte>(outBuf, 0, totalSize);
 
             // Write the header
-            return this.outStream.WriteAsync(data);
+            return outStream.WriteAsync(data);
         }
 
         private bool TryEnqueueWriteRequestLocked(uint streamId, WriteRequest wr)
@@ -594,10 +532,7 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                 // If we queue a reset frame for a stream we don't need
                 // the writequeue for it anymore. Any queued up frames for that
                 // stream may proceed as written.
-                if (wr.Header.Type == FrameType.ResetStream && streamId != 0)
-                {
-                    this.RemoveStreamLocked(streamId);
-                }
+                if (wr.Header.Type == FrameType.ResetStream && streamId != 0) RemoveStreamLocked(streamId);
 
                 return true;
             }
@@ -619,6 +554,7 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                         stream.EndOfStreamQueued = true;
                         shared.Streams[i] = stream;
                     }
+
                     stream.WriteQueue.Enqueue(wr);
                     return true;
                 }
@@ -628,36 +564,27 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
             return false;
         }
 
-        /// <summary>A pool of WriteRequest structures for reuse</summary>
-        private static readonly ConcurrentBag<WriteRequest> writeRequestPool =
-            new ConcurrentBag<WriteRequest>();
-        /// <summary>Max amount of pooled requests</summary>
-        private const int MaxPooledWriteRequests = 10*1024;
-
         /// <summary>
-        /// Allocates a new WriteRequest structure.
-        /// This could be delegated to a connection-local
-        /// or global pool in future.
+        ///     Allocates a new WriteRequest structure.
+        ///     This could be delegated to a connection-local
+        ///     or global pool in future.
         /// </summary>
         /// <returns></returns>
         private WriteRequest AllocateWriteRequest()
         {
             WriteRequest r;
-            if (writeRequestPool.TryTake(out r))
-            {
-                return r;
-            }
+            if (writeRequestPool.TryTake(out r)) return r;
 
-            var wr = new WriteRequest()
+            var wr = new WriteRequest
             {
-                Completed = new AsyncManualResetEvent(false),
+                Completed = new AsyncManualResetEvent(false)
             };
             return wr;
         }
 
         /// <summary>
-        /// Releases a WriteRequest structure.
-        /// After releasing it it may be reused for another write.
+        ///     Releases a WriteRequest structure.
+        ///     After releasing it it may be reused for another write.
         /// </summary>
         /// <param name="wr">The WriteRequest to release</param>
         private void ReleaseWriteRequest(WriteRequest wr)
@@ -672,10 +599,7 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
 
             // It would for sure be better if the ConcurrentBag had some kind of
             // PutIfCountLessThan method
-            if (writeRequestPool.Count < MaxPooledWriteRequests)
-            {
-                writeRequestPool.Add(wr);
-            }
+            if (writeRequestPool.Count < MaxPooledWriteRequests) writeRequestPool.Add(wr);
             // in other situations the WriteRequest just gets garbage collected
         }
 
@@ -685,23 +609,14 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
             WriteRequest wr = null;
             lock (shared.Mutex)
             {
-                if (shared.CloseRequested)
-                {
-                    return WriteResult.ConnectionClosedError;
-                }
-                if (closeAfterwards)
-                {
-                    shared.CloseRequested = true;
-                }
+                if (shared.CloseRequested) return WriteResult.ConnectionClosedError;
+                if (closeAfterwards) shared.CloseRequested = true;
 
                 wr = AllocateWriteRequest();
                 populateRequest(wr);
 
                 var enqueued = TryEnqueueWriteRequestLocked(streamId, wr);
-                if (!enqueued)
-                {
-                    return WriteResult.StreamResetError;
-                }
+                if (!enqueued) return WriteResult.StreamResetError;
             }
 
             // Wakeup the task
@@ -717,10 +632,8 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
             ReleaseWriteRequest(wr);
 
             if (result == WriteResult.InProgress)
-            {
                 throw new Exception(
                     "Unexpected: Write is still marked as in progress");
-            }
 
             return result;
         }
@@ -730,7 +643,8 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
         {
             return PerformWriteRequestAsync(
                 header.StreamId,
-                wr => {
+                wr =>
+                {
                     wr.Header = header;
                     wr.Headers = headers;
                 },
@@ -753,7 +667,8 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
         {
             return PerformWriteRequestAsync(
                 header.StreamId,
-                wr => {
+                wr =>
+                {
                     wr.Header = header;
                     wr.ResetFrameData = data;
                 },
@@ -765,7 +680,8 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
         {
             return PerformWriteRequestAsync(
                 0,
-                wr => {
+                wr =>
+                {
                     wr.Header = header;
                     wr.Data = data;
                 },
@@ -777,7 +693,8 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
         {
             return PerformWriteRequestAsync(
                 header.StreamId,
-                wr => {
+                wr =>
+                {
                     wr.Header = header;
                     wr.WindowUpdateData = data;
                 },
@@ -789,7 +706,8 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
         {
             return PerformWriteRequestAsync(
                 0,
-                wr => {
+                wr =>
+                {
                     wr.Header = header;
                     wr.GoAwayData = data;
                 },
@@ -801,7 +719,8 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
         {
             return PerformWriteRequestAsync(
                 header.StreamId,
-                wr => {
+                wr =>
+                {
                     wr.Header = header;
                     wr.Data = data;
                 },
@@ -809,13 +728,13 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
         }
 
         /// <summary>
-        /// Writes a DATA frame.
-        /// This will not utilize the padding feature currently
+        ///     Writes a DATA frame.
+        ///     This will not utilize the padding feature currently
         /// </summary>
         private async Task WriteDataFrameAsync(WriteRequest wr)
         {
             // Reset the padding flag. Padding is not supported
-            wr.Header.Flags = (byte)((wr.Header.Flags & ~((uint)DataFrameFlags.Padded)) & 0xFF);
+            wr.Header.Flags = (byte) (wr.Header.Flags & ~(uint) DataFrameFlags.Padded & 0xFF);
             wr.Header.Length = wr.Data.Count;
 
             LogOutgoingFrameHeader(wr.Header);
@@ -823,12 +742,12 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
             var headerView = new ArraySegment<byte>(outBuf, 0, FrameHeader.HeaderSize);
             wr.Header.EncodeInto(headerView);
 
-            await this.outStream.WriteAsync(headerView);
-            await this.outStream.WriteAsync(wr.Data);
+            await outStream.WriteAsync(headerView);
+            await outStream.WriteAsync(wr.Data);
         }
 
         /// <summary>
-        /// Writes a PING frame
+        ///     Writes a PING frame
         /// </summary>
         private Task WritePingFrameAsync(WriteRequest wr)
         {
@@ -843,11 +762,11 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
             var totalSize = FrameHeader.HeaderSize + 8;
             var data = new ArraySegment<byte>(outBuf, 0, totalSize);
 
-            return this.outStream.WriteAsync(data);
+            return outStream.WriteAsync(data);
         }
 
         /// <summary>
-        /// Writes a GoAway frame
+        ///     Writes a GoAway frame
         /// </summary>
         private Task WriteGoAwayFrameAsync(WriteRequest wr)
         {
@@ -864,11 +783,11 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                 new ArraySegment<byte>(outBuf, FrameHeader.HeaderSize, dataSize));
             var data = new ArraySegment<byte>(outBuf, 0, totalSize);
 
-            return this.outStream.WriteAsync(data);
+            return outStream.WriteAsync(data);
         }
 
         /// <summary>
-        /// Writes a RESET frame
+        ///     Writes a RESET frame
         /// </summary>
         private Task WriteResetFrameAsync(WriteRequest wr)
         {
@@ -882,11 +801,11 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
             var data = new ArraySegment<byte>(outBuf, 0, totalSize);
 
             // Write the header
-            return this.outStream.WriteAsync(data);
+            return outStream.WriteAsync(data);
         }
 
         /// <summary>
-        /// Writes a SETTINGS frame which contains the encoded settings.
+        ///     Writes a SETTINGS frame which contains the encoded settings.
         /// </summary>
         private Task WriteSettingsAsync(Settings settings)
         {
@@ -895,7 +814,7 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                 Type = FrameType.Settings,
                 StreamId = 0u,
                 Length = settings.RequiredSize,
-                Flags = 0,
+                Flags = 0
             };
             LogOutgoingFrameHeader(fh);
             fh.EncodeInto(
@@ -904,11 +823,11 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                 outBuf, FrameHeader.HeaderSize, settings.RequiredSize));
             var totalSize = FrameHeader.HeaderSize + settings.RequiredSize;
             var data = new ArraySegment<byte>(outBuf, 0, totalSize);
-            return this.outStream.WriteAsync(data);
+            return outStream.WriteAsync(data);
         }
 
         /// <summary>
-        /// Writes a SETTINGS acknowledge frame
+        ///     Writes a SETTINGS acknowledge frame
         /// </summary>
         private Task WriteSettingsAckAsync()
         {
@@ -917,19 +836,19 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                 Type = FrameType.Settings,
                 StreamId = 0u,
                 Length = 0,
-                Flags = (byte)SettingsFrameFlags.Ack,
+                Flags = (byte) SettingsFrameFlags.Ack
             };
             LogOutgoingFrameHeader(fh);
             var headerView = new ArraySegment<byte>(outBuf, 0, FrameHeader.HeaderSize);
             fh.EncodeInto(headerView);
-            return this.outStream.WriteAsync(headerView);
+            return outStream.WriteAsync(headerView);
         }
 
         /// <summary>
-        /// Writes a full header block.
-        /// This will actually write a headers frame and possibly
-        /// multiple continuation frames.
-        /// This will not utilize the padding feature currently
+        ///     Writes a full header block.
+        ///     This will actually write a headers frame and possibly
+        ///     multiple continuation frames.
+        ///     This will not utilize the padding feature currently
         /// </summary>
         private async Task WriteHeadersAsync(WriteRequest wr)
         {
@@ -966,7 +885,7 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                 // Encode a header block fragment into the output buffer
                 var headerBlockFragment = new ArraySegment<byte>(
                     outBuf, FrameHeader.HeaderSize, maxFrameSize);
-                var encodeResult = this.hEncoder.EncodeInto(
+                var encodeResult = hEncoder.EncodeInto(
                     headerBlockFragment, headers);
 
                 // If not a single header was encoded but there are headers remaining
@@ -976,25 +895,15 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                 // Retrying it in a continuation frame
                 // - is not valid since it's not allowed to send an empty fragment
                 // - won't to better, since buffer size is the same
-                if (encodeResult.FieldCount == 0 && (nrTotalHeaders - sentHeaders) != 0)
-                {
-                    // Sending should be stopped and an error should be reported
-                    // to the sending application.
-                    // TODO: There's an open question how to do this gracefully
-                    // If the too large header field is encountered inside the
-                    // continuation frame the transmission of headers is already
-                    // in progress and can't be stopped.
-                    // So as an intermediate measure kill the connection in this
-                    // case by throwing an exception.
+                if (encodeResult.FieldCount == 0 && nrTotalHeaders - sentHeaders != 0)
                     throw new Exception(
                         "Encountered too large HeaderField which can't be encoded " +
                         "in a HTTP2 frame. Closing connection");
-                }
 
                 sentHeaders += encodeResult.FieldCount;
                 var remaining = nrTotalHeaders - sentHeaders;
 
-                FrameHeader hdr = wr.Header;
+                var hdr = wr.Header;
                 hdr.Length = encodeResult.UsedBytes;
                 if (!isContinuation)
                 {
@@ -1002,22 +911,19 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                     // Flags must be set according to whether a continuation follows
                     if (remaining == 0)
                     {
-                        hdr.Flags |= (byte)HeadersFrameFlags.EndOfHeaders;
+                        hdr.Flags |= (byte) HeadersFrameFlags.EndOfHeaders;
                     }
                     else
                     {
-                        var f = hdr.Flags & ~((byte)HeadersFrameFlags.EndOfHeaders);
-                        hdr.Flags = (byte)f;
+                        var f = hdr.Flags & ~(byte) HeadersFrameFlags.EndOfHeaders;
+                        hdr.Flags = (byte) f;
                     }
                 }
                 else
                 {
                     hdr.Type = FrameType.Continuation;
                     hdr.Flags = 0;
-                    if (remaining == 0)
-                    {
-                        hdr.Flags = (byte)ContinuationFrameFlags.EndOfHeaders;
-                    }
+                    if (remaining == 0) hdr.Flags = (byte) ContinuationFrameFlags.EndOfHeaders;
                 }
 
                 // Log the complete header
@@ -1026,19 +932,14 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                 hdr.EncodeInto(headerView);
                 var dataView = new ArraySegment<byte>(
                     outBuf, 0, FrameHeader.HeaderSize + encodeResult.UsedBytes);
-                await this.outStream.WriteAsync(dataView);
+                await outStream.WriteAsync(dataView);
 
-                if (remaining == 0)
-                {
-                    break;
-                }
-                else
-                {
-                    isContinuation = true;
-                    // TODO: This might not be the best way to create a slice,
-                    // as that might allocate without need. However it works.
-                    headers = wr.Headers.Skip(sentHeaders);
-                }
+                if (remaining == 0) break;
+
+                isContinuation = true;
+                // TODO: This might not be the best way to create a slice,
+                // as that might allocate without need. However it works.
+                headers = wr.Headers.Skip(sentHeaders);
             }
         }
 
@@ -1055,12 +956,12 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
         }
 
         /// <summary>
-        /// Registers a new stream for which frames must be transmitted at the
-        /// writer.
+        ///     Registers a new stream for which frames must be transmitted at the
+        ///     writer.
         /// </summary>
         /// <returns>
-        /// True if the stream could be succesfully regiestered.
-        /// False otherwise.
+        ///     True if the stream could be succesfully regiestered.
+        ///     False otherwise.
         /// </returns>
         public bool RegisterStream(uint streamId)
         {
@@ -1068,16 +969,14 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
             {
                 // After close is initiated or errors happened no further streams
                 // may be registered
-                if (shared.CloseRequested)
-                {
-                    return false;
-                }
+                if (shared.CloseRequested) return false;
 
-                var sd = new StreamData{
+                var sd = new StreamData
+                {
                     StreamId = streamId,
                     Window = shared.InitialWindowSize, // TODO: Switch to shared.?
                     WriteQueue = new Queue<WriteRequest>(),
-                    EndOfStreamQueued = false,
+                    EndOfStreamQueued = false
                 };
                 shared.Streams.Add(sd);
             }
@@ -1086,9 +985,9 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
         }
 
         /// <summary>
-        /// Removes the stream with the given stream ID from the writer.
-        /// Pending writes will be canceled.
-        /// This does not cancel any pending WindowUpdate or ResetStream writes
+        ///     Removes the stream with the given stream ID from the writer.
+        ///     Pending writes will be canceled.
+        ///     This does not cancel any pending WindowUpdate or ResetStream writes
         /// </summary>
         public void RemoveStream(uint streamId)
         {
@@ -1113,14 +1012,11 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
             }
 
             if (writeQueue != null)
-            {
-                // Signal all queued up writes as finished with an ResetError
                 foreach (var elem in writeQueue)
                 {
                     elem.Result = WriteResult.StreamResetError;
                     elem.Completed.Set();
                 }
-            }
         }
 
         private void FinishAllOutstandingWritesLocked()
@@ -1134,8 +1030,10 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                     elem.Result = WriteResult.StreamResetError;
                     elem.Completed.Set();
                 }
+
                 stream.WriteQueue.Clear();
             }
+
             streamsMap.Clear();
 
             foreach (var elem in shared.WriteQueue)
@@ -1143,15 +1041,16 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                 elem.Result = WriteResult.StreamResetError;
                 elem.Completed.Set();
             }
+
             shared.WriteQueue.Clear();
         }
 
         /// <summary>
-        /// Instruct the writer to utilize the new settings that the remote
-        /// required and to send a settings acknowledge frame.
+        ///     Instruct the writer to utilize the new settings that the remote
+        ///     required and to send a settings acknowledge frame.
         /// </summary>
         /// <returns>
-        /// Returns an error if updating the signal leaded to an invalid state.
+        ///     Returns an error if updating the signal leaded to an invalid state.
         /// </returns>
         public async Task<Http2Error?> ApplyAndAckRemoteSettings(
             Settings newRemoteSettings)
@@ -1169,7 +1068,7 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                 changeRequest = new ChangeSettingsRequest
                 {
                     NewRemoteSettings = newRemoteSettings,
-                    Completed = new AsyncManualResetEvent(false),
+                    Completed = new AsyncManualResetEvent(false)
                 };
                 shared.ChangeSettingsRequest = changeRequest;
             }
@@ -1194,32 +1093,17 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
             // bigger than the initally set maxFrameSize, as the pool allocator
             // is able to return a bigger size. In that case the bigger size
             // will be utilized up to maxFrameSize.
-            this.MaxFrameSize = (int)remoteSettings.MaxFrameSize;
+            MaxFrameSize = (int) remoteSettings.MaxFrameSize;
 
-            this.MaxHeaderListSize = (int)remoteSettings.MaxHeaderListSize;
+            MaxHeaderListSize = (int) remoteSettings.MaxHeaderListSize;
 
             // Update the maximum HPACK table size
-            var newRequestedTableSize = (int)remoteSettings.HeaderTableSize;
-            if (newRequestedTableSize > this.hEncoder.DynamicTableSize)
-            {
-                // We could theoretically just keep the current setting.
-                // There's no need to use a bigger setting, it's just an
-                // option that is granted to us from the remote.
-                // We will even not want to go to an arbitrary settings, since
-                // this means the remote can trigger us into using an infinite
-                // amount of memory.
-                // As a compromise increase the header table size up to a
-                // configured limit.
-                this.hEncoder.DynamicTableSize =
+            var newRequestedTableSize = (int) remoteSettings.HeaderTableSize;
+            if (newRequestedTableSize > hEncoder.DynamicTableSize)
+                hEncoder.DynamicTableSize =
                     Math.Min(newRequestedTableSize, DynamicTableSizeLimit);
-            }
             else
-            {
-                // We need to lower our header table size.
-                // The next header block that we encode will contain a
-                // notification about it.
-                this.hEncoder.DynamicTableSize = newRequestedTableSize;
-            }
+                hEncoder.DynamicTableSize = newRequestedTableSize;
 
             // Store the new initial window size and update all existing flow
             // control windows. This needs to be atomic inside a mutex, to
@@ -1230,9 +1114,9 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                 // Calculate the delta for the window size
                 // The output stream windows need to be adjusted by this value.
                 var initialWindowSizeDelta =
-                    (int)remoteSettings.InitialWindowSize - shared.InitialWindowSize;
+                    (int) remoteSettings.InitialWindowSize - shared.InitialWindowSize;
 
-                shared.InitialWindowSize = (int)remoteSettings.InitialWindowSize;
+                shared.InitialWindowSize = (int) remoteSettings.InitialWindowSize;
 
                 // Update all streams windows
                 return UpdateAllStreamWindowsLocked(initialWindowSizeDelta);
@@ -1240,15 +1124,15 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
         }
 
         /// <summary>
-        /// Updates the flow control window of the given stream by amount.
-        /// If the streamId is 0 the window of the connection will be increased.
-        /// Amount must be a positive number greater than 0.
+        ///     Updates the flow control window of the given stream by amount.
+        ///     If the streamId is 0 the window of the connection will be increased.
+        ///     Amount must be a positive number greater than 0.
         /// </summary>
         /// <returns>
-        /// Returns true if the flow control window for the stream could be updated
-        /// or if the stream does not exist.
-        /// Returns false in cases where an overflow error for the flow control
-        /// window occurs.
+        ///     Returns true if the flow control window for the stream could be updated
+        ///     or if the stream does not exist.
+        ///     Returns false in cases where an overflow error for the flow control
+        ///     window occurs.
         /// </returns>
         public Http2Error? UpdateFlowControlWindow(uint streamId, int amount)
         {
@@ -1256,99 +1140,81 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
 
             // Negative or zero flow control window updates are not valid
             if (amount < 1)
-            {
                 return new Http2Error
                 {
                     Code = ErrorCode.ProtocolError,
                     StreamId = streamId,
-                    Message = "Received an invalid flow control window update",
+                    Message = "Received an invalid flow control window update"
                 };
-            }
 
             lock (shared.Mutex)
             {
                 if (streamId == 0)
                 {
                     // Check for overflow
-                    var updatedValue = (long)connFlowWindow + (long)amount;
-                    if (updatedValue > (long)int.MaxValue)
-                    {
+                    var updatedValue = connFlowWindow + (long) amount;
+                    if (updatedValue > int.MaxValue)
                         return new Http2Error
                         {
                             StreamId = 0,
                             Code = ErrorCode.FlowControlError,
-                            Message = "Flow control window overflow",
+                            Message = "Flow control window overflow"
                         };
-                    }
                     // Increase connection flow control value
                     if (Connection.logger != null &&
                         Connection.logger.IsEnabled(LogLevel.Trace))
-                    {
                         Connection.logger.LogTrace(
                             "Outgoing flow control window update:\n" +
                             "  Connection window: {0} -> {1}",
-                            connFlowWindow, (int)updatedValue);
-                    }
+                            connFlowWindow, (int) updatedValue);
                     if (connFlowWindow == 0) wakeup = true;
-                    connFlowWindow = (int)updatedValue;
+                    connFlowWindow = (int) updatedValue;
                 }
                 else
                 {
                     for (var i = 0; i < shared.Streams.Count; i++)
-                    {
                         if (shared.Streams[i].StreamId == streamId)
                         {
                             var s = shared.Streams[i];
                             // Check for overflow
-                            var updatedValue = (long)s.Window + (long)amount;
-                            if (updatedValue > (long)int.MaxValue)
-                            {
+                            var updatedValue = s.Window + (long) amount;
+                            if (updatedValue > int.MaxValue)
                                 return new Http2Error
                                 {
                                     Code = ErrorCode.FlowControlError,
                                     StreamId = streamId,
-                                    Message = "Flow control window overflow",
+                                    Message = "Flow control window overflow"
                                 };
-                            }
                             // Increase stream flow control value
                             if (Connection.logger != null &&
                                 Connection.logger.IsEnabled(LogLevel.Trace))
-                            {
                                 Connection.logger.LogTrace(
                                     "Outgoing flow control window update:\n" +
                                     "  Stream {0} window: {1} -> {2}",
-                                    streamId, s.Window, (int)updatedValue);
-                            }
-                            s.Window = (int)updatedValue;
+                                    streamId, s.Window, (int) updatedValue);
+                            s.Window = (int) updatedValue;
                             shared.Streams[i] = s;
-                            if (s.Window > 0 && s.WriteQueue.Count > 0)
-                            {
-                                wakeup = true;
-                            }
+                            if (s.Window > 0 && s.WriteQueue.Count > 0) wakeup = true;
                             break;
                         }
-                    }
                 }
             }
 
-            if (wakeup)
-            {
-                this.wakeupWriter.Set();
-            }
+            if (wakeup) wakeupWriter.Set();
             return null;
         }
 
         /// <summary>
-        /// Updates the flow control window of all streams by the given stream by amount.
-        /// The amount can be negative.
+        ///     Updates the flow control window of all streams by the given stream by amount.
+        ///     The amount can be negative.
         /// </summary>
         /// <returns>
-        /// Returns an error if at least one flow control window over- or underflows
-        /// during this operation.
+        ///     Returns an error if at least one flow control window over- or underflows
+        ///     during this operation.
         /// </returns>
         private Http2Error? UpdateAllStreamWindowsLocked(int amount)
         {
-            bool hasOverflow = false;
+            var hasOverflow = false;
             if (amount == 0) return null;
 
             // Iterate over all streams and apply window update
@@ -1356,9 +1222,9 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
             {
                 var s = shared.Streams[i];
                 // Check for overflow and underflow
-                var updatedValue = (long)s.Window + (long)amount;
-                if (updatedValue > (long)int.MaxValue ||
-                    updatedValue < (long)int.MinValue)
+                var updatedValue = s.Window + (long) amount;
+                if (updatedValue > int.MaxValue ||
+                    updatedValue < int.MinValue)
                 {
                     hasOverflow = true;
                     break;
@@ -1366,36 +1232,97 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
 
                 if (Connection.logger != null &&
                     Connection.logger.IsEnabled(LogLevel.Trace))
-                {
                     Connection.logger.LogTrace(
                         "Outgoing flow control window update:\n" +
                         "  Stream {0} window: {1} -> {2}",
                         s.StreamId, s.Window, s.Window + amount);
-                }
                 s.Window += amount;
                 shared.Streams[i] = s;
             }
 
             if (hasOverflow)
-            {
-                // We always signal a connection error if the flow control window
-                // overflows as the result of a SETTINGS update, since
-                // - that will not happen in normal environment (settings updates
-                //   happen early and not near the end of the window)
-                // - the update might overflow multiple stream windows at once,
-                //   which we can't signal and handle through the Http2Error
-                //   return value.
                 return new Http2Error
                 {
                     Code = ErrorCode.FlowControlError,
                     StreamId = 0u,
-                    Message = "Flow control window overflow through SETTINGS update",
+                    Message = "Flow control window overflow through SETTINGS update"
                 };
-            }
-            else
-            {
-                return null;
-            }
+            return null;
+        }
+
+        /// <summary>
+        ///     Configuration options for the ConnectionWriter
+        /// </summary>
+        public struct Options
+        {
+            public int MaxFrameSize;
+            public int MaxHeaderListSize;
+            public int DynamicTableSizeLimit;
+            public int InitialWindowSize;
+        }
+
+        private struct StreamData
+        {
+            public uint StreamId;
+
+            public int Window;
+
+            // TODO: Is the queue needed here?
+            // As the StreamImpl API does not allow
+            // writing concurrent header and data frames
+            // it seems superfluos
+            // It might be required if we have a client, and the client headers
+            // are sent from another method which might finish only after the
+            // stream is handed to the user.
+            public Queue<WriteRequest> WriteQueue;
+            public bool EndOfStreamQueued;
+        }
+
+        private struct SharedData
+        {
+            /// <summary>Guards the SharedData</summary>
+            public object Mutex;
+
+            /// <summary>
+            ///     The currently set initial window size as indicated by the remote
+            ///     settings.
+            /// </summary>
+            public int InitialWindowSize;
+
+            /// <summary>Outstanding writes the are associated to the connection</summary>
+            public Queue<WriteRequest> WriteQueue;
+
+            /// <summary>Streams for which data needs to be written</summary>
+            public List<StreamData> Streams;
+
+            /// <summary>
+            ///     If this is not null the writer should apply the new settings
+            ///     and send a settings ACK.
+            /// </summary>
+            public ChangeSettingsRequest ChangeSettingsRequest;
+
+            /// <summary>Whether the writer was requested to close after completing all writes</summary>
+            public bool CloseRequested;
+        }
+
+        // This needs be a class in order to be mutatable
+        private class WriteRequest
+        {
+            public AsyncManualResetEvent Completed;
+            public ArraySegment<byte> Data;
+            public GoAwayFrameData GoAwayData;
+            public FrameHeader Header;
+            public IEnumerable<HeaderField> Headers;
+            public ResetFrameData ResetFrameData;
+            public WriteResult Result;
+            public WindowUpdateData WindowUpdateData;
+        }
+
+        private class ChangeSettingsRequest
+        {
+            public AsyncManualResetEvent Completed;
+            public Settings NewRemoteSettings;
+            public Http2Error? Result;
         }
     }
 }

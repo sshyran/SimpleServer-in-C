@@ -1,7 +1,10 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
+
+#endregion
 
 namespace Ultz.SimpleServer.Common
 {
@@ -24,10 +27,8 @@ namespace Ultz.SimpleServer.Common
                     ;
                     return _types;
                 }
-                else
-                {
-                    return _types;
-                }
+
+                return _types;
             }
         }
     }

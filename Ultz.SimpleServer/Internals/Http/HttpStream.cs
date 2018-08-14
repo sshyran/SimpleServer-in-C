@@ -1,23 +1,27 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Ultz.SimpleServer.Internals.Http2.Http2;
+
+#endregion
 
 namespace Ultz.SimpleServer.Internals.Http
 {
     public class HttpStream : IReadableByteStream
     {
         private const int MaxHeaderLength = 1024;
+        private readonly IReadableByteStream _stream;
         private byte[] _httpBuffer = new byte[MaxHeaderLength];
         private int _httpBufferOffset;
 
         private ArraySegment<byte> _remains;
-        private readonly IReadableByteStream _stream;
 
         public HttpStream(IReadableByteStream stream)
         {
-            this._stream = stream;
+            _stream = stream;
         }
 
         public int HttpHeaderLength { get; private set; }
@@ -122,7 +126,7 @@ namespace Ultz.SimpleServer.Internals.Http
                 _httpBuffer = null;
             }
         }
-        
+
         public void Consume(int length)
         {
             if (length != _httpBufferOffset)

@@ -6,6 +6,7 @@
         {
             Context = context;
         }
+
         public IContext Context { get; }
     }
 }

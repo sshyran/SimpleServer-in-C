@@ -1,41 +1,35 @@
+#region
+
 using System;
 using System.Collections.Generic;
 using Ultz.SimpleServer.Internals.Http2.Hpack;
 
+#endregion
+
 namespace Ultz.SimpleServer.Internals.Http2.Http2
 {
     /// <summary>
-    /// Represents the headers and payload of an upgrade request from
-    /// HTTP/1.1 to HTTP/2
+    ///     Represents the headers and payload of an upgrade request from
+    ///     HTTP/1.1 to HTTP/2
     /// </summary>
     public class ServerUpgradeRequest
     {
         /// <summary>
-        /// The decoded settings that were included in the upgrade
-        /// </summary>
-        internal readonly Settings Settings;
-
-        /// <summary>
-        /// The headers including pseudo-headers that were included in the upgrade
+        ///     The headers including pseudo-headers that were included in the upgrade
         /// </summary>
         internal readonly List<HeaderField> Headers;
 
         /// <summary>The payload that was included in the upgrade</summary>
         internal readonly byte[] Payload;
 
-        private readonly bool valid;
-
         /// <summary>
-        /// Returns whether the upgrade request from HTTP/1 to HTTP/2 is valid.
-        /// If the upgrade is not valid an application must either reject the
-        /// upgrade or send a HTTP/1 response. It may not try to create a HTTP/2
-        /// connection based on that upgrade request.
+        ///     The decoded settings that were included in the upgrade
         /// </summary>
-        public bool IsValid => valid;
+        internal readonly Settings Settings;
 
         /// <summary>
-        /// Constructs the ServerUpgradeRequest out ouf the information from
-        /// the builder.
+        ///     Constructs the ServerUpgradeRequest out ouf the information from
+        ///     the builder.
         /// </summary>
         internal ServerUpgradeRequest(
             Settings settings,
@@ -43,43 +37,47 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
             byte[] payload,
             bool valid)
         {
-            this.Settings = settings;
-            this.Headers = headers;
-            this.Payload = payload;
-            this.valid = valid;
+            Settings = settings;
+            Headers = headers;
+            Payload = payload;
+            IsValid = valid;
         }
+
+        /// <summary>
+        ///     Returns whether the upgrade request from HTTP/1 to HTTP/2 is valid.
+        ///     If the upgrade is not valid an application must either reject the
+        ///     upgrade or send a HTTP/1 response. It may not try to create a HTTP/2
+        ///     connection based on that upgrade request.
+        /// </summary>
+        public bool IsValid { get; }
     }
 
     /// <summary>
-    /// A builder for ServerUpgradeRequests
+    ///     A builder for ServerUpgradeRequests
     /// </summary>
     public class ServerUpgradeRequestBuilder
     {
-        Settings? settings;
-        List<HeaderField> headers;
-        ArraySegment<byte> payload;
+        private List<HeaderField> headers;
+        private ArraySegment<byte> payload;
+        private Settings? settings;
 
         /// <summary>
-        /// Creates a new ServerUpgradeRequestBuilder
-        /// </summary>
-        public ServerUpgradeRequestBuilder()
-        {
-        }
-
-        /// <summary>
-        /// Builds a ServerUpgradeRequest from the stored configuration.
-        /// All other relevant configuration setter methods need to be called
-        /// before.
-        /// Only if the ServerUpgradeRequest.IsValid is true an upgrade
-        /// to HTTP/2 may be performed.
+        ///     Builds a ServerUpgradeRequest from the stored configuration.
+        ///     All other relevant configuration setter methods need to be called
+        ///     before.
+        ///     Only if the ServerUpgradeRequest.IsValid is true an upgrade
+        ///     to HTTP/2 may be performed.
         /// </summary>
         public ServerUpgradeRequest Build()
         {
-            bool valid = true;
+            var valid = true;
             if (settings == null) valid = false;
-            
+
             var headers = this.headers;
-            if (headers == null) valid = false;
+            if (headers == null)
+            {
+                valid = false;
+            }
             else
             {
                 // Validate headers
@@ -92,12 +90,7 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
             }
 
             long declaredContentLength = -1;
-            if (headers != null)
-            {
-                declaredContentLength = headers.GetContentLength();
-                // TODO: Handle invalid content lengths, which would yield
-                // results like -2?
-            }
+            if (headers != null) declaredContentLength = headers.GetContentLength();
 
             byte[] payload = null;
             if (this.payload != null && this.payload.Count > 0)
@@ -124,26 +117,26 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
             }
 
             return new ServerUpgradeRequest(
-                settings: settings ?? Settings.Default,
-                headers: headers,
-                payload: payload,
-                valid: valid);
+                settings ?? Settings.Default,
+                headers,
+                payload,
+                valid);
         }
 
         /// <summary>
-        /// Sets the list of headers that were received with the upgrade request.
-        /// This must include the pseudoheaderfields :host, :scheme, :method
-        /// and optionally :authority. This means the request line from the
-        /// upgrade request must be converted into pseudoheader fields before
-        /// calling this methods. The pseudoheaderfields must be inserted at
-        /// the beginning of the header list before any other headers.
-        /// The header fields that are related to the upgrade should get filtered
-        /// from the header list and should not get passed to the request builder,
-        /// as they are not important for the remaining application.
-        /// The remaining header fields must all utilize a lowercase headerfield
-        /// name.
-        /// The builder will take ownership of the list. The caller may not
-        /// mutate the list after passing it to the builder.
+        ///     Sets the list of headers that were received with the upgrade request.
+        ///     This must include the pseudoheaderfields :host, :scheme, :method
+        ///     and optionally :authority. This means the request line from the
+        ///     upgrade request must be converted into pseudoheader fields before
+        ///     calling this methods. The pseudoheaderfields must be inserted at
+        ///     the beginning of the header list before any other headers.
+        ///     The header fields that are related to the upgrade should get filtered
+        ///     from the header list and should not get passed to the request builder,
+        ///     as they are not important for the remaining application.
+        ///     The remaining header fields must all utilize a lowercase headerfield
+        ///     name.
+        ///     The builder will take ownership of the list. The caller may not
+        ///     mutate the list after passing it to the builder.
         /// </summary>
         public ServerUpgradeRequestBuilder SetHeaders(List<HeaderField> headers)
         {
@@ -152,9 +145,9 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
         }
 
         /// <summary>
-        /// Sets the HTTP/2 settings, which are received during the upgrade in
-        /// a HTTP2-Settings header in base64 encoded string.
-        /// The value of this header must be passed to this function.
+        ///     Sets the HTTP/2 settings, which are received during the upgrade in
+        ///     a HTTP2-Settings header in base64 encoded string.
+        ///     The value of this header must be passed to this function.
         /// </summary>
         public ServerUpgradeRequestBuilder SetHttp2Settings(
             string base64EncodedHttp2Settings)
@@ -167,10 +160,9 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
             // different characters.
             var chars = base64EncodedHttp2Settings.ToCharArray();
             for (var i = 0; i < chars.Length; i++)
-            {
-                if (chars[i] == '_') chars[i] = '/';
+                if (chars[i] == '_')
+                    chars[i] = '/';
                 else if (chars[i] == '-') chars[i] = '+';
-            }
 
             // This is an upgrade from a HTTP/1.1 connection
             // This contains a settings field.
@@ -187,22 +179,18 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
             }
 
             // Deserialize the settings
-            Settings newSettings = Settings.Default;
+            var newSettings = Settings.Default;
             var err = newSettings.UpdateFromData(
                 new ArraySegment<byte>(settingsBytes));
-            if (err == null)
-            {
-                // Only update the settings if deserialization did not cause error
-                settings = newSettings;
-            }
+            if (err == null) settings = newSettings;
 
             return this;
         }
 
         /// <summary>
-        /// Configures the payload that was received as the body of the upgrade
-        /// request. This payload will be forwarded to the handler of Stream 1.
-        /// The given view will be copied once the Build() method is invoked.
+        ///     Configures the payload that was received as the body of the upgrade
+        ///     request. This payload will be forwarded to the handler of Stream 1.
+        ///     The given view will be copied once the Build() method is invoked.
         /// </summary>
         public ServerUpgradeRequestBuilder SetPayload(
             ArraySegment<byte> payload)

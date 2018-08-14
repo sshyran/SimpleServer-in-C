@@ -1,6 +1,10 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Collections.Generic;
 using Ultz.SimpleServer.Handlers;
+
+#endregion
 
 namespace Ultz.SimpleServer.Internals
 {

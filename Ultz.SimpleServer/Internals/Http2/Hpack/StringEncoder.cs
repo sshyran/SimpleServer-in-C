@@ -1,29 +1,35 @@
+#region
+
 using System;
 using System.Text;
+
+#endregion
 
 namespace Ultz.SimpleServer.Internals.Http2.Hpack
 {
     /// <summary>
-    /// Possible strategies for applying huffman encoding
+    ///     Possible strategies for applying huffman encoding
     /// </summary>
     public enum HuffmanStrategy
     {
         /// <summary>Never use Huffman encoding</summary>
         Never,
+
         /// <summary>Always use Huffman encoding</summary>
         Always,
+
         /// <summary>Use Huffman if the string is shorter in huffman format</summary>
-        IfSmaller,
+        IfSmaller
     }
 
     /// <summary>
-    /// Encodes string values according to the HPACK specification.
+    ///     Encodes string values according to the HPACK specification.
     /// </summary>
     public static class StringEncoder
     {
         /// <summary>
-        /// Returns the byte length of the given string in non-huffman encoded
-        /// form.
+        ///     Returns the byte length of the given string in non-huffman encoded
+        ///     form.
         /// </summary>
         public static int GetByteLength(string value)
         {
@@ -31,18 +37,18 @@ namespace Ultz.SimpleServer.Internals.Http2.Hpack
         }
 
         /// <summary>
-        /// Encodes the given string into the target buffer
+        ///     Encodes the given string into the target buffer
         /// </summary>
         /// <param name="buf">The buffer into which the string should be serialized</param>
         /// <param name="value">The value to encode</param>
         /// <param name="valueByteLen">
-        /// The length of the string in bytes in non-huffman-encoded form.
-        /// This can be retrieved through the GetByteLength method.
+        ///     The length of the string in bytes in non-huffman-encoded form.
+        ///     This can be retrieved through the GetByteLength method.
         /// </param>
         /// <param name="huffman">Controls the huffman encoding</param>
         /// <returns>
-        /// The number of bytes that were required to encode the value.
-        /// -1 if the value did not fit into the buffer.
+        ///     The number of bytes that were required to encode the value.
+        ///     -1 if the value did not fit into the buffer.
         /// </returns>
         public static int EncodeInto(
             ArraySegment<byte> buf,
@@ -64,19 +70,13 @@ namespace Ultz.SimpleServer.Internals.Http2.Hpack
                 huffmanInputBuf = Encoding.ASCII.GetBytes(value);
                 requiredHuffmanBytes = Huffman.EncodedLength(
                     new ArraySegment<byte>(huffmanInputBuf));
-                if (huffman == HuffmanStrategy.IfSmaller && requiredHuffmanBytes < encodedByteLen)
-                {
-                    useHuffman = true;
-                }
+                if (huffman == HuffmanStrategy.IfSmaller && requiredHuffmanBytes < encodedByteLen) useHuffman = true;
             }
 
-            if (useHuffman)
-            {
-                encodedByteLen = requiredHuffmanBytes;
-            }
+            if (useHuffman) encodedByteLen = requiredHuffmanBytes;
 
             // Write the required length to the target buffer
-            var prefixContent = useHuffman ? (byte)0x80 : (byte)0;
+            var prefixContent = useHuffman ? (byte) 0x80 : (byte) 0;
             var used = IntEncoder.EncodeInto(
                 new ArraySegment<byte>(buf.Array, offset, free),
                 encodedByteLen, prefixContent, 7);
@@ -108,9 +108,9 @@ namespace Ultz.SimpleServer.Internals.Http2.Hpack
         }
 
         /// <summary>
-        /// Encodes the given string.
-        /// This method should not be directly used since it allocates.
-        /// EncodeInto is preferred.
+        ///     Encodes the given string.
+        ///     This method should not be directly used since it allocates.
+        ///     EncodeInto is preferred.
         /// </summary>
         /// <param name="value">The value to encode</param>
         /// <param name="huffman">Controls the huffman encoding</param>
@@ -137,11 +137,9 @@ namespace Ultz.SimpleServer.Internals.Http2.Hpack
                     Array.Copy(buf, 0, newBuf, 0, size);
                     return newBuf;
                 }
-                else
-                {
-                    // Need more buffer space
-                    estimatedBufferSize = (estimatedBufferSize + 2) * 2;
-                }
+
+                // Need more buffer space
+                estimatedBufferSize = (estimatedBufferSize + 2) * 2;
             }
         }
     }

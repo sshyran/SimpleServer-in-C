@@ -1,7 +1,11 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.IO;
 using System.Reflection;
 using Ultz.SimpleServer.Internals.Http;
+
+#endregion
 
 namespace Ultz.SimpleServer.Providers
 {

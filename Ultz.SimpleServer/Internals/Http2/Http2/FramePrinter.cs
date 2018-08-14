@@ -1,10 +1,14 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Text;
+
+#endregion
 
 namespace Ultz.SimpleServer.Internals.Http2.Http2
 {
     /// <summary>
-    /// Utilites for printing frames
+    ///     Utilites for printing frames
     /// </summary>
     public static class FramePrinter
     {
@@ -29,7 +33,6 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
 
             var first = true;
             foreach (byte flagValue in Enum.GetValues(flagEnum))
-            {
                 if ((flagValue & h.Flags) != 0)
                 {
                     // The flag is set
@@ -37,18 +40,17 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                     first = false;
                     b.Append(Enum.GetName(flagEnum, flagValue));
                 }
-            }
         }
 
         /// <summary>
-        /// Prints the frame header into human readable format
+        ///     Prints the frame header into human readable format
         /// </summary>
         /// <param name="h">The header to print</param>
         /// <returns>The printed header</returns>
         public static string PrintFrameHeader(FrameHeader h)
         {
             var b = new StringBuilder();
-            b.Append($"{ FrameTypeString(h.Type)} flags=[");
+            b.Append($"{FrameTypeString(h.Type)} flags=[");
             AddFlags(b, h);
             b.Append("] streamId=0x");
             b.Append(h.StreamId.ToString("x8"));

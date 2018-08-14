@@ -1,14 +1,18 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Buffers;
 using System.Text;
+
+#endregion
 
 namespace Ultz.SimpleServer.Internals.Http2.Hpack
 {
     public class Huffman
     {
         /// <summary>
-        /// Resizes a buffer by allocating a new one and copying usedBytes from
-        /// the old to the new buffer.
+        ///     Resizes a buffer by allocating a new one and copying usedBytes from
+        ///     the old to the new buffer.
         /// </summary>
         private static void ResizeBuffer(
             ref byte[] outBuf, int usedBytes, int newBytes,
@@ -43,7 +47,8 @@ namespace Ultz.SimpleServer.Internals.Http2.Hpack
             for (inputByteOffset = 0; inputByteOffset < input.Count; inputByteOffset++)
             {
                 var bt = input.Array[inputByteOffset];
-                for (inputBitOffset = 7; inputBitOffset >= 0; inputBitOffset--) {
+                for (inputBitOffset = 7; inputBitOffset >= 0; inputBitOffset--)
+                {
                     // Fetch bit at offset position
                     var bit = (bt & (1 << inputBitOffset)) >> inputBitOffset;
                     // Follow the tree branch that is specified by that bit
@@ -57,6 +62,7 @@ namespace Ultz.SimpleServer.Internals.Http2.Hpack
                         treeNode = treeNode.Child0;
                         isValidPadding = false;
                     }
+
                     currentSymbolLength++;
 
                     if (treeNode == null)
@@ -75,10 +81,11 @@ namespace Ultz.SimpleServer.Internals.Http2.Hpack
                                 // No more space - resize first
                                 var unprocessedBytes = input.Count - inputByteOffset;
                                 ResizeBuffer(
-                                    ref outBuf, byteCount, 2*unprocessedBytes,
+                                    ref outBuf, byteCount, 2 * unprocessedBytes,
                                     pool);
                             }
-                            outBuf[byteCount] = (byte)treeNode.Value;
+
+                            outBuf[byteCount] = (byte) treeNode.Value;
                             byteCount++;
                             treeNode = HuffmanTree.Root;
                             currentSymbolLength = 0;
@@ -93,21 +100,12 @@ namespace Ultz.SimpleServer.Internals.Http2.Hpack
                             throw new Exception("Encountered EOS in huffman code");
                         }
                     }
-                    
                 }
             }
 
-            if (currentSymbolLength > 7)
-            {
-                // A padding strictly longer
-                // than 7 bits MUST be treated as a decoding error.
-                throw new Exception("Padding exceeds 7 bits");
-            }
+            if (currentSymbolLength > 7) throw new Exception("Padding exceeds 7 bits");
 
-            if (!isValidPadding)
-            {
-                throw new Exception("Invalid padding");
-            }
+            if (!isValidPadding) throw new Exception("Invalid padding");
 
             // Convert the buffer into a string
             // TODO: Check if encoding is really correct
@@ -117,7 +115,7 @@ namespace Ultz.SimpleServer.Internals.Http2.Hpack
         }
 
         /// <summary>
-        /// Returns the length of a string in huffman encoded form
+        ///     Returns the length of a string in huffman encoded form
         /// </summary>
         public static int EncodedLength(ArraySegment<byte> data)
         {
@@ -135,23 +133,20 @@ namespace Ultz.SimpleServer.Internals.Http2.Hpack
                 }
             }
 
-            if (bitCount != 0)
-            {
-                byteCount++;
-            }
+            if (bitCount != 0) byteCount++;
 
             return byteCount;
         }
 
         /// <summary>
-        /// Performs huffman encoding on the input buffer.
-        /// Output must be big enough to hold the huffman encoded string at
-        /// the specified offset.
-        /// The required size can be calculated with Huffman.EncodedLength
+        ///     Performs huffman encoding on the input buffer.
+        ///     Output must be big enough to hold the huffman encoded string at
+        ///     the specified offset.
+        ///     The required size can be calculated with Huffman.EncodedLength
         /// </summary>
         /// <returns>
-        /// The number of bytes that are used in the buffer for the encoded
-        /// string. Will return -1 if there was not enough free space for encoding
+        ///     The number of bytes that are used in the buffer for the encoded
+        ///     string. Will return -1 if there was not enough free space for encoding
         /// </returns>
         public static int EncodeInto(
             ArraySegment<byte> buf,
@@ -164,7 +159,7 @@ namespace Ultz.SimpleServer.Internals.Http2.Hpack
             /// The value at the current offset in the output buffer
             var currentValue = 0;
 
-            for (var i = bytes.Offset; i  < bytes.Offset + bytes.Count; i++)
+            for (var i = bytes.Offset; i < bytes.Offset + bytes.Count; i++)
             {
                 // Lookup the corresponding value in the table
                 var tableEntry = HuffmanTable.Entries[bytes.Array[i]];
@@ -181,7 +176,7 @@ namespace Ultz.SimpleServer.Internals.Http2.Hpack
                     // Take the bitsToPut highest bits from binVal
                     var putBytes = binVal >> (bits - bitsToPut);
                     // Align the value on 8 bits
-                    putBytes = putBytes << (8-bitsToPut);
+                    putBytes = putBytes << (8 - bitsToPut);
                     // And put it in place at the position where we need it
                     // This can not be directly combined with the former operation,
                     // because otherwise the trailing numbers wouldn't be zeroed
@@ -191,14 +186,15 @@ namespace Ultz.SimpleServer.Internals.Http2.Hpack
                     {
                         // A full output byte was produced
                         // Write it to target buffer and advance to the next byte
-                        buf.Array[byteOffset] = (byte)(currentValue & 0xFF);
+                        buf.Array[byteOffset] = (byte) (currentValue & 0xFF);
                         byteOffset++;
                         bitOffset = 0;
                         currentValue = 0;
                     }
+
                     bits -= bitsToPut;
                     // Need only the low amount of bits
-                    binVal &= ((1<<bits)-1);
+                    binVal &= (1 << bits) - 1;
                 }
             }
 
@@ -206,9 +202,9 @@ namespace Ultz.SimpleServer.Internals.Http2.Hpack
             // and save currentValue, since this hasn't happened yet
             if (bitOffset != 0)
             {
-                var eosBits = (1 << (8-bitOffset)) - 1;
+                var eosBits = (1 << (8 - bitOffset)) - 1;
                 currentValue |= eosBits;
-                buf.Array[byteOffset] = (byte)(currentValue & 0xFF);
+                buf.Array[byteOffset] = (byte) (currentValue & 0xFF);
                 byteOffset++;
             }
 

@@ -1,12 +1,15 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Security;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
-using Ultz.SimpleServer.Internals.Http1;
 using Ultz.SimpleServer.Internals.Http2;
+
+#endregion
 
 namespace Ultz.SimpleServer.Common
 {
@@ -50,13 +53,11 @@ namespace Ultz.SimpleServer.Common
                 AllowRenegotiation = settings.ContainsKey("alpnAllowRenegotiation") &&
                                      bool.Parse(settings["alpnAllowRenegotiaion"]),
                 ApplicationProtocols = obj.Service.Protocol is HttpTwo
-                    ? new List<SslApplicationProtocol>() {SslApplicationProtocol.Http2}
-                    : obj.Service.Protocol is HttpOne
-                        ? new List<SslApplicationProtocol>() {SslApplicationProtocol.Http11}
-                        : settings.ContainsKey("alpnProtocols")
-                            ? settings["alpnProtocols"].Split(';')
-                                .Select(protocol => new SslApplicationProtocol(protocol)).ToList()
-                            : null,
+                    ? new List<SslApplicationProtocol> {SslApplicationProtocol.Http2, SslApplicationProtocol.Http11}
+                    : settings.ContainsKey("alpnProtocols")
+                        ? settings["alpnProtocols"].Split(';')
+                            .Select(protocol => new SslApplicationProtocol(protocol)).ToList()
+                        : null,
                 CertificateRevocationCheckMode = settings.ContainsKey("alpnRevokeCheck")
                     ? settings["alpnRevokeCheck"].ToLower() == "none" ? X509RevocationMode.NoCheck :
                     settings["alpnRevokeCheck"].ToLower() == "offline" ? X509RevocationMode.Offline :

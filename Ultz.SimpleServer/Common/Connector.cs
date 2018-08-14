@@ -1,17 +1,22 @@
-﻿using System.Collections.Generic;
+﻿#region
+
+using System.Collections.Generic;
 using System.Net;
 using Ultz.SimpleServer.Internals;
+
+#endregion
 
 namespace Ultz.SimpleServer.Common
 {
     public class Connector : IConfigurable
     {
-        public Service Service { get; }
         public Connector(Service service)
         {
             Service = service;
         }
-        
+
+        public Service Service { get; }
+
         public IListener Listener { get; set; }
         public int Port { get; set; }
         public string Ip { get; set; }

@@ -1,17 +1,21 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Ultz.SimpleServer.Handlers;
 using Ultz.SimpleServer.Internals;
+
+#endregion
 
 namespace Ultz.SimpleServer.Common
 {
     public abstract class Service : IConfigurable
     {
         public abstract IProtocol Protocol { get; }
-        public List<Valve> Valves { get; set; }
         public List<IHandler> Handlers { get; set; }
         public List<Connector> Connectors { get; set; }
+        public List<Valve> Valves { get; set; }
 
         public abstract void BeforeStart();
         public abstract void OnStart();
@@ -35,14 +39,14 @@ namespace Ultz.SimpleServer.Common
             Handlers.Add(handler);
         }
 
-        public void RegisterHandler(Func<IRequest,bool> canHandleCallback, Action<IContext> handler)
+        public void RegisterHandler(Func<IRequest, bool> canHandleCallback, Action<IContext> handler)
         {
-            Handlers.Add(new LamdaHandler(canHandleCallback,handler));
+            Handlers.Add(new LamdaHandler(canHandleCallback, handler));
         }
 
         internal IEnumerable<Server> GetServers()
         {
-            return Connectors.Select(x => new Server(Protocol,x.GetListener()));
+            return Connectors.Select(x => new Server(Protocol, x.GetListener()));
         }
     }
 }

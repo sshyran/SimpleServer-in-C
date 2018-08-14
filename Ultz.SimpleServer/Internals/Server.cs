@@ -1,21 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net;
+﻿#region
+
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+
+#endregion
 
 namespace Ultz.SimpleServer.Internals
 {
     public class Server : IDisposable
     {
-        private IProtocol _protocol;
-        public IListener Listener { get; }
-        private ILoggerProvider _loggerProvider;
-        private ILogger _logger;
-        private Task _listenerTask;
+        private readonly ILogger _logger;
+        private readonly ILoggerProvider _loggerProvider;
+        private readonly IProtocol _protocol;
         private CancellationTokenSource _cancellationToken;
-        public Server(IProtocol protocol,IListener listener,ILoggerProvider logger = null)
+        private Task _listenerTask;
+
+        public Server(IProtocol protocol, IListener listener, ILoggerProvider logger = null)
         {
             _protocol = protocol;
             Listener = listener;
@@ -23,7 +25,16 @@ namespace Ultz.SimpleServer.Internals
             _logger = _loggerProvider?.CreateLogger("isrv");
         }
 
-        public event EventHandler<ContextEventArgs> RequestReceived; 
+        public IListener Listener { get; }
+
+        public void Dispose()
+        {
+            _listenerTask?.Dispose();
+            _cancellationToken?.Dispose();
+            Listener?.Dispose();
+        }
+
+        public event EventHandler<ContextEventArgs> RequestReceived;
 
         public void Start()
         {
@@ -35,12 +46,12 @@ namespace Ultz.SimpleServer.Internals
             _cancellationToken = new CancellationTokenSource();
             _protocol.ContextCreated += GotContext;
             _listenerTask = Task.Factory.StartNew(ListenAysnc, _cancellationToken.Token);
-            _logger.LogInformation(_protocol.GetType().Name+"Listener has started!");
+            _logger.LogInformation(_protocol.GetType().Name + "Listener has started!");
         }
 
         private void GotContext(object sender, ContextEventArgs e)
         {
-            RequestReceived?.Invoke(this,e);
+            RequestReceived?.Invoke(this, e);
         }
 
         public void Stop()
@@ -61,23 +72,20 @@ namespace Ultz.SimpleServer.Internals
                 if (connection == null) // listener shutdown
                     continue;
 #pragma warning disable 4014
-                Task.Factory.StartNew(async () => { await _protocol.HandleConnectionAsync(connection,_loggerProvider?.CreateLogger("c"+connection.Id)); });
+                Task.Factory.StartNew(async () =>
+                {
+                    await _protocol.HandleConnectionAsync(connection,
+                        _loggerProvider?.CreateLogger("c" + connection.Id));
+                });
 #pragma warning restore 4014
             }
         }
-        
+
         public void Restart()
         {
             _logger.LogDebug("Restart triggered!");
             Stop();
             Start();
-        }
-
-        public void Dispose()
-        {
-            _listenerTask?.Dispose();
-            _cancellationToken?.Dispose();
-            Listener?.Dispose();
         }
     }
 }

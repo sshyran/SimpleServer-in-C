@@ -1,68 +1,73 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Collections.Generic;
+
+#endregion
 
 namespace Ultz.SimpleServer.Internals.Http2.Hpack
 {
     /// <summary>
-    /// HPACK encoder
+    ///     HPACK encoder
     /// </summary>
     public class Encoder
     {
-        /// <summary>
-        /// Options for creating an HPACK encoder
-        /// </summary>
-        public struct Options
-        {
-            /// <summary>
-            /// The start size for the dynamic Table
-            /// </summary>
-            public int? DynamicTableSize;
+        private readonly HeaderTable _headerTable;
+        private readonly HuffmanStrategy _huffmanStrategy;
 
-            /// <summary>
-            /// Whether to apply huffman encoding.
-            /// By default huffman encoding will be applied when the output gets
-            /// smaller through it.
-            /// </summary>
-            public HuffmanStrategy? HuffmanStrategy;
+        /// <summary>
+        ///     The table size that must be communicated to the remote in the next
+        ///     header block after a table update was performed.
+        ///     -1 means no update must be transmitted.
+        /// </summary>
+        private int _tableSizeUpdateFinalValue = -1;
+
+        /// <summary>
+        ///     The minimum table size that existed between encoding 2 header blocks.
+        ///     -1 means no update must be transmitted.
+        /// </summary>
+        private int _tableSizeUpdateMinValue = -1;
+
+        /// <summary>
+        ///     Creates a new HPACK encoder with default options
+        /// </summary>
+        public Encoder() : this(null)
+        {
         }
 
         /// <summary>
-        /// The result type of an Encode operation
+        ///     Creates a new HPACK Encoder
         /// </summary>
-        public struct Result
+        /// <param name="options">Encoder options</param>
+        public Encoder(Options? options)
         {
-            /// <summary>The number of used bytes of the input buffer</summary>
-            public int UsedBytes;
+            var dynamicTableSize = Defaults.DynamicTableSize;
+            _huffmanStrategy = HuffmanStrategy.IfSmaller;
 
-            /// <summary>The number of header fields that were encoded</summary>
-            public int FieldCount;
+            if (options.HasValue)
+            {
+                var opts = options.Value;
+                if (opts.DynamicTableSize.HasValue) dynamicTableSize = opts.DynamicTableSize.Value;
+                if (opts.HuffmanStrategy.HasValue) _huffmanStrategy = opts.HuffmanStrategy.Value;
+            }
+
+            // TODO: If the size is not the default size we basically also need
+            // to send a size update frame immediatly.
+            // However this currently the obligation of the user of this class
+
+            _headerTable = new HeaderTable(dynamicTableSize);
         }
 
-        HeaderTable _headerTable;
-        HuffmanStrategy _huffmanStrategy;
-
         /// <summary>
-        /// The minimum table size that existed between encoding 2 header blocks.
-        /// -1 means no update must be transmitted.
-        /// </summary>
-        int _tableSizeUpdateMinValue = -1;
-        /// <summary>
-        /// The table size that must be communicated to the remote in the next
-        /// header block after a table update was performed.
-        /// -1 means no update must be transmitted.
-        /// </summary>
-        int _tableSizeUpdateFinalValue = -1;
-
-        /// <summary>
-        /// The current maximum size of the dynamic table.
-        /// Setting the size might cause evictions.
-        /// If the size is changed a header table size update must be sent to the
-        /// remote peer. The new table size will be sent at the start of the next
-        /// encoded header block to the remote peer.
+        ///     The current maximum size of the dynamic table.
+        ///     Setting the size might cause evictions.
+        ///     If the size is changed a header table size update must be sent to the
+        ///     remote peer. The new table size will be sent at the start of the next
+        ///     encoded header block to the remote peer.
         /// </summary>
         public int DynamicTableSize
         {
-            get { return this._headerTable.MaxDynamicTableSize; }
+            get => _headerTable.MaxDynamicTableSize;
             set
             {
                 var current = _headerTable.MaxDynamicTableSize;
@@ -77,75 +82,31 @@ namespace Ultz.SimpleServer.Internals.Http2.Hpack
                 // trigger the eviction process.
                 _tableSizeUpdateFinalValue = value;
                 if (_tableSizeUpdateMinValue == -1 || value < _tableSizeUpdateMinValue)
-                {
                     _tableSizeUpdateMinValue = value;
-                }
-                this._headerTable.MaxDynamicTableSize = value;
+                _headerTable.MaxDynamicTableSize = value;
             }
         }
 
         /// <summary> Gets the actual used size for the dynamic table</summary>
-        public int DynamicTableUsedSize
-        {
-           get { return this._headerTable.UsedDynamicTableSize; }
-        }
+        public int DynamicTableUsedSize => _headerTable.UsedDynamicTableSize;
 
         /// <summary> Gets the number of elements in the dynamic table</summary>
-        public int DynamicTableLength
-        {
-           get { return this._headerTable.DynamicTableLength; }
-        }
+        public int DynamicTableLength => _headerTable.DynamicTableLength;
 
         /// <summary>
-        /// Creates a new HPACK encoder with default options
-        /// </summary>
-        public Encoder() : this(null)
-        {
-        }
-
-        /// <summary>
-        /// Creates a new HPACK Encoder
-        /// </summary>
-        /// <param name="options">Encoder options</param>
-        public Encoder(Options? options)
-        {
-            var dynamicTableSize = Defaults.DynamicTableSize;
-            this._huffmanStrategy = HuffmanStrategy.IfSmaller;
-
-            if (options.HasValue)
-            {
-                var opts = options.Value;
-                if (opts.DynamicTableSize.HasValue)
-                {
-                    dynamicTableSize = opts.DynamicTableSize.Value;
-                }
-                if (opts.HuffmanStrategy.HasValue)
-                {
-                    this._huffmanStrategy = opts.HuffmanStrategy.Value;
-                }
-            }
-
-            // TODO: If the size is not the default size we basically also need
-            // to send a size update frame immediatly.
-            // However this currently the obligation of the user of this class
-
-            this._headerTable = new HeaderTable(dynamicTableSize);
-        }
-
-        /// <summary>
-        /// Encodes the list of the given header fields into a Buffer, which
-        /// represents the data part of a header block fragment.
-        /// The operation will only try to write as much headers as fit in the
-        /// fragment.
-        /// Therefore the operations returns the size of the encoded header
-        /// fields as well as an information how many fields were encoded.
-        /// If not all fields were encoded these should be encoded into a
-        /// seperate header block.
-        /// If the input headers list was bigger than 0 and 0 encoded headers
-        /// are reported as a result this means the target buffer is too small
-        /// for encoding even a single header field. In this case using
-        /// continuation frames won't help, as they header field also wouldn't
-        /// fit there.
+        ///     Encodes the list of the given header fields into a Buffer, which
+        ///     represents the data part of a header block fragment.
+        ///     The operation will only try to write as much headers as fit in the
+        ///     fragment.
+        ///     Therefore the operations returns the size of the encoded header
+        ///     fields as well as an information how many fields were encoded.
+        ///     If not all fields were encoded these should be encoded into a
+        ///     seperate header block.
+        ///     If the input headers list was bigger than 0 and 0 encoded headers
+        ///     are reported as a result this means the target buffer is too small
+        ///     for encoding even a single header field. In this case using
+        ///     continuation frames won't help, as they header field also wouldn't
+        ///     fit there.
         /// </summary>
         /// <returns>The used bytes and number of encoded headers</returns>
         public Result EncodeInto(
@@ -165,7 +126,7 @@ namespace Ultz.SimpleServer.Internals.Http2.Hpack
             {
                 var used = IntEncoder.EncodeInto(
                     new ArraySegment<byte>(buf.Array, offset, count),
-                    this._tableSizeUpdateMinValue, 0x20, 5);
+                    _tableSizeUpdateMinValue, 0x20, 5);
                 if (used == -1)
                 {
                     tableUpdatesOk = false;
@@ -177,11 +138,12 @@ namespace Ultz.SimpleServer.Internals.Http2.Hpack
                     _tableSizeUpdateMinValue = -1;
                 }
             }
+
             if (_tableSizeUpdateFinalValue != -1)
             {
                 var used = IntEncoder.EncodeInto(
                     new ArraySegment<byte>(buf.Array, offset, count),
-                    this._tableSizeUpdateFinalValue, 0x20, 5);
+                    _tableSizeUpdateFinalValue, 0x20, 5);
                 if (used == -1)
                 {
                     tableUpdatesOk = false;
@@ -196,13 +158,11 @@ namespace Ultz.SimpleServer.Internals.Http2.Hpack
             }
 
             if (!tableUpdatesOk)
-            {
                 return new Result
                 {
                     UsedBytes = 0,
-                    FieldCount = 0,
-                }; 
-            }
+                    FieldCount = 0
+                };
 
             foreach (var header in headers)
             {
@@ -249,10 +209,7 @@ namespace Ultz.SimpleServer.Internals.Http2.Hpack
                         // at all. Otherwise they would only kill it's state.
                         // This logic could be improved, e.g. by determining if fields
                         // should be added based on the current size of the header table.
-                        if (this.DynamicTableSize >= 32 + nameLen + valLen)
-                        {
-                            addToIndex = true;
-                        }
+                        if (DynamicTableSize >= 32 + nameLen + valLen) addToIndex = true;
                     }
 
                     if (addToIndex)
@@ -276,13 +233,14 @@ namespace Ultz.SimpleServer.Internals.Http2.Hpack
                             count -= 1;
                             var used = StringEncoder.EncodeInto(
                                 new ArraySegment<byte>(buf.Array, tempOffset, count),
-                                header.Name, nameLen, this._huffmanStrategy);
+                                header.Name, nameLen, _huffmanStrategy);
                             if (used == -1) break;
                             tempOffset += used;
                             count -= used;
                         }
+
                         // Add the encoded field to the index
-                        this._headerTable.Insert(header.Name, nameLen, header.Value, valLen);
+                        _headerTable.Insert(header.Name, nameLen, header.Value, valLen);
                     }
                     else if (!neverIndex)
                     {
@@ -305,7 +263,7 @@ namespace Ultz.SimpleServer.Internals.Http2.Hpack
                             count -= 1;
                             var used = StringEncoder.EncodeInto(
                                 new ArraySegment<byte>(buf.Array, tempOffset, count),
-                                header.Name, nameLen, this._huffmanStrategy);
+                                header.Name, nameLen, _huffmanStrategy);
                             if (used == -1) break;
                             tempOffset += used;
                             count -= used;
@@ -332,7 +290,7 @@ namespace Ultz.SimpleServer.Internals.Http2.Hpack
                             count -= 1;
                             var used = StringEncoder.EncodeInto(
                                 new ArraySegment<byte>(buf.Array, tempOffset, count),
-                                header.Name, nameLen, this._huffmanStrategy);
+                                header.Name, nameLen, _huffmanStrategy);
                             if (used == -1) break;
                             tempOffset += used;
                             count -= used;
@@ -342,7 +300,7 @@ namespace Ultz.SimpleServer.Internals.Http2.Hpack
                     // Write the value string
                     var usedForValue = StringEncoder.EncodeInto(
                         new ArraySegment<byte>(buf.Array, tempOffset, count),
-                        header.Value, valLen, this._huffmanStrategy);
+                        header.Value, valLen, _huffmanStrategy);
                     if (usedForValue == -1) break;
                     // Writing the value succeeded
                     tempOffset += usedForValue;
@@ -358,8 +316,38 @@ namespace Ultz.SimpleServer.Internals.Http2.Hpack
             return new Result
             {
                 UsedBytes = offset - buf.Offset,
-                FieldCount = nrEncodedHeaders,
+                FieldCount = nrEncodedHeaders
             };
+        }
+
+        /// <summary>
+        ///     Options for creating an HPACK encoder
+        /// </summary>
+        public struct Options
+        {
+            /// <summary>
+            ///     The start size for the dynamic Table
+            /// </summary>
+            public int? DynamicTableSize;
+
+            /// <summary>
+            ///     Whether to apply huffman encoding.
+            ///     By default huffman encoding will be applied when the output gets
+            ///     smaller through it.
+            /// </summary>
+            public HuffmanStrategy? HuffmanStrategy;
+        }
+
+        /// <summary>
+        ///     The result type of an Encode operation
+        /// </summary>
+        public struct Result
+        {
+            /// <summary>The number of used bytes of the input buffer</summary>
+            public int UsedBytes;
+
+            /// <summary>The number of header fields that were encoded</summary>
+            public int FieldCount;
         }
     }
 }

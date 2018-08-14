@@ -1,6 +1,9 @@
-﻿using System.IO;
+﻿#region
+
+using System.IO;
 using System.Net;
-using Microsoft.Extensions.Logging;
+
+#endregion
 
 namespace Ultz.SimpleServer.Internals
 {
@@ -10,12 +13,12 @@ namespace Ultz.SimpleServer.Internals
 
         bool Connected { get; }
 
-        void Close();
-
         EndPoint LocalEndPoint { get; }
 
         EndPoint RemoteEndPoint { get; }
-        
+
         int Id { get; }
+
+        void Close();
     }
 }

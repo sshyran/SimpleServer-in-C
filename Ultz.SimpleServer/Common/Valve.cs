@@ -1,5 +1,9 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Collections.Generic;
+
+#endregion
 
 namespace Ultz.SimpleServer.Common
 {
@@ -22,7 +26,7 @@ namespace Ultz.SimpleServer.Common
     {
         string Id { get; }
     }
-    
+
     public interface IValve<in T> : IValve where T : IConfigurable
     {
         void Execute(T obj, Dictionary<string, string> settings);

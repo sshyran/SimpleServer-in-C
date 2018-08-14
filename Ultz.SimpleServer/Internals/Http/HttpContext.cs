@@ -1,4 +1,8 @@
-﻿using Microsoft.Extensions.Logging;
+﻿#region
+
+using Microsoft.Extensions.Logging;
+
+#endregion
 
 namespace Ultz.SimpleServer.Internals.Http
 {
@@ -11,6 +15,7 @@ namespace Ultz.SimpleServer.Internals.Http
             Connection = connection;
             Logger = logger;
         }
+
         public HttpRequest Request { get; }
         public HttpResponse Response { get; }
         IRequest IContext.Request => Request;

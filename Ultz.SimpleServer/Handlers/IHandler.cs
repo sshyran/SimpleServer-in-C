@@ -1,4 +1,8 @@
-﻿using Ultz.SimpleServer.Internals;
+﻿#region
+
+using Ultz.SimpleServer.Internals;
+
+#endregion
 
 namespace Ultz.SimpleServer.Handlers
 {

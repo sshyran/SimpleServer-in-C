@@ -1,4 +1,8 @@
-﻿using Microsoft.Extensions.Logging;
+﻿#region
+
+using Microsoft.Extensions.Logging;
+
+#endregion
 
 namespace Ultz.SimpleServer.Internals
 {

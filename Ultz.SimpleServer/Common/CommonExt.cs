@@ -1,20 +1,45 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 
+#endregion
+
 namespace Ultz.SimpleServer.Common
 {
     public static class CommonExt
     {
+        public static void ApplyValves<T>(this IEnumerable<Valve> valveList, T target) where T : IConfigurable
+        {
+            var valves = ValveCache.Valves;
+            foreach (var valve in valveList)
+            {
+                if (!valves.ContainsKey(valve.Key)) continue;
+                if (valves[valve.Key] is IValve<T>)
+                    ((IValve<T>) valves[valve.Key]).Execute(target,
+                        valve.Settings.ToDictionary(x => x.Name, x => x.Value));
+            }
+        }
         // PEM format credit: https://www.codeproject.com/Articles/162194/Certificates-to-DB-and-Back
 
         #region PEM Helpers
 
         private class RsaParameterTraits
         {
+            public readonly int SizeD = -1;
+            public readonly int SizeDp = -1;
+            public readonly int SizeDq = -1;
+            public readonly int SizeExp = -1;
+            public readonly int SizeInvQ = -1;
+
+            public readonly int SizeMod = -1;
+            public readonly int SizeP = -1;
+            public readonly int SizeQ = -1;
+
             public RsaParameterTraits(int modulusLengthInBits)
             {
                 // The modulus length is supposed to be one of the common lengths, which is the commonly referred to strength of the key,
@@ -32,7 +57,7 @@ namespace Ultz.SimpleServer.Common
                 {
                     // It's not an even power of 2, so round it up to the nearest power of 2.
                     assumedLength = (int) (logbase + 1.0);
-                    assumedLength = (int) (Math.Pow(2, assumedLength));
+                    assumedLength = (int) Math.Pow(2, assumedLength);
                     Debug.Assert(false); // Can this really happen in the field?  I've never seen it, so if it happens
                     // you should verify that this really does the 'right' thing!
                 }
@@ -74,21 +99,12 @@ namespace Ultz.SimpleServer.Common
                         break;
                 }
             }
-
-            public readonly int SizeMod = -1;
-            public readonly int SizeExp = -1;
-            public readonly int SizeD = -1;
-            public readonly int SizeP = -1;
-            public readonly int SizeQ = -1;
-            public readonly int SizeDp = -1;
-            public readonly int SizeDq = -1;
-            public readonly int SizeInvQ = -1;
         }
 
         private class CertHelpers
         {
             /// <summary>
-            /// This helper function parses an integer size from the reader using the ASN.1 format
+            ///     This helper function parses an integer size from the reader using the ASN.1 format
             /// </summary>
             /// <param name="rd"></param>
             /// <returns></returns>
@@ -118,10 +134,7 @@ namespace Ultz.SimpleServer.Common
                 }
 
                 //remove high order zeros in data
-                while (rd.ReadByte() == 0x00)
-                {
-                    count -= 1;
-                }
+                while (rd.ReadByte() == 0x00) count -= 1;
 
                 rd.BaseStream.Seek(-1, SeekOrigin.Current);
 
@@ -129,7 +142,6 @@ namespace Ultz.SimpleServer.Common
             }
 
             /// <summary>
-            /// 
             /// </summary>
             /// <param name="inputBytes"></param>
             /// <param name="alignSize"></param>
@@ -138,20 +150,15 @@ namespace Ultz.SimpleServer.Common
             {
                 var inputBytesSize = inputBytes.Length;
 
-                if ((alignSize != -1) && (inputBytesSize < alignSize))
+                if (alignSize != -1 && inputBytesSize < alignSize)
                 {
                     var buf = new byte[alignSize];
-                    for (var i = 0; i < inputBytesSize; ++i)
-                    {
-                        buf[i + (alignSize - inputBytesSize)] = inputBytes[i];
-                    }
+                    for (var i = 0; i < inputBytesSize; ++i) buf[i + (alignSize - inputBytesSize)] = inputBytes[i];
 
                     return buf;
                 }
-                else
-                {
-                    return inputBytes; // Already aligned, or doesn't need alignment
-                }
+
+                return inputBytes; // Already aligned, or doesn't need alignment
             }
         }
 
@@ -219,8 +226,8 @@ namespace Ultz.SimpleServer.Common
                 parms.Flags = CspProviderFlags.NoFlags;
                 parms.KeyContainerName = Guid.NewGuid().ToString().ToUpperInvariant();
                 parms.ProviderType =
-                    ((Environment.OSVersion.Version.Major > 5) ||
-                     ((Environment.OSVersion.Version.Major == 5) && (Environment.OSVersion.Version.Minor >= 1)))
+                    Environment.OSVersion.Version.Major > 5 ||
+                    Environment.OSVersion.Version.Major == 5 && Environment.OSVersion.Version.Minor >= 1
                         ? 0x18
                         : 1;
 
@@ -262,19 +269,5 @@ namespace Ultz.SimpleServer.Common
         }
 
         #endregion
-
-        public static void ApplyValves<T>(this IEnumerable<Valve> valveList, T target) where T : IConfigurable
-        {
-            var valves = ValveCache.Valves;
-            foreach (var valve in valveList)
-            {
-                if (!valves.ContainsKey(valve.Key)) continue;
-                if (valves[valve.Key] is IValve<T>)
-                {
-                    ((IValve<T>) valves[valve.Key]).Execute(target,
-                        valve.Settings.ToDictionary(x => x.Name, x => x.Value));
-                }
-            }
-        }
     }
 }

@@ -1,8 +1,7 @@
-
 namespace Ultz.SimpleServer.Internals.Http2.Hpack
 {
     /// <summary>
-    /// An entry in the static or dynamic table
+    ///     An entry in the static or dynamic table
     /// </summary>
     public struct TableEntry
     {

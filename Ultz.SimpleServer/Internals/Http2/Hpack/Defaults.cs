@@ -1,10 +1,9 @@
-﻿
-namespace Ultz.SimpleServer.Internals.Http2.Hpack
+﻿namespace Ultz.SimpleServer.Internals.Http2.Hpack
 {
     /// <summary>
-    /// Stores default values for the library
+    ///     Stores default values for the library
     /// </summary>
-    static class Defaults
+    internal static class Defaults
     {
         /// <summary>The default size of the dynamic table: 4096 bytes</summary>
         public const int DynamicTableSize = 4096;

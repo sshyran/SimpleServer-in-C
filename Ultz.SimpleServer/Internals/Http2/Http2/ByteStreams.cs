@@ -1,21 +1,25 @@
+#region
+
 using System;
 using System.Threading.Tasks;
+
+#endregion
 
 namespace Ultz.SimpleServer.Internals.Http2.Http2
 {
     /// <summary>
-    /// The result of a ReadAsync operation
+    ///     The result of a ReadAsync operation
     /// </summary>
     public struct StreamReadResult
     {
         /// <summary>
-        /// The amount of bytes that were read
+        ///     The amount of bytes that were read
         /// </summary>
         public int BytesRead;
 
         /// <summary>
-        /// Whether the end of the stream was reached
-        /// In this case no bytes should be read
+        ///     Whether the end of the stream was reached
+        ///     In this case no bytes should be read
         /// </summary>
         public bool EndOfStream;
     }
@@ -23,9 +27,9 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
     public interface IReadableByteStream
     {
         /// <summary>
-        /// Reads data from a stream into the given buffer segment.
-        /// The amound of bytes that will be read is up to the given buffer length
-        /// The return value signals how many bytes were actually read.
+        ///     Reads data from a stream into the given buffer segment.
+        ///     The amound of bytes that will be read is up to the given buffer length
+        ///     The return value signals how many bytes were actually read.
         /// </summary>
         ValueTask<StreamReadResult> ReadAsync(ArraySegment<byte> buffer);
     }
@@ -33,7 +37,7 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
     public interface IWriteableByteStream
     {
         /// <summary>
-        /// Writes the buffer to the stream.
+        ///     Writes the buffer to the stream.
         /// </summary>
         Task WriteAsync(ArraySegment<byte> buffer);
     }
@@ -41,9 +45,9 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
     public interface ICloseableByteStream
     {
         /// <summary>
-        /// Closes the stream gracefully.
-        /// This should signal EndOfStream to the receiving side once all prior
-        /// data has been read.
+        ///     Closes the stream gracefully.
+        ///     This should signal EndOfStream to the receiving side once all prior
+        ///     data has been read.
         /// </summary>
         Task CloseAsync();
     }
@@ -54,16 +58,18 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
     }
 
     /// <summary>
-    /// A marker class that is used to signal the completion of an Async operation.
-    /// This purely exists since ValueTask&lt;Void&gt; is not valid in C#.
+    ///     A marker class that is used to signal the completion of an Async operation.
+    ///     This purely exists since ValueTask&lt;Void&gt; is not valid in C#.
     /// </summary>
     public class DoneHandle
     {
-        private DoneHandle() {}
-
         /// <summary>
-        /// A static instance of the Handle
+        ///     A static instance of the Handle
         /// </summary>
         public static readonly DoneHandle Instance = new DoneHandle();
+
+        private DoneHandle()
+        {
+        }
     }
 }

@@ -1,33 +1,31 @@
-﻿using System.Collections.Generic;
-using System.Reflection;
+﻿#region
+
+using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
-using Ultz.SimpleServer.Hosts;
-using Ultz.SimpleServer.Internals;
-using Ultz.SimpleServer.Internals.Http;
+
+#endregion
 
 namespace Ultz.SimpleServer.Common
 {
     public class SimpleServer
     {
-        private ILoggerProvider _loggerProvider;
         private ILogger _logger;
-        
-        public Dictionary<string,Service> Services { get; } = new Dictionary<string, Service>();
-        
+        private ILoggerProvider _loggerProvider;
+
         public SimpleServer(ILoggerProvider logger = null)
         {
             _loggerProvider = logger;
             _logger = logger?.CreateLogger("ssmain");
         }
 
+        public Dictionary<string, Service> Services { get; } = new Dictionary<string, Service>();
+
         public void Start()
         {
-            
         }
 
         public void Stop()
         {
-            
         }
     }
 }

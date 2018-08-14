@@ -1,13 +1,35 @@
-﻿using System.Net;
+﻿#region
+
+using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
+
+#endregion
 
 namespace Ultz.SimpleServer.Internals
 {
     public class TcpConnectionListener : TcpListener, IListener
     {
         private int _id = -1;
-        
+        private readonly bool _noDelay;
+
+        public TcpConnectionListener(int port, bool noDelay) : base(port)
+        {
+            _noDelay = noDelay;
+        }
+
+        public TcpConnectionListener(IPAddress localaddr, int port, bool noDelay = true) : base(localaddr, port)
+        {
+            _noDelay = noDelay;
+        }
+
+        public TcpConnectionListener(IPEndPoint localEp, bool noDelay = true) : base(localEp)
+        {
+            _noDelay = noDelay;
+        }
+
+        public EndPoint Endpoint => LocalEndpoint;
+
         public IConnection Accept()
         {
             return AcceptAsync().GetAwaiter().GetResult();
@@ -16,41 +38,29 @@ namespace Ultz.SimpleServer.Internals
         public async Task<IConnection> AcceptAsync()
         {
             var client = await AcceptTcpClientAsync();
-            return new TcpConnection(client, _id++);
+            return new TcpConnection(client, _id++, _noDelay);
         }
 
-        public void Start()
+        public new void Start()
         {
             base.Start();
         }
 
-        public void Stop()
+        public new void Stop()
         {
             base.Stop();
         }
 
         public void RunChecks()
         {
+            // TODO: Check the port
         }
 
-        public bool Active => base.Active;
-        public EndPoint Endpoint => base.LocalEndpoint;
+        public new bool Active => base.Active;
 
         public void Dispose()
         {
             Stop();
-        }
-
-        public TcpConnectionListener(int port) : base(port)
-        {
-        }
-
-        public TcpConnectionListener(IPAddress localaddr, int port) : base(localaddr, port)
-        {
-        }
-
-        public TcpConnectionListener(IPEndPoint localEP) : base(localEP)
-        {
         }
     }
 }

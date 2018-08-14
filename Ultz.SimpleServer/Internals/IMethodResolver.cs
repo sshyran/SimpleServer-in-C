@@ -1,10 +1,15 @@
-﻿using System.Collections.Generic;
+﻿#region
+
+using System.Collections.Generic;
+
+#endregion
 
 namespace Ultz.SimpleServer.Internals
 {
-    public abstract class MethodResolver<T> : IMethodResolver where T:IMethod
+    public abstract class MethodResolver<T> : IMethodResolver where T : IMethod
     {
         protected Dictionary<byte[], T> _methods;
+
         protected MethodResolver(Dictionary<byte[], T> dictionary)
         {
             _methods = dictionary;
@@ -14,6 +19,7 @@ namespace Ultz.SimpleServer.Internals
         {
             return GetMethod(id);
         }
+
         public T GetMethod(byte[] id)
         {
             return _methods[id];

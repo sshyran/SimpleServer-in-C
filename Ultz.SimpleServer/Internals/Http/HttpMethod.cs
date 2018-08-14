@@ -1,4 +1,8 @@
-﻿using System.Text;
+﻿#region
+
+using System.Text;
+
+#endregion
 
 namespace Ultz.SimpleServer.Internals.Http
 {
@@ -9,8 +13,9 @@ namespace Ultz.SimpleServer.Internals.Http
             Id = name;
             ExpectPayload = payload;
         }
+
         public string Id { get; }
-        byte[] IMethod.Id => Encoding.UTF8.GetBytes(Id);
         public bool ExpectPayload { get; }
+        byte[] IMethod.Id => Encoding.UTF8.GetBytes(Id);
     }
 }

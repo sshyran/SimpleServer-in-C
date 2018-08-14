@@ -1,12 +1,16 @@
+#region
+
 using System;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+#endregion
+
 namespace Ultz.SimpleServer.Internals.Http2.Http2
 {
     /// <summary>
-    /// Tools for working with the HTTP/2 client connection preface
+    ///     Tools for working with the HTTP/2 client connection preface
     /// </summary>
     public static class ClientPreface
     {
@@ -14,16 +18,13 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
         public const string String = "PRI * HTTP/2.0\r\n\r\nSM\r\n\r\n";
 
         /// <summary>Contains the connection preface as bytes</summary>
-        public static readonly byte[] Bytes = Encoding.ASCII.GetBytes(ClientPreface.String);
+        public static readonly byte[] Bytes = Encoding.ASCII.GetBytes(String);
 
         /// <summary>The length of the preface</summary>
-        public static int Length
-        {
-            get { return Bytes.Length; }
-        }
+        public static int Length => Bytes.Length;
 
         /// <summary>
-        /// Writes the preface to the given stream
+        ///     Writes the preface to the given stream
         /// </summary>
         public static Task WriteAsync(IWriteableByteStream stream)
         {
@@ -31,10 +32,10 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
         }
 
         /// <summary>
-        /// Reads the preface from the given stream and compares it to
-        /// the expected value.
-        /// Will throw an error if the preface could not be read or if the stream
-        /// has finished unexpectedly.
+        ///     Reads the preface from the given stream and compares it to
+        ///     the expected value.
+        ///     Will throw an error if the preface could not be read or if the stream
+        ///     has finished unexpectedly.
         /// </summary>
         public static async ValueTask<DoneHandle> ReadAsync(IReadableByteStream stream)
         {
@@ -43,31 +44,23 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
 
             // Compare with the expected preface
             for (var i = 0; i < buffer.Length; i++)
-            {
                 if (buffer[i] != Bytes[i])
-                {
                     throw new Exception("Invalid prefix received");
-                }
-            }
 
             return DoneHandle.Instance;
         }
 
         /// <summary>
-        /// Reads the preface from the given stream and compares it to
-        /// the expected value.
-        /// Will throw an error if the preface could not be read or if the stream
-        /// has finished unexpectedly.
+        ///     Reads the preface from the given stream and compares it to
+        ///     the expected value.
+        ///     Will throw an error if the preface could not be read or if the stream
+        ///     has finished unexpectedly.
         /// </summary>
         public static async ValueTask<DoneHandle> ReadAsync(
             IReadableByteStream stream, int timeoutMillis)
         {
             if (timeoutMillis < 0) throw new ArgumentException(nameof(timeoutMillis));
-            else if (timeoutMillis == 0)
-            {
-                // No timeout
-                return await ReadAsync(stream);
-            }
+            if (timeoutMillis == 0) return await ReadAsync(stream);
 
             var cts = new CancellationTokenSource();
             var readTask = ReadAsync(stream).AsTask();

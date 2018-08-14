@@ -1,24 +1,23 @@
-﻿using System;
+﻿#region
+
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using Ultz.SimpleServer.Internals;
 
+#endregion
+
 namespace Ultz.SimpleServer.Hosts
 {
     public abstract class DecoratorListener : IListener
     {
-        private IListener _listener;
+        private readonly IListener _listener;
 
         protected DecoratorListener(IListener listener)
         {
             _listener = listener;
         }
 
-        public abstract DecoratedConnection GetConnection();
-
-        public abstract Task<DecoratedConnection> GetConnectionAsync();
-        
         public void Dispose()
         {
             _listener?.Dispose();
@@ -50,7 +49,12 @@ namespace Ultz.SimpleServer.Hosts
         }
 
         public bool Active => _listener.Active;
+
+        public abstract DecoratedConnection GetConnection();
+
+        public abstract Task<DecoratedConnection> GetConnectionAsync();
     }
+
     public abstract class DecoratedConnection : IConnection
     {
         protected IConnection _connection;

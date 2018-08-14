@@ -1,30 +1,23 @@
+#region
+
 using System;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 
+#endregion
+
 namespace Ultz.SimpleServer.Internals.Http2.Http2
 {
     /// <summary>
-    /// Extension methods for System.Net.Sockets
+    ///     Extension methods for System.Net.Sockets
     /// </summary>
     public static class SocketExtensions
     {
         /// <summary>
-        /// Contains the result of a System.Net.Socket#CreateStreams operation
-        /// </summary>
-        public struct CreateStreamsResult
-        {
-            /// <summary>The resulting readable stream</summary>
-            public IReadableByteStream ReadableStream;
-            /// <summary>The resulting writable stream</summary>
-            public IWriteAndCloseableByteStream WriteableStream;
-        }
-
-        /// <summary>
-        /// Creates the required stream abstractions on top of a .NET
-        /// Socket.
-        /// The created stream wrappers will take ownership of the stream.
-        /// It is not allowed to use the socket directly after this.
+        ///     Creates the required stream abstractions on top of a .NET
+        ///     Socket.
+        ///     The created stream wrappers will take ownership of the stream.
+        ///     It is not allowed to use the socket directly after this.
         /// </summary>
         public static CreateStreamsResult CreateStreams(this Socket socket)
         {
@@ -33,18 +26,31 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
             return new CreateStreamsResult
             {
                 ReadableStream = wrappedStream,
-                WriteableStream = wrappedStream,
+                WriteableStream = wrappedStream
             };
+        }
+
+        /// <summary>
+        ///     Contains the result of a System.Net.Socket#CreateStreams operation
+        /// </summary>
+        public struct CreateStreamsResult
+        {
+            /// <summary>The resulting readable stream</summary>
+            public IReadableByteStream ReadableStream;
+
+            /// <summary>The resulting writable stream</summary>
+            public IWriteAndCloseableByteStream WriteableStream;
         }
 
         internal class SocketWrapper : IReadableByteStream, IWriteAndCloseableByteStream
         {
-            private Socket socket;
+            private readonly Socket socket;
+
             /// <summary>
-            /// Whether a speculative nonblocking read should by tried the next
-            /// time instead of directly using an ReadAsync method.
+            ///     Whether a speculative nonblocking read should by tried the next
+            ///     time instead of directly using an ReadAsync method.
             /// </summary>
-            private bool tryNonBlockingRead = false;
+            private bool tryNonBlockingRead;
 
             public SocketWrapper(Socket socket)
             {
@@ -55,10 +61,7 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
 
             public ValueTask<StreamReadResult> ReadAsync(ArraySegment<byte> buffer)
             {
-                if (buffer.Count == 0)
-                {
-                    throw new Exception("Reading 0 bytes is not supported");
-                }
+                if (buffer.Count == 0) throw new Exception("Reading 0 bytes is not supported");
 
                 var offset = buffer.Offset;
                 var count = buffer.Count;
@@ -72,60 +75,41 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                     if (ec != SocketError.Success &&
                         ec != SocketError.WouldBlock &&
                         ec != SocketError.TryAgain)
-                    {
                         return new ValueTask<StreamReadResult>(
                             Task.FromException<StreamReadResult>(
-                                new SocketException((int)ec)));
-                    }
+                                new SocketException((int) ec)));
 
-                    if (rcvd != count)
-                    {
-                        // Socket buffer seems empty
-                        // Use an async read next time
-                        tryNonBlockingRead = false;
-                    }
+                    if (rcvd != count) tryNonBlockingRead = false;
 
                     if (ec == SocketError.Success)
-                    {
                         return new ValueTask<StreamReadResult>(
                             new StreamReadResult
                             {
                                 BytesRead = rcvd,
-                                EndOfStream = rcvd == 0,
+                                EndOfStream = rcvd == 0
                             });
-                    }
 
                     // In the other case we got EAGAIN, which means we try
                     // an async read now
                     // Assert that we have nothing read yet - otherwise the
                     // logic here would be broken
                     if (rcvd != 0)
-                    {
                         throw new Exception(
                             "Unexpected reception of data in TryAgain case");
-                    }
                 }
 
                 var readTask = socket.ReceiveAsync(buffer, SocketFlags.None);
-                Task<StreamReadResult> transformedTask = readTask.ContinueWith(tt =>
+                var transformedTask = readTask.ContinueWith(tt =>
                 {
-                    if (tt.Exception != null)
-                    {
-                        throw tt.Exception;
-                    }
+                    if (tt.Exception != null) throw tt.Exception;
 
                     var res = tt.Result;
-                    if (res == count)
-                    {
-                        // All required data was read
-                        // Try a speculative nonblocking read next time
-                        tryNonBlockingRead = true;
-                    }
+                    if (res == count) tryNonBlockingRead = true;
 
                     return new StreamReadResult
                     {
                         BytesRead = res,
-                        EndOfStream = res == 0,
+                        EndOfStream = res == 0
                     };
                 });
 
@@ -134,27 +118,19 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
 
             public Task WriteAsync(ArraySegment<byte> buffer)
             {
-                if (buffer.Count == 0)
-                {
-                    return Task.CompletedTask;
-                }
+                if (buffer.Count == 0) return Task.CompletedTask;
 
                 // Try a nonblocking write first
                 SocketError ec;
                 var sent = socket.Send(
                     buffer.Array, buffer.Offset, buffer.Count, SocketFlags.None, out ec);
 
-                if (ec != SocketError.Success && 
+                if (ec != SocketError.Success &&
                     ec != SocketError.WouldBlock &&
                     ec != SocketError.TryAgain)
-                {
-                    throw new SocketException((int)ec);
-                }
+                    throw new SocketException((int) ec);
 
-                if (sent == buffer.Count)
-                {
-                    return Task.CompletedTask;
-                }
+                if (sent == buffer.Count) return Task.CompletedTask;
 
                 // More data needs to be sent
                 var remaining = new ArraySegment<byte>(

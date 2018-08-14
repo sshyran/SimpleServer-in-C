@@ -1,169 +1,81 @@
+#region
+
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Ultz.SimpleServer.Internals.Http2.Hpack;
+
+#endregion
 
 namespace Ultz.SimpleServer.Internals.Http2.Http2
 {
     /// <summary>
-    /// A HTTP/2 connection
+    ///     A HTTP/2 connection
     /// </summary>
     public class Connection
     {
         /// <summary>
-        /// Optional configuration options, which are valid per connection
-        /// </summary>
-        public struct Options
-        {
-            /// <summary>
-            /// Optional logger
-            /// </summary>
-            public ILogger Logger;
-
-            /// <summary>
-            /// If the connection is established through an upgrade from HTTP/1,
-            /// then this contains the information about the request that
-            /// triggered the upgrade.
-            /// </summary>
-            public ServerUpgradeRequest ServerUpgradeRequest;
-
-            /// <summary>
-            /// If the connection is established through an upgrade from HTTP/1,
-            /// then this contains the information about the request that
-            /// triggered the upgrade.
-            /// </summary>
-            public ClientUpgradeRequest ClientUpgradeRequest;
-        }
-
-        private struct SharedData
-        {
-            /// Guards the SharedData
-            public object Mutex;
-            /// Gets set to true before the connection gets cleaned up
-            public bool Closed;
-            /// Map from stream ID to stream state
-            public Dictionary<uint, StreamImpl> streamMap;
-            /// The last and maximum stream ID that was sent to the remote.
-            /// 0 means we never sent anything
-            public uint LastOutgoingStreamId;
-            /// The last and maximum stream ID that was received from the remote.
-            /// 0 means we never received anything
-            public uint LastIncomingStreamId;
-            /// Whether a GoAway message has been sent
-            public bool GoAwaySent;
-            /// Tracks active PINGs. Only initialized when needed
-            public PingState PingState;
-        }
-
-        /// <summary>
-        /// The maximum size of the buffer that should be kept between frame
-        /// receiving operations. Keeping larger buffers around while not
-        /// utilized (e.g. no frames are sent) will only consume unnecessary
-        /// memory. The minimum size must be large enough the accomodate the
-        /// Frame header of the next frame that should be received plus the
-        /// frame content of all fixed-length frames (PING, RST_STREAM, etc.)
+        ///     The maximum size of the buffer that should be kept between frame
+        ///     receiving operations. Keeping larger buffers around while not
+        ///     utilized (e.g. no frames are sent) will only consume unnecessary
+        ///     memory. The minimum size must be large enough the accomodate the
+        ///     Frame header of the next frame that should be received plus the
+        ///     frame content of all fixed-length frames (PING, RST_STREAM, etc.)
         /// </summary>
         internal const int PersistentBufferSize = 128;
 
-        /// <summary>
-        /// Contains information about active PINGs
-        /// </summary>
-        private class PingState
-        {
-            public ulong Counter = 0;
-            public readonly Dictionary<ulong, TaskCompletionSource<bool>> PingMap =
-                new Dictionary<ulong, TaskCompletionSource<bool>>();
-        }
-
-        /// <summary>
-        /// Additional state if this is a client connection.
-        /// Not included a general members to save space for server-side connections.
-        /// </summary>
-        private class ClientState
-        {
-            /// Allows to create only a single stream at a time
-            public readonly SemaphoreSlim CreateStreamMutex = new SemaphoreSlim(1);
-        }
-
-        private SharedData shared;
-        private ClientState clientState;
-
-        byte[] receiveBuffer;
-
-        /// <summary>Whether the initial settings have been received from the remote</summary>
-        bool settingsReceived = false;
-        int nrUnackedSettings = 0;
-        /// <summary>Flow control window for the connection</summary>
-        private int connReceiveFlowWindow = Constants.InitialConnectionWindowSize;
-
-        internal readonly ILogger logger;
-
-        internal readonly ConnectionWriter writer;
-        internal readonly IReadableByteStream inputStream;
-        private readonly Task readerDone;
+        private readonly ClientState clientState;
 
         internal readonly ConnectionConfiguration config;
 
         private readonly HeaderReader headerReader;
+        internal readonly IReadableByteStream inputStream;
         internal readonly Settings localSettings;
+
+        internal readonly ILogger logger;
+
+        private readonly TaskCompletionSource<GoAwayReason> remoteGoAwayTcs =
+            new TaskCompletionSource<GoAwayReason>();
+
+        internal readonly ConnectionWriter writer;
+
+        /// <summary>Flow control window for the connection</summary>
+        private int connReceiveFlowWindow = Constants.InitialConnectionWindowSize;
+
+        private int nrUnackedSettings;
+
+        private byte[] receiveBuffer;
+
         internal Settings remoteSettings = Settings.Default;
 
         /// <summary>
-        /// Contains the HTTP/1 upgrade request that lead to this connection
+        ///     Contains the HTTP/1 upgrade request that lead to this connection
         /// </summary>
         internal ServerUpgradeRequest serverUpgradeRequest;
 
-        private TaskCompletionSource<GoAwayReason> remoteGoAwayTcs =
-            new TaskCompletionSource<GoAwayReason>();
+        /// <summary>Whether the initial settings have been received from the remote</summary>
+        private bool settingsReceived;
+
+        private SharedData shared;
 
         /// <summary>
-        /// Whether the connection represents the client or server part of
-        /// a HTTP/2 connection. True for servers.
-        /// </summary>
-        public bool IsServer => config.IsServer;
-
-        /// <summary>
-        /// Returns a Task that will be completed once the Connection has been
-        /// fully closed.
-        /// </summary>
-        public Task Done => readerDone;
-
-        /// <summary>
-        /// Returns the current number of active streams
-        /// </summary>
-        public int ActiveStreamCount
-        {
-            get
-            {
-                lock (shared.Mutex) { return shared.streamMap.Count; }
-            }
-        }
-
-        /// <summary>
-        /// Returns a Task that will be completed once a GoAway frame from the
-        /// remote side was received.
-        /// If the connection closes without a GoAway frame the Task will get
-        /// completed with an EndOfStreamException
-        /// </summary>
-        public Task<GoAwayReason> RemoteGoAwayReason => remoteGoAwayTcs.Task;
-
-        /// <summary>
-        /// Creates a new HTTP/2 connection on top of the a bidirectional stream
+        ///     Creates a new HTTP/2 connection on top of the a bidirectional stream
         /// </summary>
         /// <param name="config">
-        /// The configuration options that are applied to the connection and
-        /// which are shared between multiple connections.
+        ///     The configuration options that are applied to the connection and
+        ///     which are shared between multiple connections.
         /// </param>
         /// <param name="inputStream">
-        /// The stream which is used for receiving data
+        ///     The stream which is used for receiving data
         /// </param>
         /// <param name="outputStream">
-        /// The stream which is used for writing data
+        ///     The stream which is used for writing data
         /// </param>
         /// <param name="options">
-        /// Optional configuration options which are unique per connection
+        ///     Optional configuration options which are unique per connection
         /// </param>
         public Connection(
             ConnectionConfiguration config,
@@ -173,12 +85,9 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
         {
             if (config == null) throw new ArgumentNullException(nameof(config));
             this.config = config;
-            this.logger = options?.Logger;
+            logger = options?.Logger;
 
-            if (!config.IsServer)
-            {
-                clientState = new ClientState();
-            }
+            if (!config.IsServer) clientState = new ClientState();
 
             localSettings = config.Settings;
             // Disable server push as it's not supported.
@@ -192,23 +101,11 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
             {
                 serverUpgradeRequest = options.Value.ServerUpgradeRequest;
                 if (!serverUpgradeRequest.IsValid)
-                {
-                    // Throw an exception in that case that this must be handled
-                    // from the outside
-                    // In the future the Connection component might be able to
-                    // send the correct error, but that might need some changes
-                    // to cope with an invalid initial state.
                     throw new ArgumentException(
                         "The ServerUpgradeRequest is invalid.\n" +
                         "Invalid upgrade requests must be denied by the HTTP/1 " +
                         "handler");
-                }
-                else
-                {
-                    // The remote has provided us settings through the
-                    // HTTP2-Settings header
-                    remoteSettings = serverUpgradeRequest.Settings;
-                }
+                remoteSettings = serverUpgradeRequest.Settings;
             }
 
             if (inputStream == null) throw new ArgumentNullException(nameof(inputStream));
@@ -231,14 +128,10 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
             {
                 var upgrade = options.Value.ClientUpgradeRequest;
                 if (!upgrade.IsValid)
-                {
-                    // Throw an exception in that case that this must be handled
-                    // from the outside
                     throw new ArgumentException(
                         "The ClientUpgradeRequest is invalid.\n" +
                         "Invalid upgrade requests must be denied by the HTTP/1 " +
                         "handler");
-                }
 
                 // Use the same settings which were communicated during the ugprade
                 localSettings = upgrade.Settings;
@@ -248,7 +141,7 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                     this,
                     1u,
                     StreamState.HalfClosedLocal,
-                    (int)localSettings.InitialWindowSize);
+                    (int) localSettings.InitialWindowSize);
 
                 shared.streamMap[1u] = newStream;
                 shared.LastOutgoingStreamId = 1u;
@@ -261,15 +154,11 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                 var setStream =
                     upgrade.UpgradeRequestStreamTcs.TrySetResult(newStream);
                 if (!setStream)
-                {
                     if (logger != null && logger.IsEnabled(LogLevel.Error))
-                    {
                         logger.LogError(
                             "Could not set upgradeRequest stream, as the task was " +
                             "already fulfilled. Has the ClientUpgradeRequest been " +
                             "reused between multiple requests?");
-                    }
-                }
             }
 
             // Clamp the dynamic table size limit to int range.
@@ -283,15 +172,15 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                 this, outputStream,
                 new ConnectionWriter.Options
                 {
-                    MaxFrameSize = (int)remoteSettings.MaxFrameSize,
-                    MaxHeaderListSize = (int)remoteSettings.MaxHeaderListSize,
-                    InitialWindowSize = (int)remoteSettings.InitialWindowSize,
-                    DynamicTableSizeLimit = (int)dynTableSizeLimit,
+                    MaxFrameSize = (int) remoteSettings.MaxFrameSize,
+                    MaxHeaderListSize = (int) remoteSettings.MaxHeaderListSize,
+                    InitialWindowSize = (int) remoteSettings.InitialWindowSize,
+                    DynamicTableSizeLimit = (int) dynTableSizeLimit
                 },
-                new Hpack.Encoder.Options
+                new Encoder.Options
                 {
-                    DynamicTableSize = (int)remoteSettings.HeaderTableSize,
-                    HuffmanStrategy = config.HuffmanStrategy,
+                    DynamicTableSize = (int) remoteSettings.HeaderTableSize,
+                    HuffmanStrategy = config.HuffmanStrategy
                 }
             );
             // As the writer will auto-start writing the local settings we have
@@ -299,15 +188,15 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
             nrUnackedSettings++;
 
             headerReader = new HeaderReader(
-                new Hpack.Decoder(new Hpack.Decoder.Options
+                new Decoder(new Decoder.Options
                 {
                     // Remark: The dynamic table size is set to the default
                     // value of 4096 if not configured here.
                     // Configuring it and setting it to something different
                     // makes no sense, as the remote expects the default size
                     // at start
-                    DynamicTableSizeLimit = (int)dynTableSizeLimit,
-                    BufferPool = config.BufferPool,
+                    DynamicTableSizeLimit = (int) dynTableSizeLimit,
+                    BufferPool = config.BufferPool
                 }),
                 localSettings.MaxFrameSize,
                 localSettings.MaxHeaderListSize,
@@ -317,7 +206,59 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
 
             // Start the task that performs the actual reading.
             // The connection is closed once this task is fully finished.
-            readerDone = Task.Run(() => this.RunReaderAsync());
+            Done = Task.Run(() => RunReaderAsync());
+        }
+
+        /// <summary>
+        ///     Whether the connection represents the client or server part of
+        ///     a HTTP/2 connection. True for servers.
+        /// </summary>
+        public bool IsServer => config.IsServer;
+
+        /// <summary>
+        ///     Returns a Task that will be completed once the Connection has been
+        ///     fully closed.
+        /// </summary>
+        public Task Done { get; }
+
+        /// <summary>
+        ///     Returns the current number of active streams
+        /// </summary>
+        public int ActiveStreamCount
+        {
+            get
+            {
+                lock (shared.Mutex)
+                {
+                    return shared.streamMap.Count;
+                }
+            }
+        }
+
+        /// <summary>
+        ///     Returns a Task that will be completed once a GoAway frame from the
+        ///     remote side was received.
+        ///     If the connection closes without a GoAway frame the Task will get
+        ///     completed with an EndOfStreamException
+        /// </summary>
+        public Task<GoAwayReason> RemoteGoAwayReason => remoteGoAwayTcs.Task;
+
+        /// <summary>
+        ///     Returns true if the Connection is exhausted, which means no new
+        ///     outgoing streams can be created. This will be the case when the
+        ///     Connection is either closed or all valid Stream IDs have already
+        ///     been utilized.
+        /// </summary>
+        public bool IsExhausted
+        {
+            get
+            {
+                lock (shared.Mutex)
+                {
+                    if (shared.Closed) return true;
+                    return shared.LastOutgoingStreamId > int.MaxValue - 2;
+                }
+            }
         }
 
         internal void EnsureBuffer(int minSize)
@@ -347,7 +288,7 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
         }
 
         /// <summary>
-        /// This contains the main reading loop of the HTTP/2 connection
+        ///     This contains the main reading loop of the HTTP/2 connection
         /// </summary>
         private async Task RunReaderAsync()
         {
@@ -359,10 +300,7 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                 {
                     EnsureBuffer(ClientPreface.Length);
                     await ClientPreface.ReadAsync(inputStream, config.ClientPrefaceTimeout);
-                    if (logger != null && logger.IsEnabled(LogLevel.Trace))
-                    {
-                        logger.LogTrace("rcvd ClientPreface");
-                    }
+                    if (logger != null && logger.IsEnabled(LogLevel.Trace)) logger.LogTrace("rcvd ClientPreface");
                 }
 
                 var continueRead = true;
@@ -382,7 +320,7 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                         StreamId = 1u,
                         Priority = null,
                         Headers = upgrade.Headers,
-                        EndOfStream = upgrade.Payload == null,
+                        EndOfStream = upgrade.Payload == null
                     };
                     // Handle that frame, which pushes the stream to the user
                     var err = await HandleHeaders(headers);
@@ -416,14 +354,11 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                             new ArraySegment<byte>(buf, 0, upgrade.Payload.Length),
                             true,
                             out tookBufferOwnership);
-                        if (!tookBufferOwnership)
-                        {
-                            config.BufferPool.Return(buf);
-                        }
+                        if (!tookBufferOwnership) config.BufferPool.Return(buf);
                         if (err != null)
                         {
                             if (err.Value.StreamId == 0)
-                            continueRead = false;
+                                continueRead = false;
                             await HandleFrameProcessingError(err.Value);
                         }
                     }
@@ -437,10 +372,7 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                     ReleaseBuffer(PersistentBufferSize);
                     if (err != null)
                     {
-                        if (err.Value.StreamId == 0)
-                        {
-                            continueRead = false;
-                        }
+                        if (err.Value.StreamId == 0) continueRead = false;
                         await HandleFrameProcessingError(err.Value);
                     }
                 }
@@ -451,10 +383,7 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                 // an exception.
                 // As most exceptions are gracefully handled the remaining ones
                 // will only be cases where the reader fails.
-                if (logger != null && logger.IsEnabled(LogLevel.Error))
-                {
-                    logger.LogError("Reader error: {0}", e.Message);
-                }
+                if (logger != null && logger.IsEnabled(LogLevel.Error)) logger.LogError("Reader error: {0}", e.Message);
             }
 
             // Shutdown the writer.
@@ -481,13 +410,12 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                 // Mark connection as closed
                 shared.Closed = true;
             }
+
             foreach (var kvp in activeStreams)
-            {
                 // fromRemote is set to true since there's no need to send
                 // a Reset frame and the stream will get removed from the
                 // map here
-                await kvp.Value.Reset(ErrorCode.ConnectError, fromRemote: true);
-            }
+                await kvp.Value.Reset(ErrorCode.ConnectError, true);
 
             // Cleanup all pending Pings
             PingState pingState = null;
@@ -502,25 +430,17 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                     shared.PingState = null;
                 }
             }
+
             if (pingState != null)
             {
                 var ex = new ConnectionClosedException();
-                foreach (var kvp in pingState.PingMap)
-                {
-                    kvp.Value.SetException(ex);
-                }
+                foreach (var kvp in pingState.PingMap) kvp.Value.SetException(ex);
             }
 
             // If we haven't received a remote GoAway fail that Task
-            if (!remoteGoAwayTcs.Task.IsCompleted)
-            {
-                remoteGoAwayTcs.TrySetException(new EndOfStreamException());
-            }
+            if (!remoteGoAwayTcs.Task.IsCompleted) remoteGoAwayTcs.TrySetException(new EndOfStreamException());
 
-            if (logger != null && logger.IsEnabled(LogLevel.Trace))
-            {
-                logger.LogTrace("Connection closed");
-            }
+            if (logger != null && logger.IsEnabled(LogLevel.Trace)) logger.LogTrace("Connection closed");
 
             // Return the receiveBuffer back to the pool
             if (receiveBuffer != null)
@@ -543,9 +463,7 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
             {
                 // Log the error
                 if (logger != null && logger.IsEnabled(LogLevel.Error))
-                {
                     logger.LogError("Handling connection error {0}", err);
-                }
 
                 // The error is a connection error
                 // Write a suitable GOAWAY frame and stop the writer
@@ -560,9 +478,7 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
             {
                 // Log the error
                 if (logger != null && logger.IsEnabled(LogLevel.Error))
-                {
                     logger.LogError("Handling stream error {0}", err);
-                }
 
                 // The error is a stream error
                 // Check out if we know a stream with the given ID
@@ -590,11 +506,11 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                     {
                         StreamId = err.StreamId,
                         Type = FrameType.ResetStream,
-                        Flags = 0,
+                        Flags = 0
                     };
                     var resetData = new ResetFrameData
                     {
-                        ErrorCode = err.Code,
+                        ErrorCode = err.Code
                     };
                     // Write the reset frame
                     // Not interested in the result.
@@ -607,13 +523,13 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
         }
 
         /// <summary>
-        /// Forces closing the connection immediatly.
-        /// This will not send a GOAWAY message.
-        /// Pending streams will get reset.
+        ///     Forces closing the connection immediatly.
+        ///     This will not send a GOAWAY message.
+        ///     Pending streams will get reset.
         /// </summary>
         /// <returns>
-        /// A task that will be completed once the connection has fully been
-        /// shut down.
+        ///     A task that will be completed once the connection has fully been
+        ///     shut down.
         /// </returns>
         public async Task CloseNow()
         {
@@ -622,29 +538,26 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
             await writer.CloseNow();
 
             // And wait for the reader to be done
-            await readerDone;
+            await Done;
         }
 
         /// <summary>
-        /// Sends a GOAWAY frame with the given error code to the remote.
-        /// If closeConnection is set to true the connection will be closed
-        /// after to frame has been sent, otherwise not.
-        /// If the connection is also closed the returned task will wait until
-        /// the connection has been fully shut down.
+        ///     Sends a GOAWAY frame with the given error code to the remote.
+        ///     If closeConnection is set to true the connection will be closed
+        ///     after to frame has been sent, otherwise not.
+        ///     If the connection is also closed the returned task will wait until
+        ///     the connection has been fully shut down.
         /// </summary>
         public async Task GoAwayAsync(ErrorCode errorCode, bool closeConnection = false)
         {
             await InitiateGoAway(errorCode, closeConnection);
-            if (closeConnection)
-            {
-                await Done;
-            }
+            if (closeConnection) await Done;
         }
 
         /// <summary>
-        /// Sends a PING request to the remote and returns a Task.
-        /// The task will be completed once the associated ping response had
-        /// been received.
+        ///     Sends a PING request to the remote and returns a Task.
+        ///     The task will be completed once the associated ping response had
+        ///     been received.
         /// </summary>
         public Task PingAsync()
         {
@@ -652,9 +565,9 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
         }
 
         /// <summary>
-        /// Sends a PING request to the remote and returns a Task.
-        /// The task will be completed once the associated ping response had
-        /// been received.
+        ///     Sends a PING request to the remote and returns a Task.
+        ///     The task will be completed once the associated ping response had
+        ///     been received.
         /// </summary>
         public async Task PingAsync(CancellationToken ct)
         {
@@ -662,16 +575,9 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
             Task waitTask = null;
             lock (shared.Mutex)
             {
-                if (shared.Closed)
-                {
-                    // Connection is already closed
-                    throw new ConnectionClosedException();
-                }
+                if (shared.Closed) throw new ConnectionClosedException();
 
-                if (shared.PingState == null)
-                {
-                    shared.PingState = new PingState();
-                }
+                if (shared.PingState == null) shared.PingState = new PingState();
                 // TODO: Check if value is already in use
                 pingId = shared.PingState.Counter;
                 var tcs = new TaskCompletionSource<bool>();
@@ -681,15 +587,11 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
             }
 
             if (ct != CancellationToken.None)
-            {
                 ct.Register(() =>
                 {
                     lock (shared.Mutex)
                     {
-                        if (shared.PingState == null)
-                        {
-                            return;
-                        }
+                        if (shared.PingState == null) return;
 
                         TaskCompletionSource<bool> tcs = null;
                         if (shared.PingState.PingMap.TryGetValue(pingId, out tcs))
@@ -699,7 +601,6 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                         }
                     }
                 }, false);
-            }
 
             // Serialize the counter
             var fh = new FrameHeader
@@ -707,7 +608,7 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                 Type = FrameType.Ping,
                 Flags = 0,
                 StreamId = 0u,
-                Length = 8,
+                Length = 8
             };
 
             var pingBuffer = BitConverter.GetBytes(pingId);
@@ -724,32 +625,11 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
         }
 
         /// <summary>
-        /// Returns true if the Connection is exhausted, which means no new
-        /// outgoing streams can be created. This will be the case when the
-        /// Connection is either closed or all valid Stream IDs have already
-        /// been utilized.
-        /// </summary>
-        public bool IsExhausted
-        {
-            get
-            {
-                lock (shared.Mutex)
-                {
-                    if (shared.Closed)
-                    {
-                        return true;
-                    }
-                    return shared.LastOutgoingStreamId > int.MaxValue - 2;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Creates a new Stream on top of the connection.
-        /// This method may only be called on the client side of a connection.
+        ///     Creates a new Stream on top of the connection.
+        ///     This method may only be called on the client side of a connection.
         /// </summary>
         public async Task<IStream> CreateStreamAsync(
-            IEnumerable<Hpack.HeaderField> headers,
+            IEnumerable<HeaderField> headers,
             bool endOfStream = false)
         {
             if (config.IsServer)
@@ -778,15 +658,11 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
             await clientState.CreateStreamMutex.WaitAsync();
             try
             {
-                uint streamId = 0u;
+                var streamId = 0u;
                 StreamImpl stream = null;
                 lock (shared.Mutex)
                 {
-                    if (shared.Closed)
-                    {
-                        // Connection is already closed
-                        throw new ConnectionClosedException();
-                    }
+                    if (shared.Closed) throw new ConnectionClosedException();
 
                     // Retrieve a stream ID for the new stream
                     if (shared.LastOutgoingStreamId == 0)
@@ -802,26 +678,18 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                     stream = new StreamImpl(
                         this, streamId,
                         StreamState.Idle,
-                        (int)localSettings.InitialWindowSize);
+                        (int) localSettings.InitialWindowSize);
 
                     shared.streamMap[streamId] = stream;
                 }
 
                 // Register that stream at the writer
-                if (!writer.RegisterStream(streamId))
-                {
-                    // We can't register the stream at the writer
-                    // This can happen if the writer is already closed
-                    // In that case the streamMap will be cleaned up soon
-                    throw new ConnectionClosedException();
-                }
+                if (!writer.RegisterStream(streamId)) throw new ConnectionClosedException();
 
                 if (logger != null && logger.IsEnabled(LogLevel.Trace))
-                {
                     logger.LogTrace(
                         "Created new outgoing stream with ID {0}",
                         streamId);
-                }
 
                 // Write the headers
                 try
@@ -835,6 +703,7 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                     // the write can only fail if the connection is closed.
                     throw new ConnectionClosedException();
                 }
+
                 return stream;
             }
             finally
@@ -844,14 +713,14 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
         }
 
         /// <summary>
-        /// Internal version of the GoAway function. This will not wait for the
-        /// connection to close in order not to deadlock when it's u sed from
-        /// inside the Reader routine.
+        ///     Internal version of the GoAway function. This will not wait for the
+        ///     connection to close in order not to deadlock when it's u sed from
+        ///     inside the Reader routine.
         /// </summary>
         private async Task InitiateGoAway(ErrorCode errorCode, bool closeWriter)
         {
-            uint lastProcessedStreamId = 0u;
-            bool goAwaySent = false;
+            var lastProcessedStreamId = 0u;
+            var goAwaySent = false;
             lock (shared.Mutex)
             {
                 lastProcessedStreamId = shared.LastIncomingStreamId;
@@ -866,10 +735,7 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                 // Initiate only the close procedure here if required
                 // If writer was not stopped do that now.
                 // In this case a force close will be applied.
-                if (closeWriter)
-                {
-                    await writer.CloseNow();
-                }
+                if (closeWriter) await writer.CloseNow();
             }
             else
             {
@@ -877,7 +743,7 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                 {
                     Type = FrameType.GoAway,
                     StreamId = 0,
-                    Flags = 0,
+                    Flags = 0
                 };
 
                 var goAwayData = new GoAwayFrameData
@@ -886,8 +752,8 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                     {
                         LastStreamId = lastProcessedStreamId,
                         ErrorCode = errorCode,
-                        DebugData = Constants.EmptyByteArray,
-                    },
+                        DebugData = Constants.EmptyByteArray
+                    }
                 };
 
                 await writer.WriteGoAway(fh, goAwayData, closeWriter);
@@ -898,25 +764,18 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
         {
             var fh = await FrameHeader.ReceiveAsync(inputStream, receiveBuffer);
             if (logger != null && logger.IsEnabled(LogLevel.Trace))
-            {
                 logger.LogTrace("recv " + FramePrinter.PrintFrameHeader(fh));
-            }
 
             // The first thing that we need to receive after the preface
             // is a SETTINGS frame without ACK flag
             if (!settingsReceived)
-            {
-                if (fh.Type != FrameType.Settings || (fh.Flags & (byte)SettingsFrameFlags.Ack) != 0)
-                {
+                if (fh.Type != FrameType.Settings || (fh.Flags & (byte) SettingsFrameFlags.Ack) != 0)
                     return new Http2Error
                     {
                         StreamId = 0,
                         Code = ErrorCode.ProtocolError,
-                        Message = "Expected SETTINGS frame as first frame",
+                        Message = "Expected SETTINGS frame as first frame"
                     };
-                }
-                // else handle settings normally
-            }
 
             switch (fh.Type)
             {
@@ -939,7 +798,7 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                     {
                         StreamId = 0,
                         Code = ErrorCode.ProtocolError,
-                        Message = "Unexpected CONTINUATION frame",
+                        Message = "Unexpected CONTINUATION frame"
                     };
                 case FrameType.Data:
                     return await HandleDataFrame(fh);
@@ -957,18 +816,16 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
         {
             // Headers with stream ID 0 are a connection error
             if (headers.StreamId == 0)
-            {
                 return new Http2Error
                 {
                     StreamId = headers.StreamId,
                     Code = ErrorCode.ProtocolError,
-                    Message = "Received HEADERS frame with stream ID 0",
+                    Message = "Received HEADERS frame with stream ID 0"
                 };
-            }
 
             StreamImpl stream = null;
-            uint lastOutgoingStream = 0u;
-            uint lastIncomingStream = 0u;
+            var lastOutgoingStream = 0u;
+            var lastIncomingStream = 0u;
             lock (shared.Mutex)
             {
                 lastIncomingStream = shared.LastIncomingStreamId;
@@ -983,23 +840,21 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                 {
                     var handlePrioErr = HandlePriorityData(
                         headers.StreamId, headers.Priority.Value);
-                    if (handlePrioErr != null)
-                    {
-                        return handlePrioErr;
-                    }
+                    if (handlePrioErr != null) return handlePrioErr;
                 }
+
                 return stream.ProcessHeaders(headers);
             }
 
             // This might be a new stream - or a protocol error
             var isServerInitiated = headers.StreamId % 2 == 0;
             var isRemoteInitiated =
-                (IsServer && !isServerInitiated) || (!IsServer && isServerInitiated);
+                IsServer && !isServerInitiated || !IsServer && isServerInitiated;
 
             var isValidNewStream =
                 IsServer && // As a client don't accept HEADERS as a way to create a new stream
                 isRemoteInitiated &&
-                (headers.StreamId > lastIncomingStream);
+                headers.StreamId > lastIncomingStream;
 
             // Remark:
             // The HEADERS might also be trailers for a stream which has existed
@@ -1016,53 +871,42 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
             // the highest stream ID that we have used up to now.
 
             if (!isValidNewStream)
-            {
-                // Return an error, which will trigger sending RST_STREAM
                 return new Http2Error
                 {
                     StreamId = headers.StreamId,
                     Code = ErrorCode.StreamClosed,
-                    Message = "Refusing HEADERS which don't open a new stream",
+                    Message = "Refusing HEADERS which don't open a new stream"
                 };
-            }
 
             lock (shared.Mutex)
             {
                 shared.LastIncomingStreamId = headers.StreamId;
 
                 if (shared.GoAwaySent)
-                {
                     return new Http2Error
                     {
                         StreamId = headers.StreamId,
                         Code = ErrorCode.RefusedStream,
-                        Message = "Going Away",
+                        Message = "Going Away"
                     };
-                }
 
                 // Check max concurrent streams
-                if ((uint)shared.streamMap.Count + 1 > localSettings.MaxConcurrentStreams)
-                {
-                    // Return an error which will trigger a reset frame for
-                    // the new stream
+                if ((uint) shared.streamMap.Count + 1 > localSettings.MaxConcurrentStreams)
                     return new Http2Error
                     {
                         StreamId = headers.StreamId,
                         Code = ErrorCode.RefusedStream,
-                        Message = "Refusing stream due to max concurrent streams",
+                        Message = "Refusing stream due to max concurrent streams"
                     };
-                }
             }
 
             if (logger != null && logger.IsEnabled(LogLevel.Trace))
-            {
                 logger.LogTrace("Accepted new stream with ID {0}", headers.StreamId);
-            }
 
             // Create a new stream for that ID
             var newStream = new StreamImpl(
                 this, headers.StreamId, StreamState.Idle,
-                (int)localSettings.InitialWindowSize);
+                (int) localSettings.InitialWindowSize);
 
             // Add the stream to our map
             // The map might have changed between the check in this
@@ -1075,30 +919,17 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
 
             // Register that stream at the writer
             if (!writer.RegisterStream(headers.StreamId))
-            {
-                // We can't register the stream at the writer
-                // This can happen if the writer is already closed
-                // Return a connection error, since we can't proceed that way.
-                // The stream will get properly reset, since it's registered in
-                // the streamMap
                 return new Http2Error
                 {
                     StreamId = 0,
                     Code = ErrorCode.InternalError,
-                    Message = "Can't register stream at writer",
+                    Message = "Can't register stream at writer"
                 };
-            }
 
             // Let the new stream process the headers
             // This will move it from Idle state to Open
             var err = newStream.ProcessHeaders(headers);
-            if (err != null)
-            {
-                // Return the error - This will either reset the stream or
-                // the connection. No need to pass that dead stream up to
-                // the user
-                return err;
-            }
+            if (err != null) return err;
 
             // Apply the priority settings if received
             // TODO: This might also be moved into StreamImpl.ProcessHeaders
@@ -1107,19 +938,11 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                 err = HandlePriorityData(
                     headers.StreamId,
                     headers.Priority.Value);
-                if (err != null)
-                {
-                    return err;
-                }
+                if (err != null) return err;
             }
 
             var handledByUser = config.StreamListener(newStream);
-            if (!handledByUser)
-            {
-                // The user isn't interested in the stream.
-                // Therefore we reset it
-                await newStream.Reset(ErrorCode.RefusedStream, false);
-            }
+            if (!handledByUser) await newStream.Reset(ErrorCode.RefusedStream, false);
 
             return null;
         }
@@ -1127,34 +950,27 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
         private async ValueTask<Http2Error?> HandleDataFrame(FrameHeader fh)
         {
             if (fh.StreamId == 0)
-            {
                 return new Http2Error
                 {
                     StreamId = 0,
                     Code = ErrorCode.ProtocolError,
-                    Message = "Received invalid DATA frame header",
+                    Message = "Received invalid DATA frame header"
                 };
-            }
-            if ((fh.Flags & (byte)DataFrameFlags.Padded) != 0 &&
+            if ((fh.Flags & (byte) DataFrameFlags.Padded) != 0 &&
                 fh.Length < 1)
-            {
-                // Padded frames must have at least 1 byte
                 return new Http2Error
                 {
                     StreamId = 0,
                     Code = ErrorCode.ProtocolError,
-                    Message = "Frame is too small to contain padding",
+                    Message = "Frame is too small to contain padding"
                 };
-            }
             if (fh.Length > localSettings.MaxFrameSize)
-            {
                 return new Http2Error
                 {
                     StreamId = 0,
                     Code = ErrorCode.FrameSizeError,
-                    Message = "Maximum frame size exceeded",
+                    Message = "Maximum frame size exceeded"
                 };
-            }
 
             // Consume the data by reading it into our receiveBuffer
             // As reading might throw an exception a try/catch block is
@@ -1171,7 +987,7 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                 throw;
             }
 
-            var isPadded = (fh.Flags & (byte)DataFrameFlags.Padded) != 0;
+            var isPadded = (fh.Flags & (byte) DataFrameFlags.Padded) != 0;
             var padLen = 0;
             var offset = isPadded ? 1 : 0;
             var dataSize = fh.Length;
@@ -1187,7 +1003,7 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                     {
                         StreamId = 0,
                         Code = ErrorCode.ProtocolError,
-                        Message = "Frame is too small after substracting padding",
+                        Message = "Frame is too small after substracting padding"
                     };
                 }
             }
@@ -1206,7 +1022,7 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                     {
                         StreamId = 0,
                         Code = ErrorCode.FlowControlError,
-                        Message = "Received window exceeded",
+                        Message = "Received window exceeded"
                     };
                 }
 
@@ -1214,13 +1030,11 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                 connReceiveFlowWindow -= dataSize;
                 // And log the update
                 if (logger != null && logger.IsEnabled(LogLevel.Trace))
-                {
                     logger.LogTrace(
                         "Incoming flow control window update:\n" +
                         "  Connection window: {0} -> {1}\n",
                         connReceiveFlowWindow + dataSize,
                         connReceiveFlowWindow);
-                }
             }
 
             StreamImpl stream = null;
@@ -1234,13 +1048,13 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
             }
 
             Http2Error? processError = null;
-            bool streamTookBufferOwnership = false;
+            var streamTookBufferOwnership = false;
             if (stream != null)
             {
                 // Handover the data segment to the stream
                 processError = stream.PushBuffer(
                     new ArraySegment<byte>(dataBuffer, offset, dataSize),
-                    (fh.Flags & (byte)DataFrameFlags.EndOfStream) != 0,
+                    (fh.Flags & (byte) DataFrameFlags.EndOfStream) != 0,
                     out streamTookBufferOwnership);
             }
             else
@@ -1259,55 +1073,48 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                 {
                     StreamId = isIdleStreamId ? 0u : fh.StreamId,
                     Code = ErrorCode.StreamClosed,
-                    Message = "Received DATA for an unknown frame",
+                    Message = "Received DATA for an unknown frame"
                 };
             }
 
             // Release the frame which contains the data buffer if noone was
             // interested in keeping it
-            if (!streamTookBufferOwnership)
-            {
-                config.BufferPool.Return(dataBuffer);
-            }
+            if (!streamTookBufferOwnership) config.BufferPool.Return(dataBuffer);
             dataBuffer = null;
 
             // Check if we should send a window update for the connection
             // If we have encountered a connection error we will close anyway
             // and sending the update is not relevant
-            if (processError.HasValue && processError.Value.StreamId == 0)
-            {
-                return processError;
-            }
+            if (processError.HasValue && processError.Value.StreamId == 0) return processError;
 
             var maxWindow = Constants.InitialConnectionWindowSize;
             var possibleWindowUpdate = maxWindow - connReceiveFlowWindow;
             var windowUpdateAmount = 0;
-            if (possibleWindowUpdate >= (maxWindow/2))
+            if (possibleWindowUpdate >= maxWindow / 2)
             {
                 windowUpdateAmount = possibleWindowUpdate;
                 connReceiveFlowWindow += windowUpdateAmount;
                 if (logger != null && logger.IsEnabled(LogLevel.Trace))
-                {
                     logger.LogTrace(
                         "Incoming flow control window update:\n" +
                         "  Connection window: {0} -> {1}\n",
                         connReceiveFlowWindow - windowUpdateAmount,
                         connReceiveFlowWindow);
-                }
             }
 
             if (windowUpdateAmount > 0)
             {
                 // Send the window update frame for the connection
-                var wfh = new FrameHeader {
+                var wfh = new FrameHeader
+                {
                     StreamId = 0,
                     Type = FrameType.WindowUpdate,
-                    Flags = 0,
+                    Flags = 0
                 };
 
                 var updateData = new WindowUpdateData
                 {
-                    WindowSizeIncrement = windowUpdateAmount,
+                    WindowSizeIncrement = windowUpdateAmount
                 };
 
                 try
@@ -1336,28 +1143,26 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                 {
                     StreamId = 0,
                     Code = ErrorCode.ProtocolError,
-                    Message = "Received unsupported PUSH_PROMISE frame",
+                    Message = "Received unsupported PUSH_PROMISE frame"
                 });
         }
 
         /// <summary>
-        /// Handles frames that are not known to this HTTP/2 implementation.
-        /// From the specification:
-        /// Implementations MUST ignore and discard any frame that has a type
-        /// that is unknown.
+        ///     Handles frames that are not known to this HTTP/2 implementation.
+        ///     From the specification:
+        ///     Implementations MUST ignore and discard any frame that has a type
+        ///     that is unknown.
         /// </summary>
         private async ValueTask<Http2Error?> HandleUnknownFrame(FrameHeader fh)
         {
             // Check frame size
             if (fh.Length > localSettings.MaxFrameSize)
-            {
                 return new Http2Error
                 {
                     StreamId = 0,
                     Code = ErrorCode.FrameSizeError,
-                    Message = "Maximum frame size exceeded",
+                    Message = "Maximum frame size exceeded"
                 };
-            }
 
             // Read data from the unknown frame into the receive buffer
             EnsureBuffer(fh.Length);
@@ -1372,23 +1177,19 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
         private async ValueTask<Http2Error?> HandleGoAwayFrame(FrameHeader fh)
         {
             if (fh.StreamId != 0 || fh.Length < 8)
-            {
                 return new Http2Error
                 {
                     StreamId = 0,
                     Code = ErrorCode.ProtocolError,
-                    Message = "Received invalid GOAWAY frame header",
+                    Message = "Received invalid GOAWAY frame header"
                 };
-            }
             if (fh.Length > localSettings.MaxFrameSize)
-            {
                 return new Http2Error
                 {
                     StreamId = 0,
                     Code = ErrorCode.FrameSizeError,
-                    Message = "Maximum frame size exceeded",
+                    Message = "Maximum frame size exceeded"
                 };
-            }
 
             // Read data
             EnsureBuffer(fh.Length);
@@ -1426,7 +1227,7 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                 {
                     StreamId = 0,
                     Code = errc,
-                    Message = "Received invalid RST_STREAM frame header",
+                    Message = "Received invalid RST_STREAM frame header"
                 };
             }
 
@@ -1440,17 +1241,14 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
 
             // Handle the reset
             StreamImpl stream = null;
-            uint lastOutgoingStream = 0u;
-            uint lastIncomingStream = 0u;
+            var lastOutgoingStream = 0u;
+            var lastIncomingStream = 0u;
             lock (shared.Mutex)
             {
                 lastIncomingStream = shared.LastIncomingStreamId;
                 lastOutgoingStream = shared.LastOutgoingStreamId;
                 shared.streamMap.TryGetValue(fh.StreamId, out stream);
-                if (stream != null)
-                {
-                    shared.streamMap.Remove(fh.StreamId);
-                }
+                if (stream != null) shared.streamMap.Remove(fh.StreamId);
             }
 
             if (stream != null)
@@ -1463,14 +1261,12 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                 // In this case stream will always be null, as IDLE streams cant
                 // be in the map
                 if (IsIdleStreamId(fh.StreamId, lastOutgoingStream, lastIncomingStream))
-                {
                     return new Http2Error
                     {
                         StreamId = 0u,
                         Code = ErrorCode.ProtocolError,
-                        Message = "Received RST_STREAM for an IDLE stream",
+                        Message = "Received RST_STREAM for an IDLE stream"
                     };
-                }
             }
 
             return null;
@@ -1481,24 +1277,22 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
         {
             var isServerInitiated = streamId % 2 == 0;
             var isRemoteInitiated =
-                (IsServer && !isServerInitiated) ||
-                (!IsServer && isServerInitiated);
-            var isIdle = (isRemoteInitiated && streamId > lastIncomingStreamId ||
-                          !isRemoteInitiated && streamId > lastOutgoingStreamId);
+                IsServer && !isServerInitiated ||
+                !IsServer && isServerInitiated;
+            var isIdle = isRemoteInitiated && streamId > lastIncomingStreamId ||
+                         !isRemoteInitiated && streamId > lastOutgoingStreamId;
             return isIdle;
         }
 
         private async ValueTask<Http2Error?> HandleWindowUpdateFrame(FrameHeader fh)
         {
             if (fh.Length != WindowUpdateData.Size)
-            {
                 return new Http2Error
                 {
                     StreamId = 0,
                     Code = ErrorCode.FrameSizeError,
-                    Message = "Received invalid WINDOW_UPDATE frame header",
+                    Message = "Received invalid WINDOW_UPDATE frame header"
                 };
-            }
 
             // Read data
             await inputStream.ReadAll(
@@ -1509,7 +1303,7 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                 new ArraySegment<byte>(receiveBuffer, 0, WindowUpdateData.Size));
 
             // Check if the window update is sent on an idle stream
-            bool isIdleStream = false;
+            var isIdleStream = false;
             lock (shared.Mutex)
             {
                 isIdleStream = IsIdleStreamId(
@@ -1520,14 +1314,12 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
             // error. This is mainly here to satisfy the h2spec test suite.
             // The protocol would work fine without it by ignoring the update.
             if (isIdleStream)
-            {
                 return new Http2Error
                 {
                     StreamId = 0u,
                     Code = ErrorCode.ProtocolError,
-                    Message = "Received window update for Idle stream",
+                    Message = "Received window update for Idle stream"
                 };
-            }
 
             // Handle it - 0 size increments will be handled by the writer
             return writer.UpdateFlowControlWindow(
@@ -1544,14 +1336,14 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                 {
                     StreamId = 0,
                     Code = errc,
-                    Message = "Received invalid PING frame header",
+                    Message = "Received invalid PING frame header"
                 };
             }
 
             // Read ping data
             await inputStream.ReadAll(new ArraySegment<byte>(receiveBuffer, 0, 8));
 
-            var hasAck = (fh.Flags & (byte)PingFrameFlags.Ack) != 0;
+            var hasAck = (fh.Flags & (byte) PingFrameFlags.Ack) != 0;
             if (hasAck)
             {
                 // Lookup in our ping map if we have sent this ping
@@ -1561,23 +1353,17 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                     if (shared.PingState != null)
                     {
                         var id = BitConverter.ToUInt64(receiveBuffer, 0);
-                        if (shared.PingState.PingMap.TryGetValue(id, out tcs))
-                        {
-                            // We have sent a ping with that ID
-                            shared.PingState.PingMap.Remove(id);
-                        }
+                        if (shared.PingState.PingMap.TryGetValue(id, out tcs)) shared.PingState.PingMap.Remove(id);
                     }
                 }
-                if (tcs != null)
-                {
-                    tcs.SetResult(true);
-                }
+
+                if (tcs != null) tcs.SetResult(true);
             }
             else
             {
                 // Respond to the ping
                 var pongHeader = fh;
-                pongHeader.Flags = (byte)PingFrameFlags.Ack;
+                pongHeader.Flags = (byte) PingFrameFlags.Ack;
                 await writer.WritePing(
                     pongHeader, new ArraySegment<byte>(receiveBuffer, 0, 8));
             }
@@ -1595,7 +1381,7 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                 {
                     StreamId = 0,
                     Code = errc,
-                    Message = "Received invalid PRIORITY frame header",
+                    Message = "Received invalid PRIORITY frame header"
                 };
             }
 
@@ -1616,14 +1402,12 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
         {
             // Check if stream depends on itself
             if (streamId == data.StreamDependency)
-            {
                 return new Http2Error
                 {
                     Code = ErrorCode.ProtocolError,
                     StreamId = streamId,
-                    Message = "Priority Error: A stream can not depend on itself",
+                    Message = "Priority Error: A stream can not depend on itself"
                 };
-            }
 
             return null;
         }
@@ -1631,63 +1415,52 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
         private async ValueTask<Http2Error?> HandleSettingsFrame(FrameHeader fh)
         {
             if (fh.StreamId != 0)
-            {
-                // SETTINGS frames must use StreamId 0
                 return new Http2Error
                 {
                     StreamId = 0,
                     Code = ErrorCode.ProtocolError,
-                    Message = "Received SETTINGS frame with invalid stream ID",
+                    Message = "Received SETTINGS frame with invalid stream ID"
                 };
-            }
-            bool isAck = (fh.Flags & (byte)SettingsFrameFlags.Ack) != 0;
+            var isAck = (fh.Flags & (byte) SettingsFrameFlags.Ack) != 0;
 
             if (isAck)
             {
                 if (fh.Length != 0)
-                {
                     return new Http2Error
                     {
                         StreamId = 0,
                         Code = ErrorCode.ProtocolError,
-                        Message = "Received SETTINGS ACK with non-zero length",
+                        Message = "Received SETTINGS ACK with non-zero length"
                     };
-                }
                 // TODO: Stop potential timer that waits for SETTINGS ACKs
                 // Might need to protect nrUnackedSettings with a mutex
                 nrUnackedSettings--;
                 if (nrUnackedSettings < 0)
-                {
                     return new Http2Error
                     {
                         StreamId = 0,
                         Code = ErrorCode.ProtocolError,
-                        Message = "Received unexpected SETTINGS ACK",
+                        Message = "Received unexpected SETTINGS ACK"
                     };
-                }
             }
             else
             {
                 // Received SETTINGS from the remote side
                 // Validate frame length before reading the body
                 if (fh.Length > localSettings.MaxFrameSize)
-                {
                     return new Http2Error
                     {
                         StreamId = 0,
                         Code = ErrorCode.FrameSizeError,
-                        Message = "Maximum frame size exceeded",
+                        Message = "Maximum frame size exceeded"
                     };
-                }
                 if (fh.Length % 6 != 0)
-                {
                     return new Http2Error
                     {
                         StreamId = 0,
                         Code = ErrorCode.ProtocolError,
-                        Message = "Invalid SETTINGS frame length",
+                        Message = "Invalid SETTINGS frame length"
                     };
-                }
 
                 // Receive the body of the SETTINGs frame
                 EnsureBuffer(fh.Length);
@@ -1698,10 +1471,7 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                 // This will also validate the settings
                 var err = remoteSettings.UpdateFromData(
                     new ArraySegment<byte>(receiveBuffer, 0, fh.Length));
-                if (err != null)
-                {
-                    return err;
-                }
+                if (err != null) return err;
 
                 // Set the settings received flag
                 settingsReceived = true;
@@ -1711,42 +1481,108 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                 // As with the current UpdateSettings API we don't see what has
                 // changed we need to overwrite everything.
                 err = await writer.ApplyAndAckRemoteSettings(remoteSettings);
-                if (err != null)
-                {
-                    return err;
-                }
+                if (err != null) return err;
             }
 
             return null;
         }
 
         /// <summary>
-        /// Unregisters a stream from the map of streams that are managed
-        /// by this connection.
+        ///     Unregisters a stream from the map of streams that are managed
+        ///     by this connection.
         /// </summary>
         /// <param name="stream">The stream to unregister</param>
         internal void UnregisterStream(StreamImpl stream)
         {
             lock (shared.Mutex)
             {
-                if (shared.streamMap != null)
-                {
-                    shared.streamMap.Remove(stream.Id);
-                }
+                if (shared.streamMap != null) shared.streamMap.Remove(stream.Id);
             }
+        }
+
+        /// <summary>
+        ///     Optional configuration options, which are valid per connection
+        /// </summary>
+        public struct Options
+        {
+            /// <summary>
+            ///     Optional logger
+            /// </summary>
+            public ILogger Logger;
+
+            /// <summary>
+            ///     If the connection is established through an upgrade from HTTP/1,
+            ///     then this contains the information about the request that
+            ///     triggered the upgrade.
+            /// </summary>
+            public ServerUpgradeRequest ServerUpgradeRequest;
+
+            /// <summary>
+            ///     If the connection is established through an upgrade from HTTP/1,
+            ///     then this contains the information about the request that
+            ///     triggered the upgrade.
+            /// </summary>
+            public ClientUpgradeRequest ClientUpgradeRequest;
+        }
+
+        private struct SharedData
+        {
+            /// Guards the SharedData
+            public object Mutex;
+
+            /// Gets set to true before the connection gets cleaned up
+            public bool Closed;
+
+            /// Map from stream ID to stream state
+            public Dictionary<uint, StreamImpl> streamMap;
+
+            /// The last and maximum stream ID that was sent to the remote.
+            /// 0 means we never sent anything
+            public uint LastOutgoingStreamId;
+
+            /// The last and maximum stream ID that was received from the remote.
+            /// 0 means we never received anything
+            public uint LastIncomingStreamId;
+
+            /// Whether a GoAway message has been sent
+            public bool GoAwaySent;
+
+            /// Tracks active PINGs. Only initialized when needed
+            public PingState PingState;
+        }
+
+        /// <summary>
+        ///     Contains information about active PINGs
+        /// </summary>
+        private class PingState
+        {
+            public readonly Dictionary<ulong, TaskCompletionSource<bool>> PingMap =
+                new Dictionary<ulong, TaskCompletionSource<bool>>();
+
+            public ulong Counter;
+        }
+
+        /// <summary>
+        ///     Additional state if this is a client connection.
+        ///     Not included a general members to save space for server-side connections.
+        /// </summary>
+        private class ClientState
+        {
+            /// Allows to create only a single stream at a time
+            public readonly SemaphoreSlim CreateStreamMutex = new SemaphoreSlim(1);
         }
     }
 
     /// <summary>
-    /// Signals that the connection was closed
+    ///     Signals that the connection was closed
     /// </summary>
     public class ConnectionClosedException : Exception
     {
     }
 
     /// <summary>
-    /// Signals that the connection is exhausted, which means no more streams
-    /// can be created because the maximum stream ID has been reached.
+    ///     Signals that the connection is exhausted, which means no more streams
+    ///     can be created because the maximum stream ID has been reached.
     /// </summary>
     public class ConnectionExhaustedException : Exception
     {

@@ -1,13 +1,17 @@
+#region
+
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Ultz.SimpleServer.Internals.Http2.Hpack;
 
+#endregion
+
 namespace Ultz.SimpleServer.Internals.Http2.Http2
 {
     /// <summary>
-    /// Stores the data of a HEADE frame and all following CONTINUATION frames
+    ///     Stores the data of a HEADE frame and all following CONTINUATION frames
     /// </summary>
     internal struct CompleteHeadersFrameData
     {
@@ -18,25 +22,17 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
     }
 
     /// <summary>
-    /// Reads and decodes a sequence of HEADERS and CONTINUATION frames into
-    /// complete decoded header lists.
+    ///     Reads and decodes a sequence of HEADERS and CONTINUATION frames into
+    ///     complete decoded header lists.
     /// </summary>
     internal class HeaderReader : IDisposable
     {
-        /// <summary>
-        /// Stores the result of a ReadHeaders operation
-        /// </summary>
-        public struct Result
-        {
-            public Http2Error? Error;
-            public CompleteHeadersFrameData HeaderData;
-        }
+        private readonly Decoder hpackDecoder;
+        private readonly ILogger logger;
 
-        uint maxFrameSize;
-        uint maxHeaderFieldsSize;
-        Decoder hpackDecoder;
-        IReadableByteStream reader;
-        ILogger logger;
+        private readonly uint maxFrameSize;
+        private readonly uint maxHeaderFieldsSize;
+        private readonly IReadableByteStream reader;
 
         public HeaderReader(
             Decoder hpackDecoder,
@@ -58,34 +54,35 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
         }
 
         /// <summary>
-        /// Transforms the result of an HPACK decode operation into a possible
-        /// error code.
+        ///     Transforms the result of an HPACK decode operation into a possible
+        ///     error code.
         /// </summary>
         private static Http2Error? DecodeResultToError(DecoderExtensions.DecodeFragmentResult res)
         {
             if (res.Status != DecoderExtensions.DecodeStatus.Success)
             {
                 var errc =
-                    (res.Status == DecoderExtensions.DecodeStatus.MaxHeaderListSizeExceeded)
-                    ? ErrorCode.ProtocolError
-                    : ErrorCode.CompressionError;
+                    res.Status == DecoderExtensions.DecodeStatus.MaxHeaderListSizeExceeded
+                        ? ErrorCode.ProtocolError
+                        : ErrorCode.CompressionError;
                 return new Http2Error
                 {
                     StreamId = 0,
                     Code = errc,
-                    Message = res.Status.ToString(),
+                    Message = res.Status.ToString()
                 };
             }
+
             return null;
         }
 
         /// <summary>
-        /// Reads and decodes a header block which consists of a single HEADER
-        /// frame and 0 or more CONTINUATION frames.
+        ///     Reads and decodes a header block which consists of a single HEADER
+        ///     frame and 0 or more CONTINUATION frames.
         /// </summary>
         /// <param name="firstHeader">
-        /// The frame header of the HEADER frame which indicates that headers
-        /// must be read.
+        ///     The frame header of the HEADER frame which indicates that headers
+        ///     must be read.
         /// </param>
         public async ValueTask<Result> ReadHeaders(
             FrameHeader firstHeader,
@@ -93,24 +90,22 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
         {
             // Check maximum frame size
             if (firstHeader.Length > maxFrameSize)
-            {
                 return new Result
+                {
+                    Error = new Http2Error
                     {
-                        Error = new Http2Error
-                        {
-                            StreamId = 0,
-                            Code = ErrorCode.FrameSizeError,
-                            Message = "Maximum frame size exceeded",
-                        },
-                    };
-            }
+                        StreamId = 0,
+                        Code = ErrorCode.FrameSizeError,
+                        Message = "Maximum frame size exceeded"
+                    }
+                };
 
             PriorityData? prioData = null;
             var allowedHeadersSize = maxHeaderFieldsSize;
             var headers = new List<HeaderField>();
             var initialFlags = firstHeader.Flags;
 
-            var f = (HeadersFrameFlags)firstHeader.Flags;
+            var f = (HeadersFrameFlags) firstHeader.Flags;
             var isEndOfStream = f.HasFlag(HeadersFrameFlags.EndOfStream);
             var isEndOfHeaders = f.HasFlag(HeadersFrameFlags.EndOfHeaders);
             var isPadded = f.HasFlag(HeadersFrameFlags.Padded);
@@ -121,23 +116,21 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
             if (isPadded) minLength += 1;
             if (hasPriority) minLength += 5;
             if (firstHeader.Length < minLength)
-            {
                 return new Result
                 {
                     Error = new Http2Error
                     {
                         StreamId = 0,
                         Code = ErrorCode.ProtocolError,
-                        Message = "Invalid frame content size",
-                    },
+                        Message = "Invalid frame content size"
+                    }
                 };
-            }
 
             // Get a buffer for the initial frame
             // TODO: We now always read the initial frame at once, but we could
             // split it up into multiple smaller reads if the receive buffer is
             // smaller. The code needs to be slightly adapted for this.
-            byte[] buffer = ensureBuffer(firstHeader.Length);
+            var buffer = ensureBuffer(firstHeader.Length);
             // Read the content of the initial frame
             await reader.ReadAll(new ArraySegment<byte>(buffer, 0, firstHeader.Length));
 
@@ -161,17 +154,15 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
 
             var contentLen = firstHeader.Length - offset - padLen;
             if (contentLen < 0)
-            {
                 return new Result
                 {
                     Error = new Http2Error
                     {
                         StreamId = 0,
                         Code = ErrorCode.ProtocolError,
-                        Message = "Invalid frame content size",
-                    },
+                        Message = "Invalid frame content size"
+                    }
                 };
-            }
 
             // Allow table updates at the start of header header block
             // This will be reset once the first header was decoded and will
@@ -185,10 +176,7 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                 headers);
 
             var err = DecodeResultToError(decodeResult);
-            if (err != null)
-            {
-                return new Result { Error = err };
-            }
+            if (err != null) return new Result {Error = err};
 
             allowedHeadersSize -= decodeResult.HeaderFieldsSize;
 
@@ -200,26 +188,22 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                 // guaranteed to be larger than the first frameheader buffer
                 var contHeader = await FrameHeader.ReceiveAsync(reader, buffer);
                 if (logger != null && logger.IsEnabled(LogLevel.Trace))
-                {
                     logger.LogTrace("recv " + FramePrinter.PrintFrameHeader(contHeader));
-                }
                 if (contHeader.Type != FrameType.Continuation
                     || contHeader.StreamId != firstHeader.StreamId
                     || contHeader.Length > maxFrameSize
                     || contHeader.Length == 0)
-                {
                     return new Result
                     {
                         Error = new Http2Error
                         {
                             StreamId = 0,
                             Code = ErrorCode.ProtocolError,
-                            Message = "Invalid continuation frame",
-                        },
+                            Message = "Invalid continuation frame"
+                        }
                     };
-                }
 
-                var contFlags = ((ContinuationFrameFlags)contHeader.Flags);
+                var contFlags = (ContinuationFrameFlags) contHeader.Flags;
                 isEndOfHeaders = contFlags.HasFlag(ContinuationFrameFlags.EndOfHeaders);
 
                 // Read the HeaderBlockFragment of the continuation frame
@@ -239,10 +223,7 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                     headers);
 
                 var err2 = DecodeResultToError(decodeResult);
-                if (err2 != null)
-                {
-                    return new Result { Error = err2 };
-                }
+                if (err2 != null) return new Result {Error = err2};
 
                 allowedHeadersSize -= decodeResult.HeaderFieldsSize;
             }
@@ -250,17 +231,15 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
             // Check if decoder is initial state, which means a complete header
             // block was received
             if (!hpackDecoder.HasInitialState)
-            {
                 return new Result
                 {
                     Error = new Http2Error
                     {
                         Code = ErrorCode.CompressionError,
                         StreamId = 0u,
-                        Message = "Received incomplete header block",
-                    },
+                        Message = "Received incomplete header block"
+                    }
                 };
-            }
 
             return new Result
             {
@@ -270,9 +249,18 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                     StreamId = firstHeader.StreamId,
                     Headers = headers,
                     Priority = prioData,
-                    EndOfStream = isEndOfStream,
-                },
+                    EndOfStream = isEndOfStream
+                }
             };
+        }
+
+        /// <summary>
+        ///     Stores the result of a ReadHeaders operation
+        /// </summary>
+        public struct Result
+        {
+            public Http2Error? Error;
+            public CompleteHeadersFrameData HeaderData;
         }
     }
 }

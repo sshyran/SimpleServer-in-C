@@ -1,53 +1,85 @@
-﻿using System.IO;
+﻿#region
+
+using System;
+using System.IO;
 using System.Net;
 using System.Net.Security;
-using System.Security.Authentication;
-using System.Security.Cryptography.X509Certificates;
+using System.Threading;
 using System.Threading.Tasks;
-using Ultz.SimpleServer.Hosts;
 using Ultz.SimpleServer.Internals;
+
+#endregion
 
 namespace Ultz.SimpleServer.Common
 {
     public class SslListener : IListener
     {
+        private readonly IListener _child;
+        private readonly SslServerAuthenticationOptions _opts;
 
-        public SslListener(IListener listener,SslServerAuthenticationOptions sslServerAuthenticationOptions)
+        public SslListener(IListener listener, SslServerAuthenticationOptions sslServerAuthenticationOptions)
         {
             _child = listener;
+            _opts = sslServerAuthenticationOptions;
         }
-
-        private IListener _child;
 
         public void Dispose()
         {
+            _child.Dispose();
         }
 
         public IConnection Accept()
         {
-            throw new System.NotImplementedException();
+            return AcceptAsync().GetAwaiter().GetResult();
         }
 
-        public Task<IConnection> AcceptAsync()
+        public async Task<IConnection> AcceptAsync()
         {
-            throw new System.NotImplementedException();
+            return new SecureConnection(await _child.AcceptAsync(), _opts);
         }
 
         public void Start()
         {
-            throw new System.NotImplementedException();
+            _child.Start();
         }
 
         public void Stop()
         {
-            throw new System.NotImplementedException();
+            _child.Stop();
         }
 
         public void RunChecks()
         {
-            throw new System.NotImplementedException();
+            if (_opts == null)
+                throw new NullReferenceException("No options passed to the SslListener.");
+            if (_opts.ServerCertificate == null)
+                throw new NullReferenceException("ServerCertificate is null. Cannot continue.");
         }
 
-        public bool Active { get; }
+        public bool Active => _child.Active;
+
+        internal class SecureConnection : IConnection
+        {
+            private readonly IConnection _child;
+
+            public SecureConnection(IConnection child, SslServerAuthenticationOptions opts)
+            {
+                _child = child;
+                Stream = new SslStream(child.Stream);
+                ((SslStream) Stream).AuthenticateAsServerAsync(opts, CancellationToken.None);
+            }
+
+            public Stream Stream { get; }
+            public bool Connected => _child.Connected;
+
+            public void Close()
+            {
+                Stream.Dispose();
+            }
+
+            public EndPoint LocalEndPoint => _child.LocalEndPoint;
+            public EndPoint RemoteEndPoint => _child.RemoteEndPoint;
+            public int Id => _child.Id;
+        }
     }
 }
