@@ -35,7 +35,7 @@ namespace Ultz.SimpleServer.Internals.Http
 
         public IListener CreateDefaultListener(IPEndPoint endpoint)
         {
-            return new TcpConnectionListener(endpoint, true);
+            return new TcpConnectionListener(endpoint);
         }
 
         public IAttributeHandlerResolver AttributeHandlerResolver { get; }

@@ -66,7 +66,7 @@ namespace Ultz.SimpleServer.Common
             {
                 _child = child;
                 Stream = new SslStream(child.Stream);
-                ((SslStream) Stream).AuthenticateAsServerAsync(opts, CancellationToken.None);
+                ((SslStream) Stream).AuthenticateAsServerAsync(opts, CancellationToken.None).GetAwaiter().GetResult();
             }
 
             public Stream Stream { get; }
