@@ -31,10 +31,14 @@ namespace Ultz.SimpleServer.Internals.Http1
             foreach (var header in Headers)
                 response += header.Key + ": " + header.Value + crlf;
             response += crlf;
+            // write headers
             var bytes = Encoding.UTF8.GetBytes(response);
             _connection.Stream.Write(bytes, 0, bytes.Length);
+            // write response
             bytes = ((MemoryStream) OutputStream).ToArray();
             _connection.Stream.Write(bytes, 0, bytes.Length);
+            // close the connection
+            // TODO: Keep Alive support?
             _connection.Close();
         }
     }

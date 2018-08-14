@@ -10,7 +10,7 @@ namespace Ultz.SimpleServer.Internals
 {
     public class TcpConnectionListener : TcpListener, IListener
     {
-        private int _id = -1;
+        private int _id = 0;
         private readonly bool _noDelay;
 
         public TcpConnectionListener(int port, bool noDelay) : base(port)

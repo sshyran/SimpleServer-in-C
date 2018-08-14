@@ -1,6 +1,9 @@
 ﻿#region
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 #endregion
 
@@ -22,7 +25,7 @@ namespace Ultz.SimpleServer.Internals
 
         public T GetMethod(byte[] id)
         {
-            return _methods[id];
+            return _methods.First(x => x.Key.SequenceEqual(id)).Value;
         }
     }
 

@@ -24,7 +24,7 @@ namespace Ultz.SimpleServer.Internals.Http
             Headers = new ReadOnlyDictionary<string, string>(headers.Where(x => !x.Key.StartsWith(":"))
                 .ToDictionary(x => x.Key, x => x.Value));
             InputStream = payload == null ? new MemoryStream() : new MemoryStream(payload);
-            Protocol = headers[":simpleserver.protocol"];
+            Protocol = headers[":version"];
         }
 
         public HttpMethod Method { get; }
@@ -66,7 +66,6 @@ namespace Ultz.SimpleServer.Internals.Http
             {
                 {":method", method},
                 {":path", path},
-                {":authority", ""},
                 {":version", proto}
             };
             for (var i = 1; i < lines.Length; i++)
@@ -102,6 +101,17 @@ namespace Ultz.SimpleServer.Internals.Http
                 MethodResolver = methodResolver,
                 Payload = null
             };
+        }
+
+        public Dictionary<string, string> ToDictionary()
+        {
+            return new Dictionary<string, string>()
+            {
+                {":method", Method.Id},
+                {":authority", Url.Authority},
+                {":path", RawUrl},
+                {":version", Protocol}
+            }.Concat(Headers).ToDictionary(x => x.Key, x => x.Value);
         }
     }
 

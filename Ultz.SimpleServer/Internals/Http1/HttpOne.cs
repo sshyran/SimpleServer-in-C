@@ -39,6 +39,7 @@ namespace Ultz.SimpleServer.Internals.Http1
                         new ArraySegment<byte>(Encoding.ASCII.GetBytes(
                             "HTTP/1.1 400 Bad Request\r\nServer: SimpleServer/1.0 sshttp2\r\nContent-Type: text/html\r\nContent-Length: 26\r\n\r\nThe payload was too large.")));
                     await outStream.CloseAsync();
+                    return;
                 }
             }
             else if (req.ExpectPayload)
@@ -47,7 +48,12 @@ namespace Ultz.SimpleServer.Internals.Http1
                     new ArraySegment<byte>(Encoding.ASCII.GetBytes(
                         "HTTP/1.1 400 Bad Request\r\nServer: SimpleServer/1.0 sshttp2\r\nContent-Type: text/html\r\nContent-Length: 25\r\n\r\nNo content-length header.")));
                 await outStream.CloseAsync();
+                return;
             }
+
+            var request = req.Request;
+            logger.LogInformation(request.Method.Id +" "+ request.RawUrl + " "+ request.Protocol);
+            PassContext(new HttpContext(request, new HttpOneResponse(request, connection), connection, logger));
         }
     }
 }
