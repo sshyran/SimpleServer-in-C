@@ -41,7 +41,7 @@ namespace Ultz.SimpleServer.Internals.Http
         public IAttributeHandlerResolver AttributeHandlerResolver { get; }
         public IMethodResolver MethodResolver => new HttpMethodResolver(DefaultMethods);
 
-        public static Http Create(HttpMode mode = HttpMode.Dual)
+        public static Http Create(HttpMode mode = HttpMode.Legacy)
         {
             if (mode == HttpMode.Legacy)
                 return new HttpOne();
@@ -50,6 +50,7 @@ namespace Ultz.SimpleServer.Internals.Http
 
         protected void PassContext(HttpContext ctx)
         {
+            Console.WriteLine("GOT CONTEXT");
             ContextCreated?.Invoke(this, new ContextEventArgs(ctx));
         }
     }

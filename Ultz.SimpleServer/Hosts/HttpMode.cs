@@ -1,4 +1,6 @@
-﻿namespace Ultz.SimpleServer.Hosts
+﻿using System;
+
+namespace Ultz.SimpleServer.Hosts
 {
     public enum HttpMode
     {

@@ -110,6 +110,7 @@ namespace Ultz.SimpleServer.Internals.Http
             var initLength = _httpBuffer.Length;
             while (_httpBuffer.Length - initLength == length)
             {
+                Console.WriteLine(_httpBuffer.Length+"-"+initLength+"=="+length +": "+(_httpBuffer.Length - initLength == length));
                 var res = await _stream.ReadAsync(
                     new ArraySegment<byte>(_httpBuffer, _httpBufferOffset, _httpBuffer.Length - _httpBufferOffset));
 

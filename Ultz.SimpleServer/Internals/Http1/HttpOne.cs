@@ -22,7 +22,7 @@ namespace Ultz.SimpleServer.Internals.Http1
             var req = HttpRequest.ParseFrom(
                 Encoding.ASCII.GetString(
                     stream.HeaderBytes.Array, stream.HeaderBytes.Offset, stream.HeaderBytes.Count - 4),
-                (MethodResolver<HttpMethod>) MethodResolver);
+                (MethodResolver<HttpMethod>) MethodResolver, connection);
             if (req.ExpectPayload && req.Headers.TryGetValue("content-length", out var contentLength))
             {
                 if (int.TryParse(contentLength, out var length))

@@ -48,17 +48,25 @@ namespace Ultz.SimpleServer.Internals.Http2
             var config = new ConnectionConfigurationBuilder(true)
                 .UseStreamListener(arg =>
                 {
-                    var headers = arg.ReadHeadersAsync().GetAwaiter().GetResult();
-                    var optional = HttpRequest.ParseFrom(headers.ToDictionary(x => x.Name, x => x.Value), null);
-                    if (optional.ExpectPayload)
+                    Task.Run(() =>
                     {
-                        var seg = new ArraySegment<byte>(new byte[int.Parse(optional.Headers["content-length"])]);
-                        var res = arg.ReadAsync(seg).GetAwaiter().GetResult();
-                        optional.Payload = seg.ToArray();
-                    }
+                        var headers = arg.ReadHeadersAsync().GetAwaiter().GetResult();
+                        var optional = HttpRequest.ParseFrom(new HttpHeaderCollection(headers),
+                            new HttpMethodResolver(DefaultMethods));
+                        if (optional.ExpectPayload)
+                        {
+                            Console.WriteLine("ExpectPayload");
+                            var seg = new ArraySegment<byte>(new byte[int.Parse(optional.Headers["content-length"])]);
+                            Console.WriteLine(seg.Count);
+                            var res = arg.ReadAsync(seg).GetAwaiter().GetResult();
+                            optional.Payload = seg.ToArray();
+                            Console.WriteLine("StillAlive");
+                        }
 
-                    var req = optional.Request;
-                    PassContext(new HttpContext(req, new HttpTwoResponse(req, arg), stream.Connection, logger));
+                        var req = optional.Request;
+                        Console.WriteLine("StillStillAlive");
+                        PassContext(new HttpContext(req, new HttpTwoResponse(req, arg), stream.Connection, logger));
+                    });
                     return true;
                 })
                 .UseSettings(Settings.DefaultSimpleServer)
@@ -84,7 +92,7 @@ namespace Ultz.SimpleServer.Internals.Http2
                     var req = HttpRequest.ParseFrom(
                         Encoding.ASCII.GetString(
                             headerBytes.Array, headerBytes.Offset, headerBytes.Count - 4),
-                        (MethodResolver<HttpMethod>) MethodResolver);
+                        (MethodResolver<HttpMethod>) MethodResolver, stream.Connection);
 
                     if (req.ExpectPayload && req.Headers.TryGetValue("content-length", out var contentLength))
                     {
@@ -155,13 +163,13 @@ namespace Ultz.SimpleServer.Internals.Http2
                     foreach (var kvp in request.Headers)
                     {
                         // Skip Connection upgrade related headers
-                        if (kvp.Key == "connection" ||
-                            kvp.Key == "upgrade" ||
-                            kvp.Key == "http2-settings")
+                        if (kvp.Name == "connection" ||
+                            kvp.Name == "upgrade" ||
+                            kvp.Name == "http2-settings")
                             continue;
                         headers.Add(new HeaderField
                         {
-                            Name = kvp.Key,
+                            Name = kvp.Name,
                             Value = kvp.Value
                         });
                     }
@@ -187,7 +195,7 @@ namespace Ultz.SimpleServer.Internals.Http2
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error during connection upgrade: {0}", e.Message);
+                Console.WriteLine("Error during connection upgrade: {0}", e);
                 await writeAndCloseableByteStream.CloseAsync();
                 return;
             }

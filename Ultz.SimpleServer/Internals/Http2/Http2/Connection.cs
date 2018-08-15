@@ -383,7 +383,7 @@ namespace Ultz.SimpleServer.Internals.Http2.Http2
                 // an exception.
                 // As most exceptions are gracefully handled the remaining ones
                 // will only be cases where the reader fails.
-                if (logger != null && logger.IsEnabled(LogLevel.Error)) logger.LogError("Reader error: {0}", e.Message);
+                if (logger != null && logger.IsEnabled(LogLevel.Error)) logger.LogError("Reader error: {0}", e);
             }
 
             // Shutdown the writer.
