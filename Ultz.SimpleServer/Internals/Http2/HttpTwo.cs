@@ -98,9 +98,8 @@ namespace Ultz.SimpleServer.Internals.Http2
                     {
                         if (int.TryParse(contentLength, out var length))
                         {
-                            var arr = new ArraySegment<byte>(new byte[length]);
-                            var res = await upgradeReadStream.ReadAsync(arr);
-                            req.Payload = arr.ToArray();
+                            await upgradeReadStream.WaitForPayload(length);
+                            req.Payload = upgradeReadStream.Payload.ToArray();
                         }
                         else
                         {
