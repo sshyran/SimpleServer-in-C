@@ -7,10 +7,10 @@
 using System;
 using System.Reflection;
 
-[assembly: System.Reflection.AssemblyCompanyAttribute("sscorlib")]
+[assembly: System.Reflection.AssemblyCompanyAttribute("Ultz.SimpleServer")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
-[assembly: System.Reflection.AssemblyProductAttribute("sscorlib")]
-[assembly: System.Reflection.AssemblyTitleAttribute("sscorlib")]
+[assembly: System.Reflection.AssemblyProductAttribute("Ultz.SimpleServer")]
+[assembly: System.Reflection.AssemblyTitleAttribute("Ultz.SimpleServer")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

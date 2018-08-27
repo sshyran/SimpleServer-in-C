@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography.X509Certificates;
+﻿#if NETCOREAPP2_1
+using System.Security.Cryptography.X509Certificates;
 
 namespace Ultz.SimpleServer.Common
 {
@@ -17,3 +18,4 @@ namespace Ultz.SimpleServer.Common
         }
     }
 }
+#endif

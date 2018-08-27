@@ -1,4 +1,5 @@
-﻿#region
+﻿#if NETCOREAPP2_1
+#region
 
 using System;
 using System.Collections.Generic;
@@ -79,3 +80,4 @@ namespace Ultz.SimpleServer.Common
         public string Id => "simpleserver.ssl";
     }
 }
+#endif

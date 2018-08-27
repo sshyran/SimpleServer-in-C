@@ -156,7 +156,11 @@ namespace Ultz.SimpleServer.Internals.Http2
                         new HeaderField
                         {
                             Name = ":scheme",
+                            #if NETCOREAPP2_1
                             Value = stream.Connection is SslListener.SecureConnection ? "https" : "http"
+                            #else
+                            Value = "http"
+                            #endif
                         }
                     };
                     foreach (var kvp in request.Headers)
@@ -175,7 +179,7 @@ namespace Ultz.SimpleServer.Internals.Http2
 
                     var upgradeBuilder = new ServerUpgradeRequestBuilder();
                     upgradeBuilder.SetHeaders(headers);
-                    upgradeBuilder.SetPayload(req.Payload);
+                    upgradeBuilder.SetPayload(new ArraySegment<byte>(req.Payload));
                     upgradeBuilder.SetHttp2Settings(http2SettingsHeader);
                     upgrade = upgradeBuilder.Build();
 

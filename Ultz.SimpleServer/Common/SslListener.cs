@@ -1,4 +1,5 @@
-﻿#region
+﻿#if NETCOREAPP2_1
+#region
 
 using System;
 using System.IO;
@@ -83,3 +84,4 @@ namespace Ultz.SimpleServer.Common
         }
     }
 }
+#endif

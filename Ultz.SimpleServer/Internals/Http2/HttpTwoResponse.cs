@@ -33,7 +33,7 @@ namespace Ultz.SimpleServer.Internals.Http2
                 body.Length == 0).GetAwaiter().GetResult();
             Console.WriteLine("wrote\nBODY");
             if (body.Length != 0)
-                Stream.WriteAsync(body, true).GetAwaiter().GetResult();
+                Stream.WriteAsync(new ArraySegment<byte>(body), true).GetAwaiter().GetResult();
             Console.WriteLine("wrote");
             Console.WriteLine("Stream State: "+Stream.State);
             // the stream is already closed, no need to do anyhting else.

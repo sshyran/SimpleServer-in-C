@@ -77,7 +77,11 @@ namespace Ultz.SimpleServer.Internals.Http
                 {":method", method},
                 {":path", path},
                 {":version", proto},
+                #if NETCOREAPP2_1
                 {":scheme", connection is SslListener.SecureConnection ? "https" : "http"}
+                #else
+                {":scheme","http"}
+                #endif
             }.Select(x => new HeaderField(){Name = x.Key, Value = x.Value}));
             for (var i = 1; i < lines.Length; i++)
             {
