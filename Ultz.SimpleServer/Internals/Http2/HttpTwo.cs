@@ -55,16 +55,12 @@ namespace Ultz.SimpleServer.Internals.Http2
                             new HttpMethodResolver(DefaultMethods));
                         if (optional.ExpectPayload)
                         {
-                            Console.WriteLine("ExpectPayload");
                             var seg = new ArraySegment<byte>(new byte[int.Parse(optional.Headers["content-length"])]);
-                            Console.WriteLine(seg.Count);
                             var res = arg.ReadAsync(seg).GetAwaiter().GetResult();
                             optional.Payload = seg.ToArray();
-                            Console.WriteLine("StillAlive");
                         }
 
                         var req = optional.Request;
-                        Console.WriteLine("StillStillAlive");
                         PassContext(new HttpContext(req, new HttpTwoResponse(req, arg), stream.Connection, logger));
                     });
                     return true;
@@ -198,7 +194,7 @@ namespace Ultz.SimpleServer.Internals.Http2
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error during connection upgrade: {0}", e);
+                logger.LogError(e,"An error occured while upgrading a HTTP/1.X request to H2");
                 await writeAndCloseableByteStream.CloseAsync();
                 return;
             }

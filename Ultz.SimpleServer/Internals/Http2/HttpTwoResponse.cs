@@ -27,15 +27,11 @@ namespace Ultz.SimpleServer.Internals.Http2
             if (force)
                 Stream.CloseAsync().GetAwaiter().GetResult();
             var body = ((MemoryStream) OutputStream).ToArray();
-            Console.WriteLine("HEADERS");
             Stream.WriteHeadersAsync(
                 new List<HeaderField> {new HeaderField {Name = ":status", Value = StatusCode.ToString()}},
                 body.Length == 0).GetAwaiter().GetResult();
-            Console.WriteLine("wrote\nBODY");
             if (body.Length != 0)
                 Stream.WriteAsync(new ArraySegment<byte>(body), true).GetAwaiter().GetResult();
-            Console.WriteLine("wrote");
-            Console.WriteLine("Stream State: "+Stream.State);
             // the stream is already closed, no need to do anyhting else.
         }
     }

@@ -50,7 +50,6 @@ namespace Ultz.SimpleServer.Internals.Http
 
         protected void PassContext(HttpContext ctx)
         {
-            Console.WriteLine("GOT CONTEXT");
             ContextCreated?.Invoke(this, new ContextEventArgs(ctx));
         }
     }
