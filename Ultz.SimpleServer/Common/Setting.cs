@@ -1,6 +1,6 @@
 ﻿namespace Ultz.SimpleServer.Common
 {
-    public class Setting
+    public struct Setting
     {
         public string Name { get; set; }
         public string Value { get; set; }

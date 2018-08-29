@@ -16,19 +16,16 @@ namespace Ultz.SimpleServer.Common
         {
             get
             {
-                if (_types == null)
-                {
-                    _types = (from asm in AppDomain.CurrentDomain.GetAssemblies()
-                        from type in asm.GetTypes()
-                        from @interface in type.GetInterfaces()
-                        let instance = (IValve) Activator.CreateInstance(type)
-                        where @interface.IsGenericType && @interface.GetGenericTypeDefinition() == typeof(IValve<>)
-                        select instance).ToDictionary(instance => instance.Id);
-                    ;
-                    return _types;
-                }
-
+                if (_types != null) return _types;
+                _types = (from asm in AppDomain.CurrentDomain.GetAssemblies()
+                    from type in asm.GetTypes()
+                    from @interface in type.GetInterfaces()
+                    let instance = (IValve) Activator.CreateInstance(type)
+                    where @interface.IsGenericType && @interface.GetGenericTypeDefinition() == typeof(IValve)
+                    select instance).ToDictionary(instance => instance.Id);
+                
                 return _types;
+
             }
         }
     }

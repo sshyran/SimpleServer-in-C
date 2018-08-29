@@ -1,10 +1,12 @@
 ﻿#if NETCOREAPP2_1
+
 #region
 
 using System;
 using System.IO;
 using System.Net;
 using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 using Ultz.SimpleServer.Internals;
@@ -22,6 +24,8 @@ namespace Ultz.SimpleServer.Common
         {
             _child = listener;
             _opts = sslServerAuthenticationOptions;
+            _opts.ServerCertificate = new X509Certificate2(_opts.ServerCertificate.Export(X509ContentType.Pkcs12));
+            // the above line is a workaround for SS-19
         }
 
         public void Dispose()
@@ -36,11 +40,13 @@ namespace Ultz.SimpleServer.Common
 
         public async Task<IConnection> AcceptAsync()
         {
+            Console.WriteLine("StartAccept");
             return new SecureConnection(await _child.AcceptAsync(), _opts);
         }
 
         public void Start()
         {
+            Console.WriteLine("Started");
             _child.Start();
         }
 
@@ -65,9 +71,20 @@ namespace Ultz.SimpleServer.Common
 
             public SecureConnection(IConnection child, SslServerAuthenticationOptions opts)
             {
+                Console.WriteLine("Securing connection " + child.Id);
                 _child = child;
                 Stream = new SslStream(child.Stream);
-                ((SslStream) Stream).AuthenticateAsServerAsync(opts, CancellationToken.None).GetAwaiter().GetResult();
+                Console.WriteLine("Stream connected, sending handshake");
+                try
+                {
+                    ((SslStream) Stream).AuthenticateAsServerAsync(opts, CancellationToken.None).GetAwaiter()
+                        .GetResult();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
             }
 
             public Stream Stream { get; }

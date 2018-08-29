@@ -1,6 +1,5 @@
 ﻿#region
 
-using System;
 using System.Collections.Generic;
 
 #endregion
@@ -13,13 +12,8 @@ namespace Ultz.SimpleServer.Common
     // 4. Execute the appropriate method
     public class Valve
     {
-        private Type _type;
         public string Key { get; set; }
         public List<Setting> Settings { get; set; }
-
-        private void FindType()
-        {
-        }
     }
 
     public interface IValve

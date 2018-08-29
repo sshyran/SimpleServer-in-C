@@ -1,26 +1,29 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <TargetFrameworks>netcoreapp2.1;netstandard2.0</TargetFrameworks>
-        <Version>1.0.0</Version>
-        <PackageIconUrl>https://static.ultz.co.uk/new/ss2.png</PackageIconUrl>
-        <PackageVersion>1.0.0-alpha1</PackageVersion>
-        <PackageLicenseUrl>https://stash.onultz.com/projects/SS/repos/simpleserver/browse/LICENSE.MD</PackageLicenseUrl>
-        <RepositoryUrl>https://stash.onultz.com/projects/SS/repos/simpleserver/browse/</RepositoryUrl>
-        <RepositoryType>Git</RepositoryType>
-        <Description>SimpleServer offers an easy-to-use HTTP server library built with an extendable architecture. It is the first to include HTTP/1, HTTP/2, and HTTPS - built for the modern web.</Description>
-        <PackageReleaseNotes>This is the first Alpha build of SimpleServer 1.0. Currently, the Ultz.SimpleServer.Common classes have NOT been implemented, so do not use them. To create a basic server, use the Ultz.SimpleServer.Internals.Server class. THIS HAS NOT BEEN EXTENSIVELY TESTED!</PackageReleaseNotes>
-        <Authors>Ultz Limited</Authors>
-    </PropertyGroup>
-    <ItemGroup>
-        <EmbeddedResource Include="Providers/ErrorPages/ErrorPage.html"/>
-    </ItemGroup>
-    <ItemGroup>
-        <PackageReference Include="JetBrains.Annotations" Version="2018.2.1">
-            <PrivateAssets>all</PrivateAssets>
-            <ExcludeAssets>runtime</ExcludeAssets>
-        </PackageReference>
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.1.1"/>
-        <PackageReference Include="System.Buffers" Version="4.5.0"/>
-        <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.1"/>
-    </ItemGroup>
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp2.1;netstandard2.0</TargetFrameworks>
+    <Version>1.0.0</Version>
+    <PackageIconUrl>https://static.ultz.co.uk/new/ss2.png</PackageIconUrl>
+    <PackageVersion>1.0.0-alpha1</PackageVersion>
+    <PackageLicenseUrl>https://stash.onultz.com/projects/SS/repos/simpleserver/browse/LICENSE.MD</PackageLicenseUrl>
+    <RepositoryUrl>https://stash.onultz.com/projects/SS/repos/simpleserver/browse/</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
+    <Description>SimpleServer offers an easy-to-use HTTP server library built with an extendable architecture. It is the first to include HTTP/1, HTTP/2, and HTTPS - built for the modern web.</Description>
+    <PackageReleaseNotes>This is the first Alpha build of SimpleServer 1.0. Currently, the Ultz.SimpleServer.Common classes have NOT been implemented, so do not use them. To create a basic server, use the Ultz.SimpleServer.Internals.Server class. THIS HAS NOT BEEN EXTENSIVELY TESTED!</PackageReleaseNotes>
+    <Authors>Ultz</Authors>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.5' ">
+    <PackageReference Include="System.Runtime.Loader" Version="4.3.0" />
+    <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Ultz.SimpleServer.Minimal\Ultz.SimpleServer.Minimal.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Internals" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.1.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+  </ItemGroup>
 </Project>

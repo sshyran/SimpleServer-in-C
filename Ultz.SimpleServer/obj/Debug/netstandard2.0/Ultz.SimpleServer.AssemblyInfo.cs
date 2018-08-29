@@ -7,7 +7,7 @@
 using System;
 using System.Reflection;
 
-[assembly: System.Reflection.AssemblyCompanyAttribute("Ultz Limited")]
+[assembly: System.Reflection.AssemblyCompanyAttribute("Ultz")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyDescriptionAttribute("SimpleServer offers an easy-to-use HTTP server library built with an extendable a" +
 "rchitecture. It is the first to include HTTP/1, HTTP/2, and HTTPS - built for th" +

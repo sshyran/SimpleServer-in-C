@@ -16,10 +16,18 @@
     ],
     "frameworks": {
       "netcoreapp2.1": {
-        "projectReferences": {}
+        "projectReferences": {
+          "C:\\Users\\Dylan Perks\\Documents\\SimpleServer\\Ultz.SimpleServer.Minimal\\Ultz.SimpleServer.Minimal.csproj": {
+            "projectPath": "C:\\Users\\Dylan Perks\\Documents\\SimpleServer\\Ultz.SimpleServer.Minimal\\Ultz.SimpleServer.Minimal.csproj"
+          }
+        }
       },
       "netstandard2.0": {
-        "projectReferences": {}
+        "projectReferences": {
+          "C:\\Users\\Dylan Perks\\Documents\\SimpleServer\\Ultz.SimpleServer.Minimal\\Ultz.SimpleServer.Minimal.csproj": {
+            "projectPath": "C:\\Users\\Dylan Perks\\Documents\\SimpleServer\\Ultz.SimpleServer.Minimal\\Ultz.SimpleServer.Minimal.csproj"
+          }
+        }
       }
     },
     "warningProperties": {
@@ -31,12 +39,6 @@
   "frameworks": {
     "netcoreapp2.1": {
       "dependencies": {
-        "JetBrains.Annotations": {
-          "include": "Compile, Build, Native, ContentFiles, Analyzers",
-          "suppressParent": "All",
-          "target": "Package",
-          "version": "[2018.2.1, )"
-        },
         "Microsoft.Extensions.Logging.Abstractions": {
           "target": "Package",
           "version": "[2.1.1, )"
@@ -47,13 +49,9 @@
           "version": "[2.1.0, )",
           "autoReferenced": true
         },
-        "System.Buffers": {
+        "Newtonsoft.Json": {
           "target": "Package",
-          "version": "[4.5.0, )"
-        },
-        "System.Threading.Tasks.Extensions": {
-          "target": "Package",
-          "version": "[4.5.1, )"
+          "version": "[11.0.2, )"
         }
       },
       "imports": [
@@ -64,12 +62,6 @@
     },
     "netstandard2.0": {
       "dependencies": {
-        "JetBrains.Annotations": {
-          "include": "Compile, Build, Native, ContentFiles, Analyzers",
-          "suppressParent": "All",
-          "target": "Package",
-          "version": "[2018.2.1, )"
-        },
         "Microsoft.Extensions.Logging.Abstractions": {
           "target": "Package",
           "version": "[2.1.1, )"
@@ -80,13 +72,9 @@
           "version": "[2.0.3, )",
           "autoReferenced": true
         },
-        "System.Buffers": {
+        "Newtonsoft.Json": {
           "target": "Package",
-          "version": "[4.5.0, )"
-        },
-        "System.Threading.Tasks.Extensions": {
-          "target": "Package",
-          "version": "[4.5.1, )"
+          "version": "[11.0.2, )"
         }
       },
       "imports": [

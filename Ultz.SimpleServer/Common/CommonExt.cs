@@ -6,6 +6,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Text;
+using Newtonsoft.Json;
 
 #endregion
 
@@ -24,7 +26,36 @@ namespace Ultz.SimpleServer.Common
                         valve.Settings.ToDictionary(x => x.Name, x => x.Value));
             }
         }
-        // PEM format credit: https://www.codeproject.com/Articles/162194/Certificates-to-DB-and-Back
+
+        public static void Add(this ICollection<Valve> coll, IValve valve, params Setting[] settings)
+        {
+            coll.Add(
+                new Valve() {Key = valve.Id, Settings = settings == null ? new List<Setting>() : settings.ToList()});
+        }
+
+        public static void Add(this ICollection<Valve> coll, params IValve[] valves)
+        {
+            foreach (var valve in valves)
+                coll.Add(valve);
+        }
+
+        public static void AddValve(this IConfigurable configurable, params Valve[] valves)
+        {
+            foreach (var valve in valves)
+                configurable.Valves.Add(valve);
+        }
+
+        public static void AddValve(this IConfigurable configurable, IValve valve, params Setting[] settings)
+        {
+            configurable.Valves.Add(valve, settings);
+        }
+
+        public static void AddValve(this IConfigurable configurable, params IValve[] valve)
+        {
+            configurable.Valves.Add(valve);
+        }
+
+        // PEM helpers credit: https://www.codeproject.com/Articles/162194/Certificates-to-DB-and-Back
 
         #region PEM Helpers
 
@@ -177,7 +208,7 @@ namespace Ultz.SimpleServer.Common
             return end < 0 ? null : Convert.FromBase64String(pemString.Substring(start, end));
         }
 
-        public static RSACryptoServiceProvider DecodeRsaPrivateKey(byte[] privateKeyBytes)
+        public static RSA DecodeRsaPrivateKey(byte[] privateKeyBytes)
         {
             var ms = new MemoryStream(privateKeyBytes);
             var rd = new BinaryReader(ms);
@@ -222,16 +253,16 @@ namespace Ultz.SimpleServer.Common
 
                 // In order to solve a problem with instancing RSACryptoServiceProvider
                 // via default constructor on .net 4.0 this is a hack
-                var parms = new CspParameters();
-                parms.Flags = CspProviderFlags.NoFlags;
-                parms.KeyContainerName = Guid.NewGuid().ToString().ToUpperInvariant();
-                parms.ProviderType =
-                    Environment.OSVersion.Version.Major > 5 ||
-                    Environment.OSVersion.Version.Major == 5 && Environment.OSVersion.Version.Minor >= 1
-                        ? 0x18
-                        : 1;
-
-                var rsa = new RSACryptoServiceProvider(parms);
+//                var parms = new CspParameters();
+//                parms.Flags = CspProviderFlags.NoFlags;
+//                parms.KeyContainerName = Guid.NewGuid().ToString().ToUpperInvariant();
+//                parms.ProviderType =
+//                    Environment.OSVersion.Version.Major > 5 ||
+//                    Environment.OSVersion.Version.Major == 5 && Environment.OSVersion.Version.Minor >= 1
+//                        ? 0x18
+//                        : 1;
+//
+//                var rsa = new RSACryptoServiceProvider(parms);
                 var rsAparams = new RSAParameters();
 
                 rsAparams.Modulus = rd.ReadBytes(CertHelpers.DecodeIntegerSize(rd));
@@ -253,7 +284,9 @@ namespace Ultz.SimpleServer.Common
                 rsAparams.DQ = CertHelpers.AlignBytes(rd.ReadBytes(CertHelpers.DecodeIntegerSize(rd)), traits.SizeDq);
                 rsAparams.InverseQ =
                     CertHelpers.AlignBytes(rd.ReadBytes(CertHelpers.DecodeIntegerSize(rd)), traits.SizeInvQ);
-
+                
+                //rsa.ImportParameters(rsAparams);
+                var rsa = RSA.Create();
                 rsa.ImportParameters(rsAparams);
                 return rsa;
             }
