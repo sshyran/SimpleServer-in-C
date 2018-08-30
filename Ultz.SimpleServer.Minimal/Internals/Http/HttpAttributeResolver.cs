@@ -27,7 +27,7 @@ namespace Ultz.SimpleServer.Internals.Http
         public IEnumerable<IHandler> GetHandlers(object instance)
         {
             var type = instance.GetType();
-            var methods = type.GetRuntimeMethods();
+            var methods = type.GetTypeInfo().DeclaredMethods;
             foreach (var method in methods)
             {
                 if (method.ReturnType == typeof(void))
@@ -46,7 +46,7 @@ namespace Ultz.SimpleServer.Internals.Http
                         // Notes on Url template parsing
                         //
                         // Example URL:   /get?id={id}
-                        // Example Regex: /get?id=(?<id>.*)
+                        // Example Regex: \/get\?id=(?<id>.*)
                         //
                         // so all {<name>} fragments become (?<<name>>.*)
                         // We will use the names of arguments in the method,
@@ -55,9 +55,15 @@ namespace Ultz.SimpleServer.Internals.Http
                         foreach (var attribute in method.GetCustomAttributes(attr))
                         {
                             var selectedParams = parameters.ToDictionary(x => x.Name, x => x.ParameterType);
-                            var regex = new Regex(selectedParams.Keys.Aggregate(((HttpAttribute) attribute).Route,
-                                (current, argument) =>
-                                    current.Replace("{" + argument + "}", "(?<" + argument + ">.*)")));
+                            var regex = new Regex(selectedParams.Keys.Aggregate(
+                                    ((HttpAttribute) attribute).Route.Replace("/", "\\/").Replace("[", "\\[")
+                                    .Replace("^", "\\^").Replace("$", "\\$").Replace(".", "\\.").Replace("|", "\\|")
+                                    .Replace("?", "\\?").Replace("*", "\\*").Replace("+", "\\+").Replace("(", "\\(")
+                                    .Replace(")", "\\)"),
+                                    (current, argument) =>
+                                        current.Replace("{" + argument + "}", "(?<" + argument + ">.*)"))
+                                .Replace("{", "\\{").Replace("}", "\\}"));
+                            Console.WriteLine("Regex: " + regex);
                             yield return new HttpAttributeHandler(method, (HttpAttribute) attribute, instance, regex);
                         }
                     }
@@ -86,14 +92,16 @@ namespace Ultz.SimpleServer.Internals.Http
             if (_regex != null)
             {
                 return _regex.IsMatch(_attribute is HttpConnectAttribute
-                    ? ((HttpRequest) request).RawUrl
-                    : ((HttpRequest) request).RawUrl.ToUrlFormat());
+                           ? ((HttpRequest) request).RawUrl
+                           : ((HttpRequest) request).RawUrl.ToUrlFormat()) &&
+                       _attribute.Method == (HttpMethod) request.Method;
             }
             else
             {
                 if (_attribute is HttpConnectAttribute)
                     return ((HttpRequest) request).RawUrl == _attribute.Route;
-                return ((HttpRequest) request).RawUrl.ToUrlFormat() == _attribute.Route;
+                return ((HttpRequest) request).RawUrl.ToUrlFormat() == _attribute.Route &&
+                       _attribute.Method == (HttpMethod) request.Method;
             }
         }
 
@@ -107,6 +115,7 @@ namespace Ultz.SimpleServer.Internals.Http
                 for (var i = 0; i < parameters.Count; i++) // foreach var param in parameters
                 {
                     var param = parameters.ElementAt(i);
+                    Console.WriteLine(param.Key);
                     if (_regex.GetGroupNames().Contains(param.Key))
                     {
                         if (param.Value == typeof(string))
@@ -209,9 +218,16 @@ namespace Ultz.SimpleServer.Internals.Http
                         {
                             invocationArgs.Add(match.Groups[param.Key].Value.ToCharArray());
                         }
-                        else if (param.Value == typeof(HttpContext))
+                        else
                         {
-                            invocationArgs.Add((HttpContext) context);
+                            invocationArgs.Add(null);
+                        }
+                    } // end if there's regex group matching the parameter name
+                    else
+                    {
+                        if (param.Value == typeof(HttpContext))
+                        {
+                            invocationArgs.Add(context);                           
                         }
                         else if (param.Value == typeof(IContext))
                         {
@@ -221,10 +237,6 @@ namespace Ultz.SimpleServer.Internals.Http
                         {
                             invocationArgs.Add(null);
                         }
-                    } // end if there's regex group matching the parameter name
-                    else
-                    {
-                        invocationArgs.Add(null);
                     }
                 } // end foreach parameter
 

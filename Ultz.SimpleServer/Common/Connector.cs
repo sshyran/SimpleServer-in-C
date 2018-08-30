@@ -27,7 +27,7 @@ namespace Ultz.SimpleServer.Common
         public int Port { get; set; }
         public string Ip { get; set; }
 
-        public List<Valve> Valves { get; set; }
+        public List<Valve> Valves { get; set; } = new List<Valve>();
 
         public IListener GetListener()
         {

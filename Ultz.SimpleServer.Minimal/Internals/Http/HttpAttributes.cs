@@ -13,6 +13,7 @@ namespace Ultz.SimpleServer.Internals.Http
         }
 
         public abstract string Route { get; }
+        public abstract HttpMethod Method { get; }
     }
 
     [AttributeUsage(AttributeTargets.Method)]
@@ -29,6 +30,7 @@ namespace Ultz.SimpleServer.Internals.Http
         }
 
         public override string Route { get; }
+        public override HttpMethod Method => HttpMethod.Get;
     }
 
     [AttributeUsage(AttributeTargets.Method)]
@@ -45,6 +47,7 @@ namespace Ultz.SimpleServer.Internals.Http
         }
 
         public override string Route { get; }
+        public override HttpMethod Method => HttpMethod.Post;
     }
 
     [AttributeUsage(AttributeTargets.Method)]
@@ -61,6 +64,7 @@ namespace Ultz.SimpleServer.Internals.Http
         }
 
         public override string Route { get; }
+        public override HttpMethod Method => HttpMethod.Put;
     }
 
     [AttributeUsage(AttributeTargets.Method)]
@@ -77,6 +81,7 @@ namespace Ultz.SimpleServer.Internals.Http
         }
 
         public override string Route { get; }
+        public override HttpMethod Method => HttpMethod.Patch;
     }
 
     [AttributeUsage(AttributeTargets.Method)]
@@ -93,6 +98,7 @@ namespace Ultz.SimpleServer.Internals.Http
         }
 
         public override string Route { get; }
+        public override HttpMethod Method => HttpMethod.Delete;
     }
 
     [AttributeUsage(AttributeTargets.Method)]
@@ -109,6 +115,7 @@ namespace Ultz.SimpleServer.Internals.Http
         }
 
         public override string Route { get; }
+        public override HttpMethod Method => HttpMethod.Options;
     }
 
     [AttributeUsage(AttributeTargets.Method)]
@@ -124,6 +131,7 @@ namespace Ultz.SimpleServer.Internals.Http
         }
 
         public override string Route { get; }
+        public override HttpMethod Method => HttpMethod.Head;
     }
 
     [AttributeUsage(AttributeTargets.Method)]
@@ -140,6 +148,7 @@ namespace Ultz.SimpleServer.Internals.Http
         }
 
         public override string Route { get; }
+        public override HttpMethod Method => HttpMethod.Trace;
     }
 
     [AttributeUsage(AttributeTargets.Method)]
@@ -152,5 +161,6 @@ namespace Ultz.SimpleServer.Internals.Http
         }
 
         public override string Route { get; }
+        public override HttpMethod Method => HttpMethod.Connect;
     }
 }

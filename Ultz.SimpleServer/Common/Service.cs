@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Ultz.SimpleServer.Handlers;
 using Ultz.SimpleServer.Internals;
 
@@ -18,7 +19,7 @@ namespace Ultz.SimpleServer.Common
             
         }
         
-        private IEnumerable<Server> _servers;
+        private List<Server> _servers;
         private ILogger _logger;
         public abstract IProtocol Protocol { get; }
         public IEnumerable<IHandler> Handlers { get; } = new List<IHandler>();
@@ -56,11 +57,12 @@ namespace Ultz.SimpleServer.Common
             OnStart();
             Logger.LogInformation("Executed runtime prerequisites (OnStart)");
             Logger.LogInformation("Starting all servers...");
-            _servers = GetServers().Select(RegisterServer).Select(x =>
+            _servers = new List<Server>();
+            foreach (var server in GetServers())
             {
-                x.Start();
-                return x;
-            });
+                server.Start();
+                _servers.Add(server);
+            }
             Logger.LogInformation("All servers started");
             AfterStart();
             Logger.LogInformation("Executed post-start operations (AfterStart)");
@@ -75,12 +77,6 @@ namespace Ultz.SimpleServer.Common
                 server.Stop();
             _servers = null;
             AfterStop();
-        }
-
-        public Server RegisterServer(Server server)
-        {
-            server.RequestReceived += ServerOnRequestReceived;
-            return server;
         }
 
         private void ServerOnRequestReceived(object sender, ContextEventArgs e)
@@ -126,7 +122,7 @@ namespace Ultz.SimpleServer.Common
 
         public void RegisterHandlers(object handlerObject)
         {
-            ((List<IHandler>)Handlers).AddRange(Protocol?.AttributeHandlerResolver?.GetHandlers(handlerObject.GetType()));
+            ((List<IHandler>)Handlers).AddRange(Protocol?.AttributeHandlerResolver?.GetHandlers(handlerObject));
         }
 
         public void RegsiterHandlers(params IHandler[] handlers)
@@ -146,7 +142,12 @@ namespace Ultz.SimpleServer.Common
 
         internal IEnumerable<Server> GetServers()
         {
-            return Connectors.Select(x => new Server(Protocol, x.GetListener(), LoggerProvider));
+            return Connectors.Select(x =>
+            {
+                var srv= new Server(Protocol, x.GetListener(), LoggerProvider);
+                srv.RequestReceived += ServerOnRequestReceived;
+                return srv;
+            });
         }
 
         /// <inheritdoc />

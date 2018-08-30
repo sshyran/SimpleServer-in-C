@@ -272,7 +272,7 @@
           "lib/netcoreapp2.1/_._": {}
         }
       },
-      "Ultz.SimpleServer.Abstractions/1.0.0": {
+      "Ultz.SimpleServer.Abstractions/1.0.0-alpha2": {
         "type": "project",
         "framework": ".NETStandard,Version=v1.4",
         "dependencies": {
@@ -292,7 +292,7 @@
           "Microsoft.Extensions.Logging.Abstractions": "1.1.2",
           "System.Buffers": "4.5.0",
           "System.Threading.Tasks.Extensions": "4.5.1",
-          "Ultz.SimpleServer.Abstractions": "1.0.0",
+          "Ultz.SimpleServer.Abstractions": "1.0.0-alpha2",
           "http2dotnet": "0.8.0"
         },
         "compile": {
@@ -404,7 +404,7 @@
           "lib/netstandard2.0/System.Threading.Tasks.Extensions.dll": {}
         }
       },
-      "Ultz.SimpleServer.Abstractions/1.0.0": {
+      "Ultz.SimpleServer.Abstractions/1.0.0-alpha2": {
         "type": "project",
         "framework": ".NETStandard,Version=v1.4",
         "dependencies": {
@@ -424,7 +424,7 @@
           "Microsoft.Extensions.Logging.Abstractions": "1.1.2",
           "System.Buffers": "4.5.0",
           "System.Threading.Tasks.Extensions": "4.5.1",
-          "Ultz.SimpleServer.Abstractions": "1.0.0",
+          "Ultz.SimpleServer.Abstractions": "1.0.0-alpha2",
           "http2dotnet": "0.8.0"
         },
         "compile": {
@@ -1065,7 +1065,7 @@
         "version.txt"
       ]
     },
-    "Ultz.SimpleServer.Abstractions/1.0.0": {
+    "Ultz.SimpleServer.Abstractions/1.0.0-alpha2": {
       "type": "project",
       "path": "../Ultz.SimpleServer.Abstractions/Ultz.SimpleServer.Abstractions.csproj",
       "msbuildProject": "../Ultz.SimpleServer.Abstractions/Ultz.SimpleServer.Abstractions.csproj"

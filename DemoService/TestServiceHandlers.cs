@@ -32,5 +32,18 @@ namespace DemoService
             sw.Close();
             ctx.Response.Close();
         }
+
+        [HttpGet("echo?text={text}")]
+        public void Echo(HttpContext ctx, string text)
+        {
+            Console.WriteLine(text);
+            Console.WriteLine((ctx == null) + "/"+(text == null));
+            ctx.Response.Headers["content-type"] = "text/html";
+            var sw = new StreamWriter(ctx.Response.OutputStream);
+            sw.WriteLine("<h1>" + text + "</h1><a href=\"/\">< Return</a>");
+            sw.Flush();
+            sw.Close();
+            ctx.Response.Close();
+        }
     }
 }

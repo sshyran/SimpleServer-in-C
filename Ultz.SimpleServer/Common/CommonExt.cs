@@ -17,14 +17,10 @@ namespace Ultz.SimpleServer.Common
     {
         public static void ApplyValves<T>(this IEnumerable<Valve> valveList, T target) where T : IConfigurable
         {
-            var valves = ValveCache.Valves;
-            foreach (var valve in valveList)
-            {
-                if (!valves.ContainsKey(valve.Key)) continue;
-                if (valves[valve.Key] is IValve<T>)
-                    ((IValve<T>) valves[valve.Key]).Execute(target,
-                        valve.Settings.ToDictionary(x => x.Name, x => x.Value));
-            }
+            foreach (var applyValve in valveList)
+            foreach (var valve in ValveCache.Valves.Values.Where(x => x is IValve<T>))
+                if (applyValve.Key == valve.Id)
+                    ((IValve<T>) valve).Execute(target, applyValve.Settings.ToDictionary(x => x.Name, x => x.Value));
         }
 
         public static void Add(this ICollection<Valve> coll, IValve valve, params Setting[] settings)
@@ -284,7 +280,7 @@ namespace Ultz.SimpleServer.Common
                 rsAparams.DQ = CertHelpers.AlignBytes(rd.ReadBytes(CertHelpers.DecodeIntegerSize(rd)), traits.SizeDq);
                 rsAparams.InverseQ =
                     CertHelpers.AlignBytes(rd.ReadBytes(CertHelpers.DecodeIntegerSize(rd)), traits.SizeInvQ);
-                
+
                 //rsa.ImportParameters(rsAparams);
                 var rsa = RSA.Create();
                 rsa.ImportParameters(rsAparams);
