@@ -9,6 +9,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Ultz.SimpleServer.Internals
 {
+    /// <summary>
+    /// Represents a server that listens for connections, processes them as contexts, and passes them to an <see cref="EventHandler"/>.
+    /// </summary>
     public class Server : IDisposable
     {
         private readonly ILogger _logger;
@@ -17,6 +20,12 @@ namespace Ultz.SimpleServer.Internals
         private CancellationTokenSource _cancellationToken;
         private Task _listenerTask;
 
+        /// <summary>
+        /// Creates a server for the given protocol, listening for connections at the given listener, and optionally a logger provider.
+        /// </summary>
+        /// <param name="protocol">the protocol that connections are passed to</param>
+        /// <param name="listener">the listener that listens for connections</param>
+        /// <param name="logger">an optional logger provider</param>
         public Server(IProtocol protocol, IListener listener, ILoggerProvider logger = null)
         {
             _protocol = protocol;
@@ -25,16 +34,26 @@ namespace Ultz.SimpleServer.Internals
             _logger = _loggerProvider?.CreateLogger("isrv");
         }
 
+        /// <summary>
+        /// The underlying connection listener.
+        /// </summary>
         public IListener Listener { get; }
 
+        /// <inheritdoc />
         public void Dispose()
         {
             _cancellationToken?.Dispose();
             Listener?.Dispose();
         }
 
+        /// <summary>
+        /// An event that's called when a <see cref="IContext"/> is received.
+        /// </summary>
         public event EventHandler<ContextEventArgs> RequestReceived;
 
+        /// <summary>
+        /// Starts the server
+        /// </summary>
         public void Start()
         {
             _logger.LogDebug("Startup has begun with protocol " + _protocol.GetType().FullName);
@@ -54,6 +73,9 @@ namespace Ultz.SimpleServer.Internals
             RequestReceived?.Invoke(this, e);
         }
 
+        /// <summary>
+        /// Stops the server.
+        /// </summary>
         public void Stop()
         {
             _logger.LogDebug("Stopping isrv...");

@@ -9,8 +9,6 @@ namespace DemoService
         [HttpGet]
         public void GetIndexPage(HttpContext ctx)
         {
-            foreach (var header in ctx.Request.ToDictionary())
-                Console.WriteLine(header.Name + ": " + header.Value);
             ctx.Response.Headers["content-type"] = "text/html";
             var sw = new StreamWriter(ctx.Response.OutputStream);
             sw.WriteLine(
@@ -24,7 +22,6 @@ namespace DemoService
         {
             var sr = new StreamReader(ctx.Request.InputStream);
             var dat = sr.ReadToEnd();
-            Console.WriteLine(dat);
             ctx.Response.Headers["content-type"] = "text/html";
             var sw = new StreamWriter(ctx.Response.OutputStream);
             sw.WriteLine("<h1>Hello, " + dat?.Remove(0, 5) + "!</h1><a href=\"/\">< Return</a>");
@@ -36,8 +33,6 @@ namespace DemoService
         [HttpGet("echo?text={text}")]
         public void Echo(HttpContext ctx, string text)
         {
-            Console.WriteLine(text);
-            Console.WriteLine((ctx == null) + "/"+(text == null));
             ctx.Response.Headers["content-type"] = "text/html";
             var sw = new StreamWriter(ctx.Response.OutputStream);
             sw.WriteLine("<h1>" + text + "</h1><a href=\"/\">< Return</a>");

@@ -1,4 +1,4 @@
-﻿#if NETCOREAPP2_1
+﻿#if NETCOREAPP2_1 || NETSTANDARD2_1
 
 #region
 
@@ -40,13 +40,11 @@ namespace Ultz.SimpleServer.Common
 
         public async Task<IConnection> AcceptAsync()
         {
-            Console.WriteLine("StartAccept");
             return new SecureConnection(await _child.AcceptAsync(), _opts);
         }
 
         public void Start()
         {
-            Console.WriteLine("Started");
             _child.Start();
         }
 
@@ -71,20 +69,10 @@ namespace Ultz.SimpleServer.Common
 
             public SecureConnection(IConnection child, SslServerAuthenticationOptions opts)
             {
-                Console.WriteLine("Securing connection " + child.Id);
                 _child = child;
                 Stream = new SslStream(child.Stream);
-                Console.WriteLine("Stream connected, sending handshake");
-                try
-                {
-                    ((SslStream) Stream).AuthenticateAsServerAsync(opts, CancellationToken.None).GetAwaiter()
-                        .GetResult();
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                    throw;
-                }
+                ((SslStream) Stream).AuthenticateAsServerAsync(opts, CancellationToken.None).GetAwaiter()
+                    .GetResult();
             }
 
             public Stream Stream { get; }

@@ -11,8 +11,17 @@ using Http2.Hpack;
 
 namespace Ultz.SimpleServer.Internals.Http
 {
+    /// <summary>
+    /// Represents a HTTP request
+    /// </summary>
     public class HttpRequest : IRequest
     {
+        /// <summary>
+        /// Instantiates with the given <see cref="HttpHeaderCollection"/>, payload, and method resolver.
+        /// </summary>
+        /// <param name="headers">a collection of HTTP/2 headers with pseudo headers included (:method, :scheme, :authority, :path, and (optionally), :version</param>
+        /// <param name="payload">the request payload (can be null)</param>
+        /// <param name="methodResolver">a method resolver to use to map the method name to a server-implemented <see cref="HttpMethod"/></param>
         public HttpRequest(HttpHeaderCollection headers, byte[] payload,
             MethodResolver<HttpMethod> methodResolver)
         {
@@ -28,16 +37,35 @@ namespace Ultz.SimpleServer.Internals.Http
             Protocol = headers.ContainsKey(":version") ? headers[":version"] : null;
 #pragma warning restore 618
         }
-
+        /// <summary>
+        /// The HTTP method attached to this request.
+        /// </summary>
         public HttpMethod Method { get; }
+        /// <summary>
+        /// The raw method name as it was when passed to the constructor
+        /// </summary>
         public string RawMethod { get; }
+        /// <summary>
+        /// A collection of additional headers sent with this request.
+        /// </summary>
         public HttpHeaderCollection Headers { get; }
+        /// <summary>
+        /// The URL attached to this request.
+        /// </summary>
         public Uri Url { get; }
+        /// <summary>
+        /// The raw URL as it was when passed to the constructor.
+        /// </summary>
         public string RawUrl { get; }
+        /// <summary>
+        /// The HTTP protcol version. Can be null.
+        /// </summary>
         [Obsolete("As HTTP/2 omits a version header, it is deprecated and will be removed in a future release")]
         public string Protocol { get; }
 
         IMethod IRequest.Method => Method;
+
+        /// <inheritdoc />
         public Stream InputStream { get; }
 
         /// <summary>
@@ -74,11 +102,7 @@ namespace Ultz.SimpleServer.Internals.Http
                 {":method", method},
                 {":path", path},
                 {":version", proto},
-                #if NETCOREAPP2_1
-                {":scheme", connection is SslListener.SecureConnection ? "https" : "http"}
-                #else
-                {":scheme","http"}
-                #endif
+                {":scheme", connection.GetType().FullName == "Ultz.SimpleServer.Common.SslListener.SecureConnection" ? "https" : "http"}
             }.Select(x => new HeaderField(){Name = x.Key, Value = x.Value}));
             for (var i = 1; i < lines.Length; i++)
             {
@@ -102,6 +126,12 @@ namespace Ultz.SimpleServer.Internals.Http
             };
         }
 
+        /// <summary>
+        /// Parses a HTTP header from a HTTP/2 header collection
+        /// </summary>
+        /// <param name="headers">the header collection including pseudo headers</param>
+        /// <param name="methodResolver">the method resolver</param>
+        /// <returns>an optional used to determine if the invoker should listen for a payload</returns>
         public static HttpParserOptional ParseFrom(HttpHeaderCollection headers,
             MethodResolver<HttpMethod> methodResolver)
         {
@@ -115,11 +145,15 @@ namespace Ultz.SimpleServer.Internals.Http
             };
         }
 
+        /// <summary>
+        /// Converts this HTTP request to a HTTP/2 header collection.
+        /// </summary>
+        /// <returns>the HTTP/2 header representation of this request</returns>
         public HttpHeaderCollection ToDictionary()
         {
             return new HttpHeaderCollection(new List<HeaderField>()
             {
-                new HeaderField(){Name =":method", Value=Method.Id},
+                new HeaderField(){Name =":method", Value=RawMethod},
                 new HeaderField(){Name =":authority", Value =Url.Authority},
                 new HeaderField(){Name=":path", Value=RawUrl},
 #pragma warning disable 618
@@ -129,12 +163,30 @@ namespace Ultz.SimpleServer.Internals.Http
         }
     }
 
+    /// <summary>
+    /// Represents a parser result, used to determine if a request payload is expected.
+    /// </summary>
     public class HttpParserOptional
     {
+        /// <summary>
+        /// Instantiates a <see cref="HttpRequest"/> from the contents of this optional.
+        /// </summary>
         public HttpRequest Request => new HttpRequest(Headers, Payload, MethodResolver);
+        /// <summary>
+        /// A HTTP request header represented as a HTTP/2 header collection
+        /// </summary>
         public HttpHeaderCollection Headers { get; set; }
+        /// <summary>
+        /// True if the parser should expect a payload, false otherwise. This is set by the parser and is not automatically determined.
+        /// </summary>
         public bool ExpectPayload { get; set; }
+        /// <summary>
+        /// A payload associated with the request. Can be null.
+        /// </summary>
         public byte[] Payload { get; set; }
+        /// <summary>
+        /// The method resolver to be used.
+        /// </summary>
         public MethodResolver<HttpMethod> MethodResolver { get; set; }
     }
 }

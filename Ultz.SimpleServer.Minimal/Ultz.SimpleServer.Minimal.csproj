@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <RootNamespace>Ultz.SimpleServer</RootNamespace>
-    <TargetFramework>netstandard1.4</TargetFramework>
     <Version>1.0.0</Version>
     <PackageIconUrl>https://static.ultz.co.uk/new/ss2.png</PackageIconUrl>
     <PackageVersion>1.0.0-alpha2</PackageVersion>
@@ -12,6 +11,7 @@
     <PackageReleaseNotes>This is the second Alpha build of SimpleServer 1.0. We believe we have implemented everything we need to implement before release, so we'll be testing this version excessively to (hopefully) put us into beta.</PackageReleaseNotes>
     <Authors>Ultz</Authors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <TargetFramework>netstandard1.4</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="http2dotnet" Version="0.8.0" />

@@ -1,5 +1,8 @@
 ﻿namespace Ultz.SimpleServer.Internals
 {
+    /// <summary>
+    /// Represents a HTTP server mode
+    /// </summary>
     public enum HttpMode
     {
         /// <summary>

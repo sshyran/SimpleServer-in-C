@@ -6,8 +6,18 @@ using Microsoft.Extensions.Logging;
 
 namespace Ultz.SimpleServer.Internals.Http
 {
+    /// <summary>
+    /// Represents a HTTP request/response context
+    /// </summary>
     public class HttpContext : IContext
     {
+        /// <summary>
+        /// Creates an instance with the given properties
+        /// </summary>
+        /// <param name="req">the request</param>
+        /// <param name="res">the response</param>
+        /// <param name="connection">the underlying connection</param>
+        /// <param name="logger">the logger assigned to this context</param>
         public HttpContext(HttpRequest req, HttpResponse res, IConnection connection, ILogger logger)
         {
             Request = req;
@@ -16,11 +26,21 @@ namespace Ultz.SimpleServer.Internals.Http
             Logger = logger;
         }
 
+        /// <summary>
+        /// The HTTP request
+        /// </summary>
         public HttpRequest Request { get; }
+        /// <summary>
+        /// The HTTP response
+        /// </summary>
         public HttpResponse Response { get; }
         IRequest IContext.Request => Request;
         IResponse IContext.Response => Response;
+
+        /// <inheritdoc />
         public IConnection Connection { get; }
+
+        /// <inheritdoc />
         public ILogger Logger { get; }
     }
 }

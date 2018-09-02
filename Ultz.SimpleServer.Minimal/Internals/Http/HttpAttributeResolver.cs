@@ -9,8 +9,12 @@ using Ultz.SimpleServer.Common;
 
 namespace Ultz.SimpleServer.Internals.Http
 {
+    /// <inheritdoc />
     public class HttpAttributeResolver : IAttributeHandlerResolver
     {
+        /// <summary>
+        /// A list of 
+        /// </summary>
         public List<Type> Attributes { get; } = new List<Type>()
         {
             typeof(HttpGetAttribute),
@@ -24,6 +28,7 @@ namespace Ultz.SimpleServer.Internals.Http
             typeof(HttpOptionsAttribute)
         };
 
+        /// <inheritdoc />
         public IEnumerable<IHandler> GetHandlers(object instance)
         {
             var type = instance.GetType();
@@ -37,7 +42,7 @@ namespace Ultz.SimpleServer.Internals.Http
                         continue;
                     if (parameters.Length == 1 && parameters[0].ParameterType == typeof(HttpContext))
                     {
-                        foreach (var attr in Attributes)
+                        foreach (var attr in Attributes.Where(x => typeof(HttpAttribute).GetTypeInfo().IsAssignableFrom(x.GetTypeInfo())))
                         foreach (var attribute in method.GetCustomAttributes(attr))
                             yield return new HttpAttributeHandler(method, (HttpAttribute) attribute, instance);
                     }
@@ -63,7 +68,6 @@ namespace Ultz.SimpleServer.Internals.Http
                                     (current, argument) =>
                                         current.Replace("{" + argument + "}", "(?<" + argument + ">.*)"))
                                 .Replace("{", "\\{").Replace("}", "\\}"));
-                            Console.WriteLine("Regex: " + regex);
                             yield return new HttpAttributeHandler(method, (HttpAttribute) attribute, instance, regex);
                         }
                     }
@@ -72,7 +76,7 @@ namespace Ultz.SimpleServer.Internals.Http
         }
     }
 
-    public class HttpAttributeHandler : IHandler
+    internal class HttpAttributeHandler : IHandler
     {
         private HttpAttribute _attribute;
         private MethodInfo _handler;
@@ -115,7 +119,6 @@ namespace Ultz.SimpleServer.Internals.Http
                 for (var i = 0; i < parameters.Count; i++) // foreach var param in parameters
                 {
                     var param = parameters.ElementAt(i);
-                    Console.WriteLine(param.Key);
                     if (_regex.GetGroupNames().Contains(param.Key))
                     {
                         if (param.Value == typeof(string))

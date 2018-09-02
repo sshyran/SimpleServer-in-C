@@ -15,6 +15,7 @@ using Http2;
 
 namespace Ultz.SimpleServer.Internals.Http2
 {
+    /// <inheritdoc />
     public class HttpTwo : Http.Http
     {
         private static readonly byte[] Http2Start = Encoding.ASCII.GetBytes(
@@ -26,6 +27,7 @@ namespace Ultz.SimpleServer.Internals.Http2
             "Connection: Upgrade\r\n" +
             "Upgrade: h2c\r\n\r\n");
 
+        /// <inheritdoc />
         public override async Task HandleConnectionAsync(IConnection connection, ILogger logger)
         {
             var wrappedStreams = new ConnectionByteStream(connection);
@@ -36,7 +38,7 @@ namespace Ultz.SimpleServer.Internals.Http2
 
         private static bool MaybeHttpStart(ArraySegment<byte> bytes)
         {
-            if (bytes == null || bytes.Count != Http2Start.Length) return false;
+            if (bytes.Count != Http2Start.Length) return false;
             return !Http2Start.Where((t, i) => bytes.Array[bytes.Offset + i] != t).Any();
         }
 
@@ -119,7 +121,9 @@ namespace Ultz.SimpleServer.Internals.Http2
 
                     var request = req.Request;
 
+#pragma warning disable 618
                     if (request.Protocol != "HTTP/1.1")
+#pragma warning restore 618
                     {
                         PassContext(new HttpContext(request, new HttpOneResponse(request, stream.Connection),
                             stream.Connection, logger));
@@ -217,7 +221,9 @@ namespace Ultz.SimpleServer.Internals.Http2
 
             // Close the connection if we get a GoAway from the client
             var remoteGoAwayTask = http2Con.RemoteGoAwayReason;
-            var closeWhenRemoteGoAway = Task.Run(async () =>
+#pragma warning disable 4014
+            Task.Run(async () =>
+#pragma warning restore 4014
             {
                 await remoteGoAwayTask;
                 await http2Con.GoAwayAsync(ErrorCode.NoError, true);

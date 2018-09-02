@@ -10,17 +10,20 @@ using Ultz.SimpleServer.Internals.Http;
 
 namespace Ultz.SimpleServer.Internals.Http1
 {
+    /// <inheritdoc />
     public class HttpOneResponse : HttpResponse
     {
         private readonly IConnection _connection;
         private readonly HttpRequest _request;
 
+        /// <inheritdoc />
         public HttpOneResponse(HttpRequest request, IConnection conection)
         {
             _connection = conection;
             _request = request;
         }
 
+        /// <inheritdoc />
         public override void Close(bool force = false)
         {
             if (force)

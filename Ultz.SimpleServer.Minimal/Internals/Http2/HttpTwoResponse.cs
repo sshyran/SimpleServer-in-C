@@ -11,8 +11,10 @@ using Http2;
 
 namespace Ultz.SimpleServer.Internals.Http2
 {
+    /// <inheritdoc />
     public class HttpTwoResponse : HttpResponse
     {
+        /// <inheritdoc />
         public HttpTwoResponse(HttpRequest request, IStream stream)
         {
             Request = request;
@@ -22,6 +24,7 @@ namespace Ultz.SimpleServer.Internals.Http2
         private HttpRequest Request { get; }
         private IStream Stream { get; }
 
+        /// <inheritdoc />
         public override void Close(bool force = false)
         {
             if (force)

@@ -10,7 +10,7 @@ using Http2;
 
 namespace Ultz.SimpleServer.Internals.Http
 {
-    public class HttpStream : IReadableByteStream
+    internal class HttpStream : IReadableByteStream
     {
 
         private const int MaxHeaderLength = 1024 * 1024; // 1MB

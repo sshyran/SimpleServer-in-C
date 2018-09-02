@@ -12,8 +12,10 @@ using Http2;
 
 namespace Ultz.SimpleServer.Internals.Http1
 {
+    /// <inheritdoc />
     public class HttpOne : Http.Http
     {
+        /// <inheritdoc />
         public override async Task HandleConnectionAsync(IConnection connection, ILogger logger)
         {
             var streams = connection.Stream.CreateStreams();
@@ -50,7 +52,9 @@ namespace Ultz.SimpleServer.Internals.Http1
             }
 
             var request = req.Request;
+#pragma warning disable 618
             logger.LogInformation(request.Method.Id +" "+ request.RawUrl + " "+ request.Protocol);
+#pragma warning restore 618
             PassContext(new HttpContext(request, new HttpOneResponse(request, connection), connection, logger));
         }
     }

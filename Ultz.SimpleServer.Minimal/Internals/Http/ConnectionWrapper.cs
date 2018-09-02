@@ -9,7 +9,7 @@ using Http2;
 
 namespace Ultz.SimpleServer.Internals.Http
 {
-    public class ConnectionByteStream : IReadableByteStream, IWriteAndCloseableByteStream
+    internal class ConnectionByteStream : IReadableByteStream, IWriteAndCloseableByteStream
     {
         public ConnectionByteStream(IConnection connection)
         {
