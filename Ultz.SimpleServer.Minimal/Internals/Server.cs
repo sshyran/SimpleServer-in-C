@@ -1,4 +1,23 @@
-﻿#region
+﻿// Server.cs - Ultz.SimpleServer.Minimal
+// 
+// Copyright (C) 2018 Ultz Limited
+// 
+// This file is part of SimpleServer.
+// 
+// SimpleServer is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// SimpleServer is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+// 
+// You should have received a copy of the GNU Lesser General Public License
+// along with SimpleServer. If not, see <http://www.gnu.org/licenses/>.
+
+#region
 
 using System;
 using System.Threading;
@@ -10,7 +29,8 @@ using Microsoft.Extensions.Logging;
 namespace Ultz.SimpleServer.Internals
 {
     /// <summary>
-    /// Represents a server that listens for connections, processes them as contexts, and passes them to an <see cref="EventHandler"/>.
+    ///     Represents a server that listens for connections, processes them as contexts, and passes them to an
+    ///     <see cref="EventHandler" />.
     /// </summary>
     public class Server : IDisposable
     {
@@ -21,7 +41,8 @@ namespace Ultz.SimpleServer.Internals
         private Task _listenerTask;
 
         /// <summary>
-        /// Creates a server for the given protocol, listening for connections at the given listener, and optionally a logger provider.
+        ///     Creates a server for the given protocol, listening for connections at the given listener, and optionally a logger
+        ///     provider.
         /// </summary>
         /// <param name="protocol">the protocol that connections are passed to</param>
         /// <param name="listener">the listener that listens for connections</param>
@@ -35,7 +56,7 @@ namespace Ultz.SimpleServer.Internals
         }
 
         /// <summary>
-        /// The underlying connection listener.
+        ///     The underlying connection listener.
         /// </summary>
         public IListener Listener { get; }
 
@@ -47,12 +68,12 @@ namespace Ultz.SimpleServer.Internals
         }
 
         /// <summary>
-        /// An event that's called when a <see cref="IContext"/> is received.
+        ///     An event that's called when a <see cref="IContext" /> is received.
         /// </summary>
         public event EventHandler<ContextEventArgs> RequestReceived;
 
         /// <summary>
-        /// Starts the server
+        ///     Starts the server
         /// </summary>
         public void Start()
         {
@@ -64,7 +85,7 @@ namespace Ultz.SimpleServer.Internals
             _cancellationToken = new CancellationTokenSource();
             _protocol.ContextCreated += GotContext;
             Listener.Start();
-            _listenerTask = Task.Factory.StartNew(ListenAysnc, _cancellationToken.Token);
+            _listenerTask = Task.Factory.StartNew(ListenAsync, _cancellationToken.Token);
             _logger.LogInformation(_protocol.GetType().Name + "Listener has started!");
         }
 
@@ -74,7 +95,7 @@ namespace Ultz.SimpleServer.Internals
         }
 
         /// <summary>
-        /// Stops the server.
+        ///     Stops the server.
         /// </summary>
         public void Stop()
         {
@@ -84,7 +105,7 @@ namespace Ultz.SimpleServer.Internals
             _logger.LogInformation("Listener has stopped!");
         }
 
-        private async Task ListenAysnc()
+        private async Task ListenAsync()
         {
             _cancellationToken.Token.ThrowIfCancellationRequested();
             _logger.LogDebug("Active: " + Listener.Active);
@@ -113,6 +134,9 @@ namespace Ultz.SimpleServer.Internals
             }
         }
 
+        /// <summary>
+        ///     Stops and starts the server
+        /// </summary>
         public void Restart()
         {
             _logger.LogDebug("Restart triggered!");

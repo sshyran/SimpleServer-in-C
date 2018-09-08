@@ -1,4 +1,23 @@
-﻿#region
+﻿// HttpStream.cs - Ultz.SimpleServer.Minimal
+// 
+// Copyright (C) 2018 Ultz Limited
+// 
+// This file is part of SimpleServer.
+// 
+// SimpleServer is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// SimpleServer is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+// 
+// You should have received a copy of the GNU Lesser General Public License
+// along with SimpleServer. If not, see <http://www.gnu.org/licenses/>.
+
+#region
 
 using System;
 using System.IO;
@@ -12,14 +31,13 @@ namespace Ultz.SimpleServer.Internals.Http
 {
     internal class HttpStream : IReadableByteStream
     {
-
         private const int MaxHeaderLength = 1024 * 1024; // 1MB
         private readonly IReadableByteStream _stream;
-        private byte[] _httpBuffer = new byte[MaxHeaderLength];
-        private ArraySegment<byte> _remains;
-        private int _httpBufferOffset;
 
         private ArraySegment<byte> _completeRemains;
+        private byte[] _httpBuffer = new byte[MaxHeaderLength];
+        private int _httpBufferOffset;
+        private ArraySegment<byte> _remains;
 
         public HttpStream(IReadableByteStream stream)
         {
@@ -30,8 +48,9 @@ namespace Ultz.SimpleServer.Internals.Http
 
         public ArraySegment<byte> HeaderBytes =>
             new ArraySegment<byte>(_httpBuffer, 0, HttpHeaderLength);
-        
-        public ArraySegment<byte> Payload => new ArraySegment<byte>(_httpBuffer, HttpHeaderLength, _httpBuffer.Length - HttpHeaderLength);
+
+        public ArraySegment<byte> Payload =>
+            new ArraySegment<byte>(_httpBuffer, HttpHeaderLength, _httpBuffer.Length - HttpHeaderLength);
 
         public ValueTask<StreamReadResult> ReadAsync(ArraySegment<byte> buffer)
         {
@@ -104,7 +123,7 @@ namespace Ultz.SimpleServer.Internals.Http
                 }
             }
         }
-        
+
         public async Task WaitForPayload(int length)
         {
             var initLength = _httpBuffer.Length;

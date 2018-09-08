@@ -1,11 +1,34 @@
-﻿using System;
+﻿// HttpAttributeResolver.cs - Ultz.SimpleServer.Minimal
+// 
+// Copyright (C) 2018 Ultz Limited
+// 
+// This file is part of SimpleServer.
+// 
+// SimpleServer is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// SimpleServer is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+// 
+// You should have received a copy of the GNU Lesser General Public License
+// along with SimpleServer. If not, see <http://www.gnu.org/licenses/>.
+
+#region
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-using Ultz.SimpleServer.Handlers;
 using Ultz.SimpleServer.Common;
+using Ultz.SimpleServer.Handlers;
+
+#endregion
 
 namespace Ultz.SimpleServer.Internals.Http
 {
@@ -13,9 +36,9 @@ namespace Ultz.SimpleServer.Internals.Http
     public class HttpAttributeResolver : IAttributeHandlerResolver
     {
         /// <summary>
-        /// A list of 
+        ///     A list of
         /// </summary>
-        public List<Type> Attributes { get; } = new List<Type>()
+        public List<Type> Attributes { get; } = new List<Type>
         {
             typeof(HttpGetAttribute),
             typeof(HttpPostAttribute),
@@ -34,28 +57,17 @@ namespace Ultz.SimpleServer.Internals.Http
             var type = instance.GetType();
             var methods = type.GetTypeInfo().DeclaredMethods;
             foreach (var method in methods)
-            {
                 if (method.ReturnType == typeof(void))
                 {
                     var parameters = method.GetParameters();
                     if (parameters.Length == 0)
                         continue;
                     if (parameters.Length == 1 && parameters[0].ParameterType == typeof(HttpContext))
-                    {
-                        foreach (var attr in Attributes.Where(x => typeof(HttpAttribute).GetTypeInfo().IsAssignableFrom(x.GetTypeInfo())))
+                        foreach (var attr in Attributes.Where(x =>
+                            typeof(HttpAttribute).GetTypeInfo().IsAssignableFrom(x.GetTypeInfo())))
                         foreach (var attribute in method.GetCustomAttributes(attr))
                             yield return new HttpAttributeHandler(method, (HttpAttribute) attribute, instance);
-                    }
                     else
-                    {
-                        // Notes on Url template parsing
-                        //
-                        // Example URL:   /get?id={id}
-                        // Example Regex: \/get\?id=(?<id>.*)
-                        //
-                        // so all {<name>} fragments become (?<<name>>.*)
-                        // We will use the names of arguments in the method,
-                        // and replace the string accordingly.
                         foreach (var attr in Attributes)
                         foreach (var attribute in method.GetCustomAttributes(attr))
                         {
@@ -70,18 +82,16 @@ namespace Ultz.SimpleServer.Internals.Http
                                 .Replace("{", "\\{").Replace("}", "\\}"));
                             yield return new HttpAttributeHandler(method, (HttpAttribute) attribute, instance, regex);
                         }
-                    }
                 }
-            }
         }
     }
 
     internal class HttpAttributeHandler : IHandler
     {
-        private HttpAttribute _attribute;
-        private MethodInfo _handler;
-        private object _instance;
-        private Regex _regex;
+        private readonly HttpAttribute _attribute;
+        private readonly MethodInfo _handler;
+        private readonly object _instance;
+        private readonly Regex _regex;
 
         public HttpAttributeHandler(MethodInfo methodInfo, HttpAttribute attribute, object instance, Regex regex = null)
         {
@@ -100,13 +110,11 @@ namespace Ultz.SimpleServer.Internals.Http
                            : ((HttpRequest) request).RawUrl.ToUrlFormat()) &&
                        _attribute.Method == (HttpMethod) request.Method;
             }
-            else
-            {
-                if (_attribute is HttpConnectAttribute)
-                    return ((HttpRequest) request).RawUrl == _attribute.Route;
-                return ((HttpRequest) request).RawUrl.ToUrlFormat() == _attribute.Route &&
-                       _attribute.Method == (HttpMethod) request.Method;
-            }
+
+            if (_attribute is HttpConnectAttribute)
+                return ((HttpRequest) request).RawUrl == _attribute.Route;
+            return ((HttpRequest) request).RawUrl.ToUrlFormat() == _attribute.Route &&
+                   _attribute.Method == (HttpMethod) request.Method;
         }
 
         public void Handle(IContext context)
@@ -132,90 +140,58 @@ namespace Ultz.SimpleServer.Internals.Http
                         else if (param.Value == typeof(int))
                         {
                             if (int.TryParse(match.Groups[param.Key].Value, out var value))
-                            {
                                 invocationArgs.Add(value);
-                            }
                             else
-                            {
                                 invocationArgs.Add(null);
-                            }
                         }
                         else if (param.Value == typeof(long))
                         {
                             if (long.TryParse(match.Groups[param.Key].Value, out var value))
-                            {
                                 invocationArgs.Add(value);
-                            }
                             else
-                            {
                                 invocationArgs.Add(null);
-                            }
                         }
                         else if (param.Value == typeof(uint))
                         {
                             if (uint.TryParse(match.Groups[param.Key].Value, out var value))
-                            {
                                 invocationArgs.Add(value);
-                            }
                             else
-                            {
                                 invocationArgs.Add(null);
-                            }
                         }
                         else if (param.Value == typeof(ulong))
                         {
                             if (ulong.TryParse(match.Groups[param.Key].Value, out var value))
-                            {
                                 invocationArgs.Add(value);
-                            }
                             else
-                            {
                                 invocationArgs.Add(null);
-                            }
                         }
                         else if (param.Value == typeof(short))
                         {
                             if (short.TryParse(match.Groups[param.Key].Value, out var value))
-                            {
                                 invocationArgs.Add(value);
-                            }
                             else
-                            {
                                 invocationArgs.Add(null);
-                            }
                         }
                         else if (param.Value == typeof(ushort))
                         {
                             if (ushort.TryParse(match.Groups[param.Key].Value, out var value))
-                            {
                                 invocationArgs.Add(value);
-                            }
                             else
-                            {
                                 invocationArgs.Add(null);
-                            }
                         }
                         else if (param.Value == typeof(float))
                         {
                             if (float.TryParse(match.Groups[param.Key].Value, out var value))
-                            {
                                 invocationArgs.Add(value);
-                            }
                             else
-                            {
                                 invocationArgs.Add(null);
-                            }
                         }
                         else if (param.Value == typeof(decimal))
                         {
                             if (decimal.TryParse(match.Groups[param.Key].Value, out var value))
-                            {
                                 invocationArgs.Add(value);
-                            }
                             else
-                            {
                                 invocationArgs.Add(null);
-                            }
                         }
                         else if (param.Value == typeof(char[]))
                         {
@@ -229,17 +205,11 @@ namespace Ultz.SimpleServer.Internals.Http
                     else
                     {
                         if (param.Value == typeof(HttpContext))
-                        {
-                            invocationArgs.Add(context);                           
-                        }
-                        else if (param.Value == typeof(IContext))
-                        {
                             invocationArgs.Add(context);
-                        }
+                        else if (param.Value == typeof(IContext))
+                            invocationArgs.Add(context);
                         else
-                        {
                             invocationArgs.Add(null);
-                        }
                     }
                 } // end foreach parameter
 

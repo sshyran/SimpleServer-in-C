@@ -1,4 +1,23 @@
-﻿#region
+﻿// SimpleServer.cs - Ultz.SimpleServer
+// 
+// Copyright (C) 2018 Ultz Limited
+// 
+// This file is part of SimpleServer.
+// 
+// SimpleServer is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// SimpleServer is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+// 
+// You should have received a copy of the GNU Lesser General Public License
+// along with SimpleServer. If not, see <http://www.gnu.org/licenses/>.
+
+#region
 
 using System;
 using System.Collections;
@@ -12,9 +31,9 @@ namespace Ultz.SimpleServer.Common
 {
     public class SimpleServer : IDisposable, ICollection<Service>
     {
-        private ILogger _logger;
-        private ILoggerProvider _loggerProvider;
         private bool _disposed;
+        private readonly ILogger _logger;
+        private readonly ILoggerProvider _loggerProvider;
 
         public SimpleServer(ILoggerProvider logger = null)
         {
@@ -23,6 +42,54 @@ namespace Ultz.SimpleServer.Common
         }
 
         public IReadOnlyDictionary<string, Service> Services { get; } = new Dictionary<string, Service>();
+
+        public IEnumerator<Service> GetEnumerator()
+        {
+            return Services.Values.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        public void Add(Service item)
+        {
+            var services = (Dictionary<string, Service>) Services;
+            var name = item.GetType().Name;
+            var number = 1;
+            while (services.ContainsKey(name + number)) number++;
+
+            services.Add(name + number, item);
+        }
+
+        public void Clear()
+        {
+            ((IDictionary) Services).Clear();
+        }
+
+        public bool Contains(Service item)
+        {
+            return Services.Values.Contains(item);
+        }
+
+        public void CopyTo(Service[] array, int arrayIndex)
+        {
+            Array.Copy(Services.Values.ToArray(), 0, array, arrayIndex, array.Length);
+        }
+
+        public bool Remove(Service item)
+        {
+            return ((IDictionary<string, string>) Services).Remove(Services.First(x => x.Value == item).Key);
+        }
+
+        public int Count => Services.Count;
+        public bool IsReadOnly => false;
+
+        public void Dispose()
+        {
+            Stop(true);
+        }
 
         public void Start()
         {
@@ -44,7 +111,7 @@ namespace Ultz.SimpleServer.Common
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, service.Key + " failed to start!");
-                    _logger.LogError(new EventId(working,"StartFail"), ex, service.Key+" failed to start");
+                    _logger.LogError(new EventId(working, "StartFail"), ex, service.Key + " failed to start");
                 }
             }
 
@@ -80,56 +147,5 @@ namespace Ultz.SimpleServer.Common
                 _logger.LogInformation("SimpleServer has been disposed");
             _disposed = dispose;
         }
-
-        public void Dispose()
-        {
-            Stop(true);
-        }
-
-        public IEnumerator<Service> GetEnumerator()
-        {
-            return Services.Values.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-
-        public void Add(Service item)
-        {
-            var services = (Dictionary<string, Service>) Services;
-            var name = item.GetType().Name;
-            var number = 1;
-            while (services.ContainsKey(name + number))
-            {
-                number++;
-            }
-
-            services.Add(name + number, item);
-        }
-
-        public void Clear()
-        {
-            ((IDictionary) Services).Clear();
-        }
-
-        public bool Contains(Service item)
-        {
-            return Services.Values.Contains(item);
-        }
-
-        public void CopyTo(Service[] array, int arrayIndex)
-        {
-            Array.Copy(Services.Values.ToArray(),0,array,arrayIndex, array.Length);
-        }
-
-        public bool Remove(Service item)
-        {
-            return ((IDictionary<string, string>) Services).Remove(Services.First(x => x.Value == item).Key);
-        }
-
-        public int Count => Services.Count;
-        public bool IsReadOnly => false;
     }
 }

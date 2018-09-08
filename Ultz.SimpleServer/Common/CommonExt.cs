@@ -1,4 +1,23 @@
-﻿#region
+﻿// CommonExt.cs - Ultz.SimpleServer
+// 
+// Copyright (C) 2018 Ultz Limited
+// 
+// This file is part of SimpleServer.
+// 
+// SimpleServer is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// SimpleServer is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+// 
+// You should have received a copy of the GNU Lesser General Public License
+// along with SimpleServer. If not, see <http://www.gnu.org/licenses/>.
+
+#region
 
 using System;
 using System.Collections.Generic;
@@ -11,8 +30,17 @@ using System.Security.Cryptography;
 
 namespace Ultz.SimpleServer.Common
 {
+    /// <summary>
+    ///     Contains a set of commonly used extension methods
+    /// </summary>
     public static class CommonExt
     {
+        /// <summary>
+        ///     Applies a set of valves to a target, if possible
+        /// </summary>
+        /// <param name="valveList">the set of valves to apply</param>
+        /// <param name="target">the target <see cref="IConfigurable" /></param>
+        /// <typeparam name="T">the type of the target</typeparam>
         public static void ApplyValves<T>(this IEnumerable<Valve> valveList, T target) where T : IConfigurable
         {
             foreach (var applyValve in valveList)
@@ -21,18 +49,34 @@ namespace Ultz.SimpleServer.Common
                     ((IValve<T>) valve).Execute(target, applyValve.Settings.ToDictionary(x => x.Name, x => x.Value));
         }
 
+        /// <summary>
+        ///     Adds a <see cref="IValve" /> to a <see cref="Valve" /> collection
+        /// </summary>
+        /// <param name="coll">the target <see cref="Valve" /> collection</param>
+        /// <param name="valve">the <see cref="IValve" /> to add</param>
+        /// <param name="settings">any settings that should be passed to the valve</param>
         public static void Add(this ICollection<Valve> coll, IValve valve, params Setting[] settings)
         {
             coll.Add(
-                new Valve() {Key = valve.Id, Settings = settings == null ? new List<Setting>() : settings.ToList()});
+                new Valve {Key = valve.Id, Settings = settings == null ? new List<Setting>() : settings.ToList()});
         }
 
+        /// <summary>
+        ///     Adds multiple <see cref="IValve" /> to a <see cref="Valve" /> collection, with no settings
+        /// </summary>
+        /// <param name="coll">the target collection</param>
+        /// <param name="valves">the valves to add</param>
         public static void Add(this ICollection<Valve> coll, params IValve[] valves)
         {
             foreach (var valve in valves)
                 coll.Add(valve);
         }
 
+        /// <summary>
+        ///     Adds valves to an <see cref="IConfigurable" />
+        /// </summary>
+        /// <param name="configurable">the target</param>
+        /// <param name="valves">the valves to add</param>
         public static void AddValve(this IConfigurable configurable, params Valve[] valves)
         {
             foreach (var valve in valves)

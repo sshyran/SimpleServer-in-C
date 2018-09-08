@@ -1,4 +1,23 @@
-﻿#region
+﻿// Service.cs - Ultz.SimpleServer
+// 
+// Copyright (C) 2018 Ultz Limited
+// 
+// This file is part of SimpleServer.
+// 
+// SimpleServer is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// SimpleServer is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+// 
+// You should have received a copy of the GNU Lesser General Public License
+// along with SimpleServer. If not, see <http://www.gnu.org/licenses/>.
+
+#region
 
 using System;
 using System.Collections.Generic;
@@ -13,19 +32,30 @@ namespace Ultz.SimpleServer.Common
 {
     public abstract class Service : IConfigurable, IDisposable
     {
-        protected Service()
-        {
-            
-        }
-        
-        private List<Server> _servers;
         private ILogger _logger;
+
+        private List<Server> _servers;
+
         public abstract IProtocol Protocol { get; }
         public IEnumerable<IHandler> Handlers { get; } = new List<IHandler>();
         public IEnumerable<Connector> Connectors { get; } = new List<Connector>();
-        public List<Valve> Valves { get; set; }
         public ILogger Logger => _logger ?? (_logger = LoggerProvider.CreateLogger(GetType().Name));
         public ILoggerProvider LoggerProvider { get; set; }
+
+        protected Exception CurrentError { get; private set; }
+
+        public bool Active => _servers != null;
+        public List<Valve> Valves { get; set; }
+
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            if (Active)
+                Stop();
+            ((List<IHandler>) Handlers).Clear();
+            ((List<Connector>) Connectors).Clear();
+            Valves.Clear();
+        }
 
         protected abstract void BeforeStart();
         protected abstract void OnStart();
@@ -33,14 +63,12 @@ namespace Ultz.SimpleServer.Common
         protected abstract void OnStop();
         protected abstract void BeforeStop();
         protected abstract void AfterStop();
-
-        protected Exception CurrentError { get; private set; }
         protected abstract void OnError(ErrorType type, IContext context);
 
         public void Add(Connector connector)
         {
             connector.Service = this;
-            ((List<Connector>)Connectors).Add(connector);
+            ((List<Connector>) Connectors).Add(connector);
         }
 
         public void Add(params Connector[] connectors)
@@ -48,7 +76,7 @@ namespace Ultz.SimpleServer.Common
             foreach (var connector in connectors)
                 Add(connector);
         }
-        
+
         public void Start()
         {
             BeforeStart();
@@ -62,10 +90,11 @@ namespace Ultz.SimpleServer.Common
                 server.Start();
                 _servers.Add(server);
             }
+
             Logger.LogInformation("All servers started");
             AfterStart();
             Logger.LogInformation("Executed post-start operations (AfterStart)");
-            Logger.LogInformation(GetType().Name+" is now running.");
+            Logger.LogInformation(GetType().Name + " is now running.");
         }
 
         public void Stop()
@@ -117,46 +146,34 @@ namespace Ultz.SimpleServer.Common
             }
         }
 
-        public bool Active => _servers != null;
-
         public void RegisterHandlers(object handlerObject)
         {
-            ((List<IHandler>)Handlers).AddRange(Protocol?.AttributeHandlerResolver?.GetHandlers(handlerObject));
+            ((List<IHandler>) Handlers).AddRange(Protocol?.AttributeHandlerResolver?.GetHandlers(handlerObject));
         }
 
         public void RegsiterHandlers(params IHandler[] handlers)
         {
-            ((List<IHandler>)Handlers).AddRange(handlers);
+            ((List<IHandler>) Handlers).AddRange(handlers);
         }
 
         public void RegisterHandler(IHandler handler)
         {
-            ((List<IHandler>)Handlers).Add(handler);
+            ((List<IHandler>) Handlers).Add(handler);
         }
 
         public void RegisterHandler(Func<IRequest, bool> canHandleCallback, Action<IContext> handler)
         {
-            ((List<IHandler>)Handlers).Add(new LamdaHandler(canHandleCallback, handler));
+            ((List<IHandler>) Handlers).Add(new LamdaHandler(canHandleCallback, handler));
         }
 
         internal IEnumerable<Server> GetServers()
         {
             return Connectors.Select(x =>
             {
-                var srv= new Server(Protocol, x.GetListener(), LoggerProvider);
+                var srv = new Server(Protocol, x.GetListener(), LoggerProvider);
                 srv.RequestReceived += ServerOnRequestReceived;
                 return srv;
             });
-        }
-
-        /// <inheritdoc />
-        public void Dispose()
-        {
-            if (Active)
-                Stop();
-            ((List<IHandler>)Handlers).Clear();
-            ((List<Connector>)Connectors).Clear();
-            Valves.Clear();
         }
     }
 }

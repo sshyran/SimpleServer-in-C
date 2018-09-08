@@ -1,4 +1,4 @@
-﻿// ErrorType.cs - Ultz.SimpleServer
+﻿// MinimalExt.cs - Ultz.SimpleServer.Minimal
 // 
 // Copyright (C) 2018 Ultz Limited
 // 
@@ -19,9 +19,23 @@
 
 namespace Ultz.SimpleServer.Common
 {
-    public enum ErrorType
+    /// <summary>
+    ///     Contains commonly used extension methods
+    /// </summary>
+    public static class MinimalExt
     {
-        HandlerNotFound = 404,
-        UnhandledException = 500
+        /// <summary>
+        ///     Trims and/or appends slashes on the given string
+        /// </summary>
+        /// <param name="s">the given string</param>
+        /// <returns>the formatted string</returns>
+        public static string ToUrlFormat(this string s)
+        {
+            if (!s.StartsWith("/"))
+                s = "/" + s;
+            if (s.EndsWith("/"))
+                s = s.Remove(s.Length - 1);
+            return s;
+        }
     }
 }

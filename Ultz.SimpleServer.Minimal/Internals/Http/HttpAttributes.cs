@@ -1,21 +1,45 @@
-﻿using System;
+﻿// HttpAttributes.cs - Ultz.SimpleServer.Minimal
+// 
+// Copyright (C) 2018 Ultz Limited
+// 
+// This file is part of SimpleServer.
+// 
+// SimpleServer is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// SimpleServer is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+// 
+// You should have received a copy of the GNU Lesser General Public License
+// along with SimpleServer. If not, see <http://www.gnu.org/licenses/>.
+
+#region
+
+using System;
+
+#endregion
 
 namespace Ultz.SimpleServer.Internals.Http
 {
     /// <summary>
-    /// An abstract <see cref="System.Attribute"/> that, when impemented, is representative of a method and route. Used to resolve handlers.
+    ///     An abstract <see cref="System.Attribute" /> that, when impemented, is representative of a method and route. Used to
+    ///     resolve handlers.
     /// </summary>
     public abstract class HttpAttribute : Attribute
     {
         /// <summary>
-        /// Creates an instance of this <see cref="HttpAttribute"/> at the index route 
+        ///     Creates an instance of this <see cref="HttpAttribute" /> at the index route
         /// </summary>
         protected HttpAttribute()
         {
         }
 
         /// <summary>
-        /// Creates an instance of this <see cref="HttpAttribute"/> at the specified route 
+        ///     Creates an instance of this <see cref="HttpAttribute" /> at the specified route
         /// </summary>
         /// <param name="route"></param>
         protected HttpAttribute(string route)
@@ -23,22 +47,26 @@ namespace Ultz.SimpleServer.Internals.Http
         }
 
         /// <summary>
-        /// Represents the route that the handler should serve.
+        ///     Represents the route that the handler should serve.
         /// </summary>
         public abstract string Route { get; }
+
         /// <summary>
-        /// Represents the methods the handler can handle.
+        ///     Represents the methods the handler can handle.
         /// </summary>
         public abstract HttpMethod Method { get; }
     }
+
     /// <summary>
-    /// An attribute used on handlers that can handle the GET method
+    ///     An attribute used on handlers that can handle the GET method
     /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
     public class HttpGetAttribute : HttpAttribute
     {
         /// <inheritdoc />
-        public HttpGetAttribute() : this(""){}
+        public HttpGetAttribute() : this("")
+        {
+        }
 
         /// <inheritdoc />
         public HttpGetAttribute(string route) : base(route)
@@ -58,13 +86,15 @@ namespace Ultz.SimpleServer.Internals.Http
     }
 
     /// <summary>
-    /// An attribute used on handlers that can handle the POST method
+    ///     An attribute used on handlers that can handle the POST method
     /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
     public class HttpPostAttribute : HttpAttribute
     {
         /// <inheritdoc />
-        public HttpPostAttribute() : this(""){}
+        public HttpPostAttribute() : this("")
+        {
+        }
 
         /// <inheritdoc />
         public HttpPostAttribute(string route) : base(route)
@@ -84,13 +114,15 @@ namespace Ultz.SimpleServer.Internals.Http
     }
 
     /// <summary>
-    /// An attribute used on handlers that can handle the PUT method
+    ///     An attribute used on handlers that can handle the PUT method
     /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
     public class HttpPutAttribute : HttpAttribute
     {
         /// <inheritdoc />
-        public HttpPutAttribute() : this(""){}
+        public HttpPutAttribute() : this("")
+        {
+        }
 
         /// <inheritdoc />
         public HttpPutAttribute(string route) : base(route)
@@ -110,13 +142,15 @@ namespace Ultz.SimpleServer.Internals.Http
     }
 
     /// <summary>
-    /// An attribute used on handlers that can handle the PATCH method
+    ///     An attribute used on handlers that can handle the PATCH method
     /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
     public class HttpPatchAttribute : HttpAttribute
     {
         /// <inheritdoc />
-        public HttpPatchAttribute() : this(""){}
+        public HttpPatchAttribute() : this("")
+        {
+        }
 
         /// <inheritdoc />
         public HttpPatchAttribute(string route) : base(route)
@@ -136,13 +170,15 @@ namespace Ultz.SimpleServer.Internals.Http
     }
 
     /// <summary>
-    /// An attribute used on handlers that can handle the DELETE method
+    ///     An attribute used on handlers that can handle the DELETE method
     /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
     public class HttpDeleteAttribute : HttpAttribute
     {
         /// <inheritdoc />
-        public HttpDeleteAttribute() : this(""){}
+        public HttpDeleteAttribute() : this("")
+        {
+        }
 
         /// <inheritdoc />
         public HttpDeleteAttribute(string route) : base(route)
@@ -162,13 +198,15 @@ namespace Ultz.SimpleServer.Internals.Http
     }
 
     /// <summary>
-    /// An attribute used on handlers that can handle the OPTIONS method
+    ///     An attribute used on handlers that can handle the OPTIONS method
     /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
     public class HttpOptionsAttribute : HttpAttribute
     {
         /// <inheritdoc />
-        public HttpOptionsAttribute() : this(""){}
+        public HttpOptionsAttribute() : this("")
+        {
+        }
 
         /// <inheritdoc />
         public HttpOptionsAttribute(string route) : base(route)
@@ -188,7 +226,7 @@ namespace Ultz.SimpleServer.Internals.Http
     }
 
     /// <summary>
-    /// An attribute used on handlers that can handle the HEAD method
+    ///     An attribute used on handlers that can handle the HEAD method
     /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
     public class HttpHeadAttribute : HttpAttribute
@@ -211,13 +249,15 @@ namespace Ultz.SimpleServer.Internals.Http
     }
 
     /// <summary>
-    /// An attribute used on handlers that can handle the TRACE method
+    ///     An attribute used on handlers that can handle the TRACE method
     /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
     public class HttpTraceAttribute : HttpAttribute
     {
         /// <inheritdoc />
-        public HttpTraceAttribute() : this(""){}
+        public HttpTraceAttribute() : this("")
+        {
+        }
 
         /// <inheritdoc />
         public HttpTraceAttribute(string route) : base(route)
@@ -237,7 +277,7 @@ namespace Ultz.SimpleServer.Internals.Http
     }
 
     /// <summary>
-    /// An attribute used on handlers that can handle the CONNECT method
+    ///     An attribute used on handlers that can handle the CONNECT method
     /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
     public class HttpConnectAttribute : HttpAttribute

@@ -1,10 +1,10 @@
 ﻿{
   "version": "1.0.0-alpha2",
   "restore": {
-    "projectUniqueName": "C:\\Users\\Dylan Perks\\Documents\\SimpleServer\\Ultz.SimpleServer\\Ultz.SimpleServer.csproj",
+    "projectUniqueName": "E:\\7_) SimpleServer 1.0\\Ultz.SimpleServer\\Ultz.SimpleServer.csproj",
     "projectName": "Ultz.SimpleServer",
-    "projectPath": "C:\\Users\\Dylan Perks\\Documents\\SimpleServer\\Ultz.SimpleServer\\Ultz.SimpleServer.csproj",
-    "outputPath": "C:\\Users\\Dylan Perks\\Documents\\SimpleServer\\Ultz.SimpleServer\\obj\\",
+    "projectPath": "E:\\7_) SimpleServer 1.0\\Ultz.SimpleServer\\Ultz.SimpleServer.csproj",
+    "outputPath": "E:\\7_) SimpleServer 1.0\\Ultz.SimpleServer\\obj\\",
     "projectStyle": "PackageReference",
     "crossTargeting": true,
     "fallbackFolders": [
@@ -17,15 +17,15 @@
     "frameworks": {
       "netcoreapp2.1": {
         "projectReferences": {
-          "C:\\Users\\Dylan Perks\\Documents\\SimpleServer\\Ultz.SimpleServer.Minimal\\Ultz.SimpleServer.Minimal.csproj": {
-            "projectPath": "C:\\Users\\Dylan Perks\\Documents\\SimpleServer\\Ultz.SimpleServer.Minimal\\Ultz.SimpleServer.Minimal.csproj"
+          "E:\\7_) SimpleServer 1.0\\Ultz.SimpleServer.Minimal\\Ultz.SimpleServer.Minimal.csproj": {
+            "projectPath": "E:\\7_) SimpleServer 1.0\\Ultz.SimpleServer.Minimal\\Ultz.SimpleServer.Minimal.csproj"
           }
         }
       },
       "netstandard2.0": {
         "projectReferences": {
-          "C:\\Users\\Dylan Perks\\Documents\\SimpleServer\\Ultz.SimpleServer.Minimal\\Ultz.SimpleServer.Minimal.csproj": {
-            "projectPath": "C:\\Users\\Dylan Perks\\Documents\\SimpleServer\\Ultz.SimpleServer.Minimal\\Ultz.SimpleServer.Minimal.csproj"
+          "E:\\7_) SimpleServer 1.0\\Ultz.SimpleServer.Minimal\\Ultz.SimpleServer.Minimal.csproj": {
+            "projectPath": "E:\\7_) SimpleServer 1.0\\Ultz.SimpleServer.Minimal\\Ultz.SimpleServer.Minimal.csproj"
           }
         }
       }

@@ -1,15 +1,34 @@
-﻿#region
+﻿// HttpTwo.cs - Ultz.SimpleServer.Minimal
+// 
+// Copyright (C) 2018 Ultz Limited
+// 
+// This file is part of SimpleServer.
+// 
+// SimpleServer is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// SimpleServer is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+// 
+// You should have received a copy of the GNU Lesser General Public License
+// along with SimpleServer. If not, see <http://www.gnu.org/licenses/>.
+
+#region
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Http2;
+using Http2.Hpack;
 using Microsoft.Extensions.Logging;
 using Ultz.SimpleServer.Internals.Http;
 using Ultz.SimpleServer.Internals.Http1;
-using Http2.Hpack;
-using Http2;
 
 #endregion
 
@@ -53,16 +72,17 @@ namespace Ultz.SimpleServer.Internals.Http2
                     {
                         var headers = arg.ReadHeadersAsync().GetAwaiter().GetResult();
                         var optional = HttpRequest.ParseFrom(new HttpHeaderCollection(headers),
-                            new HttpMethodResolver(DefaultMethods));
+                            new HttpMethodResolver(Methods));
                         if (optional.ExpectPayload)
                         {
                             var seg = new ArraySegment<byte>(new byte[int.Parse(optional.Headers["content-length"])]);
-                            var res = arg.ReadAsync(seg).GetAwaiter().GetResult();
+                            // TODO: Use the StreamReadResult, as sometimes the packets won't all be sent at once
+                            arg.ReadAsync(seg).GetAwaiter().GetResult();
                             optional.Payload = seg.ToArray();
                         }
 
                         var req = optional.Request;
-                        PassContext(new HttpContext(req, new HttpTwoResponse(req, arg), stream.Connection, logger));
+                        PassContext(new HttpContext(req, new HttpTwoResponse(arg), stream.Connection, logger));
                     });
                     return true;
                 })
@@ -129,6 +149,7 @@ namespace Ultz.SimpleServer.Internals.Http2
                             stream.Connection, logger));
                         return;
                     }
+
                     if (!request.Headers.TryGetValue("connection", out var connectionHeader) ||
                         !request.Headers.TryGetValue("host", out _) ||
                         !request.Headers.TryGetValue("upgrade", out var upgradeHeader) ||
@@ -144,16 +165,14 @@ namespace Ultz.SimpleServer.Internals.Http2
 
                     var connParts =
                         connectionHeader
-                            .Split(new[] {','})
+                            .Split(',')
                             .Select(p => p.Trim())
                             .ToArray();
                     if (connParts.Length != 2 ||
                         !connParts.Contains("Upgrade") ||
                         !connParts.Contains("HTTP2-Settings"))
-                    {
                         PassContext(new HttpContext(request, new HttpOneResponse(request, stream.Connection),
                             stream.Connection, logger));
-                    }
 
                     var headers = new List<HeaderField>
                     {
