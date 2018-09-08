@@ -77,16 +77,16 @@ namespace Ultz.SimpleServer.Internals
         /// </summary>
         public void Start()
         {
-            _logger.LogDebug("Startup has begun with protocol " + _protocol.GetType().FullName);
-            _logger.LogDebug("Running listener checks...");
+            _logger?.LogDebug("Startup has begun with protocol " + _protocol.GetType().FullName);
+            _logger?.LogDebug("Running listener checks...");
             Listener.RunChecks();
-            _logger.LogDebug("Success.");
-            _logger.LogDebug("Starting listener...");
+            _logger?.LogDebug("Success.");
+            _logger?.LogDebug("Starting listener...");
             _cancellationToken = new CancellationTokenSource();
             _protocol.ContextCreated += GotContext;
             Listener.Start();
             _listenerTask = Task.Factory.StartNew(ListenAsync, _cancellationToken.Token);
-            _logger.LogInformation(_protocol.GetType().Name + "Listener has started!");
+            _logger?.LogInformation(_protocol.GetType().Name + "Listener has started!");
         }
 
         private void GotContext(object sender, ContextEventArgs e)
@@ -99,24 +99,23 @@ namespace Ultz.SimpleServer.Internals
         /// </summary>
         public void Stop()
         {
-            _logger.LogDebug("Stopping isrv...");
+            _logger?.LogDebug("Stopping isrv...");
             _cancellationToken.Cancel();
             Listener.Stop();
-            _logger.LogInformation("Listener has stopped!");
+            _logger?.LogInformation("Listener has stopped!");
         }
 
         private async Task ListenAsync()
         {
             _cancellationToken.Token.ThrowIfCancellationRequested();
-            _logger.LogDebug("Active: " + Listener.Active);
             while (Listener.Active)
             {
                 _cancellationToken.Token.ThrowIfCancellationRequested();
-                _logger.LogDebug("Awaiting connection...");
+                _logger?.LogDebug("Awaiting connection...");
                 var connection = await Listener.AcceptAsync();
                 if (connection == null) // listener shutdown
                     continue;
-                _logger.LogDebug("Got connection " + connection.Id + "!");
+                _logger?.LogDebug("Got connection " + connection.Id + "!");
 #pragma warning disable 4014
                 Task.Factory.StartNew(async () =>
                 {
@@ -127,7 +126,7 @@ namespace Ultz.SimpleServer.Internals
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogError("Couldn't handle request" + ex);
+                        _logger?.LogError("Couldn't handle request" + ex);
                     }
                 });
 #pragma warning restore 4014
@@ -139,7 +138,7 @@ namespace Ultz.SimpleServer.Internals
         /// </summary>
         public void Restart()
         {
-            _logger.LogDebug("Restart triggered!");
+            _logger?.LogDebug("Restart triggered!");
             Stop();
             Start();
         }

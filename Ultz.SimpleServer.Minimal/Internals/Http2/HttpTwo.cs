@@ -223,7 +223,7 @@ namespace Ultz.SimpleServer.Internals.Http2
             }
             catch (Exception e)
             {
-                logger.LogError(new EventId(stream.Connection.Id + 6000, "StartFail"), e,
+                logger?.LogError(new EventId(stream.Connection.Id, "StartFail"), e,
                     "An error occured while trying to upgrade a HTTP/1.X request to a H2 request.");
                 await writeAndCloseableByteStream.CloseAsync();
                 return;

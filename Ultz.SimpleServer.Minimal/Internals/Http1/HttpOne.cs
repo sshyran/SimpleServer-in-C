@@ -72,7 +72,7 @@ namespace Ultz.SimpleServer.Internals.Http1
 
             var request = req.Request;
 #pragma warning disable 618
-            logger.LogInformation(request.Method.Id + " " + request.RawUrl + " " + request.Protocol);
+            logger?.LogInformation(request.Method.Id + " " + request.RawUrl + " " + request.Protocol);
 #pragma warning restore 618
             PassContext(new HttpContext(request, new HttpOneResponse(request, connection), connection, logger));
         }
