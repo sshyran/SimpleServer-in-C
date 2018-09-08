@@ -40,7 +40,7 @@ namespace DemoProject
 {
     internal class Program
     {
-        private const bool IsSslTest = false;
+        private const bool IsSslTest = true;
 
         private static void Main(string[] args)
         {
@@ -61,7 +61,8 @@ namespace DemoProject
                             ClientCertificateRequired = false
                         }), logger
                 );
-            server = new Server(Http.Create(HttpMode.Dual),
+            else
+                server = new Server(Http.Create(HttpMode.Dual),
                 new TcpConnectionListener(IPAddress.Any, 11111),
                 new ConsoleLoggerProvider((s, level) => true, true));
 
