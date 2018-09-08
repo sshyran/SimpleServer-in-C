@@ -17,11 +17,22 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with SimpleServer. If not, see <http://www.gnu.org/licenses/>.
 
+using Ultz.SimpleServer.Internals;
+
 namespace Ultz.SimpleServer.Common
 {
+    /// <summary>
+    /// A reason to why an error has been thrown
+    /// </summary>
     public enum ErrorType
     {
+        /// <summary>
+        /// No handlers can handle the <see cref="IRequest"/>
+        /// </summary>
         HandlerNotFound = 404,
+        /// <summary>
+        /// An unhandled exception occured
+        /// </summary>
         UnhandledException = 500
     }
 }

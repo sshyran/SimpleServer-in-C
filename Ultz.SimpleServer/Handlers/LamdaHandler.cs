@@ -26,22 +26,26 @@ using Ultz.SimpleServer.Internals;
 
 namespace Ultz.SimpleServer.Handlers
 {
+    /// <inheritdoc />
     public class LamdaHandler : IHandler
     {
         private readonly Func<IRequest, bool> _canHandle;
         private readonly Action<IContext> _handle;
 
+        /// <inheritdoc />
         public LamdaHandler(Func<IRequest, bool> canHandleCallback, Action<IContext> handler)
         {
             _canHandle = canHandleCallback;
             _handle = handler;
         }
 
+        /// <inheritdoc />
         public bool CanHandle(IRequest request)
         {
             return _canHandle(request);
         }
 
+        /// <inheritdoc />
         public void Handle(IContext context)
         {
             _handle(context);

@@ -28,34 +28,66 @@ using Ultz.SimpleServer.Internals;
 
 namespace Ultz.SimpleServer.Common
 {
+    /// <summary>
+    /// A class representing an <see cref="IPEndPoint"/>
+    /// </summary>
     public class Connector : IConfigurable
     {
-        public Connector()
-        {
-        }
-
+        /// <summary>
+        /// Creates a <see cref="Connector"/> representing the given <see cref="IPEndPoint"/>
+        /// </summary>
+        /// <param name="endPoint">the endpoint that this connector should represent</param>
         public Connector(IPEndPoint endPoint)
         {
             Port = endPoint.Port;
             Ip = endPoint.Address.ToString();
         }
 
+        /// <summary>
+        /// Creates a <see cref="Connector"/> representing the given <see cref="IPAddress"/> and port.
+        /// </summary>
+        /// <param name="address">the scope of the <see cref="IPEndPoint"/></param>
+        /// <param name="port">the port</param>
         public Connector(IPAddress address, int port) : this(new IPEndPoint(address, port))
         {
         }
 
+        /// <summary>
+        /// Creates a <see cref="Connector"/> representing the given address and port.
+        /// </summary>
+        /// <param name="address">the raw <see cref="IPAddress"/></param>
+        /// <param name="port">the port</param>
         public Connector(string address, int port) : this(IPAddress.Parse(address), port)
         {
         }
 
+        /// <summary>
+        /// The <see cref="Service"/> this <see cref="Connector"/> is attached to
+        /// </summary>
         public Service Service { get; set; }
 
+        /// <summary>
+        /// The listener returned by <see cref="GetListener"/>. This method shouldn't be used unless used by a <see cref="Valve"/>.
+        /// </summary>
         public IListener Listener { get; set; }
+        /// <summary>
+        /// The port this <see cref="Connector"/> should bind to
+        /// </summary>
         public int Port { get; set; }
+        /// <summary>
+        /// The raw <see cref="IPAddress"/> of this <see cref="Connector"/>
+        /// </summary>
         public string Ip { get; set; }
 
+
+        /// <inheritdoc />
         public List<Valve> Valves { get; set; } = new List<Valve>();
 
+        /// <summary>
+        /// Creates a default listener and applies <see cref="Valve"/>s to it
+        /// </summary>
+        /// <returns>the listener</returns>
+        /// <exception cref="NullReferenceException"><see cref="Service"/> has not been set</exception>
         public IListener GetListener()
         {
             if (Service == null)

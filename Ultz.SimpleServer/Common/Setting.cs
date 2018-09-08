@@ -19,9 +19,18 @@
 
 namespace Ultz.SimpleServer.Common
 {
+    /// <summary>
+    /// A <see cref="Name"/>/<see cref="Value"/> pair
+    /// </summary>
     public struct Setting
     {
+        /// <summary>
+        /// The name of this <see cref="Setting"/> as recognised by the <see cref="Valve"/>
+        /// </summary>
         public string Name { get; set; }
+        /// <summary>
+        /// An acceptable value for this <see cref="Setting"/>.
+        /// </summary>
         public string Value { get; set; }
     }
 }

@@ -83,11 +83,22 @@ namespace Ultz.SimpleServer.Common
                 configurable.Valves.Add(valve);
         }
 
+        /// <summary>
+        /// Adds a valve to an <see cref="IConfigurable"/> with the given <see cref="Setting"/>s
+        /// </summary>
+        /// <param name="configurable">the target <see cref="IConfigurable"/></param>
+        /// <param name="valve">the valve to add</param>
+        /// <param name="settings">the associated settings</param>
         public static void AddValve(this IConfigurable configurable, IValve valve, params Setting[] settings)
         {
             configurable.Valves.Add(valve, settings);
         }
 
+        /// <summary>
+        /// Adds valves to an <see cref="IConfigurable"/>
+        /// </summary>
+        /// <param name="configurable">the target</param>
+        /// <param name="valve">the valves to add</param>
         public static void AddValve(this IConfigurable configurable, params IValve[] valve)
         {
             configurable.Valves.Add(valve);
@@ -231,6 +242,12 @@ namespace Ultz.SimpleServer.Common
             }
         }
 
+        /// <summary>
+        /// Removes borders from a PEM certificate file, and decodes the Base64 data.
+        /// </summary>
+        /// <param name="pemString">the PEM file</param>
+        /// <param name="section">the PEM border name</param>
+        /// <returns></returns>
         public static byte[] GetBytesFromPem(string pemString, string section)
         {
             var header = string.Format("-----BEGIN {0}-----", section);
@@ -246,6 +263,11 @@ namespace Ultz.SimpleServer.Common
             return end < 0 ? null : Convert.FromBase64String(pemString.Substring(start, end));
         }
 
+        /// <summary>
+        /// Decodes an <see cref="RSA"/> private key from its <see cref="Byte"/> form.
+        /// </summary>
+        /// <param name="privateKeyBytes">the raw private key</param>
+        /// <returns>the decoded private key</returns>
         public static RSA DecodeRsaPrivateKey(byte[] privateKeyBytes)
         {
             var ms = new MemoryStream(privateKeyBytes);

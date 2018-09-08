@@ -34,11 +34,19 @@ using Ultz.SimpleServer.Internals;
 
 namespace Ultz.SimpleServer.Common
 {
+    /// <summary>
+    /// A wrapper that applies an <see cref="SslStream"/> to accepted <see cref="IConnection"/>s
+    /// </summary>
     public class SslListener : IListener
     {
         private readonly IListener _child;
         private readonly SslServerAuthenticationOptions _opts;
 
+        /// <summary>
+        /// Creates an instance of <see cref="SslListener"/>, wrapping the given <see cref="IListener"/> with the given <see cref="SslServerAuthenticationOptions"/>
+        /// </summary>
+        /// <param name="listener">the base listener to wrap</param>
+        /// <param name="sslServerAuthenticationOptions">AuthenticateAsServerAsync options</param>
         public SslListener(IListener listener, SslServerAuthenticationOptions sslServerAuthenticationOptions)
         {
             _child = listener;
@@ -47,39 +55,48 @@ namespace Ultz.SimpleServer.Common
             // the above line is a workaround for SS-19
         }
 
+
+        /// <inheritdoc />
         public void Dispose()
         {
             _child.Dispose();
         }
 
+        /// <inheritdoc />
         public IConnection Accept()
         {
             return AcceptAsync().GetAwaiter().GetResult();
         }
 
+        /// <inheritdoc />
         public async Task<IConnection> AcceptAsync()
         {
             return new SecureConnection(await _child.AcceptAsync(), _opts);
         }
 
+        /// <inheritdoc />
         public void Start()
         {
             _child.Start();
         }
 
+        /// <inheritdoc />
         public void Stop()
         {
             _child.Stop();
         }
 
+        /// <inheritdoc />
         public void RunChecks()
         {
             if (_opts == null)
                 throw new NullReferenceException("No options passed to the SslListener.");
             if (_opts.ServerCertificate == null)
                 throw new NullReferenceException("ServerCertificate is null. Cannot continue.");
+            _child.RunChecks();
         }
 
+        /// <inheritdoc />
         public bool Active => _child.Active;
 
         internal class SecureConnection : IConnection

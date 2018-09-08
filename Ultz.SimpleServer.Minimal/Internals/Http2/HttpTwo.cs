@@ -181,7 +181,7 @@ namespace Ultz.SimpleServer.Internals.Http2
                         new HeaderField
                         {
                             Name = ":scheme",
-#if NETCOREAPP2_1
+#if NETCOREAPP2_1 || NETSTANDARD2_1
                             Value = stream.Connection is SslListener.SecureConnection ? "https" : "http"
                             #else
                             Value = "http"

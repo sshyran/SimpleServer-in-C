@@ -27,7 +27,7 @@ using System.Linq;
 
 namespace Ultz.SimpleServer.Common
 {
-    public class ValveCache
+    internal class ValveCache
     {
         private static Dictionary<string, IValve> _types;
 
@@ -37,9 +37,13 @@ namespace Ultz.SimpleServer.Common
             {
                 if (_types != null) return _types;
                 var dictionary = new Dictionary<string, IValve>();
+                // ReSharper disable once LoopCanBeConvertedToQuery
+                // DON'T CONVERT THIS TO LINQ UNTIL CERTIFIED.
                 foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
                 foreach (var type in asm.GetTypes())
                 {
+                    if (type.FullName == null)
+                        continue;
                     if (!type.GetInterfaces().Contains(typeof(IValve)) &&
                         !type.FullName.StartsWith("Ultz.SimpleServer.Common.IValve`1"))
                         continue;

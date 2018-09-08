@@ -29,20 +29,31 @@ using Microsoft.Extensions.Logging;
 
 namespace Ultz.SimpleServer.Common
 {
+    /// <summary>
+    /// A server that will start and stop multiple <see cref="Service"/>s in union
+    /// </summary>
     public class SimpleServer : IDisposable, ICollection<Service>
     {
         private bool _disposed;
         private readonly ILogger _logger;
         private readonly ILoggerProvider _loggerProvider;
 
+        /// <summary>
+        /// Creates an instance of <see cref="SimpleServer"/>, optionally with a logger
+        /// </summary>
+        /// <param name="logger"></param>
         public SimpleServer(ILoggerProvider logger = null)
         {
             _loggerProvider = logger;
             _logger = logger?.CreateLogger("SimpleServer");
         }
 
+        /// <summary>
+        /// A read only dictionary of <see cref="Service"/>s, indexed by their names
+        /// </summary>
         public IReadOnlyDictionary<string, Service> Services { get; } = new Dictionary<string, Service>();
 
+        /// <inheritdoc />
         public IEnumerator<Service> GetEnumerator()
         {
             return Services.Values.GetEnumerator();
@@ -53,8 +64,14 @@ namespace Ultz.SimpleServer.Common
             return GetEnumerator();
         }
 
+        /// <summary>
+        /// Adds a service to <see cref="Services"/>
+        /// </summary>
+        /// <param name="item">the service to add</param>
         public void Add(Service item)
         {
+            if (item == null)
+                throw new ArgumentNullException(nameof(item));
             var services = (Dictionary<string, Service>) Services;
             var name = item.GetType().Name;
             var number = 1;
@@ -62,35 +79,60 @@ namespace Ultz.SimpleServer.Common
 
             services.Add(name + number, item);
         }
+        
+        /// <summary>
+        /// Adds a service to <see cref="Services"/> with the given name
+        /// </summary>
+        /// <param name="name">the given name</param>
+        /// <param name="item">the service to add</param>
+        public void Add(string name,Service item)
+        {
+            var services = (Dictionary<string, Service>) Services;
+            services.Add(name, item);
+        }
 
+        /// <inheritdoc />
         public void Clear()
         {
             ((IDictionary) Services).Clear();
         }
 
+        /// <inheritdoc />
         public bool Contains(Service item)
         {
             return Services.Values.Contains(item);
         }
 
+        /// <inheritdoc />
         public void CopyTo(Service[] array, int arrayIndex)
         {
             Array.Copy(Services.Values.ToArray(), 0, array, arrayIndex, array.Length);
         }
 
+        /// <inheritdoc />
         public bool Remove(Service item)
         {
+            // Honestly this error is bullsh*t
+            // ReSharper disable once SuspiciousTypeConversion.Global
             return ((IDictionary<string, string>) Services).Remove(Services.First(x => x.Value == item).Key);
         }
 
+        /// <inheritdoc />
         public int Count => Services.Count;
+
+        /// <inheritdoc />
         public bool IsReadOnly => false;
 
+        /// <inheritdoc />
         public void Dispose()
         {
             Stop(true);
         }
 
+        /// <summary>
+        /// Starts all of <see cref="Services"/> contained within this <see cref="SimpleServer"/>
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">thrown if this <see cref="SimpleServer"/> has been <see cref="Dispose"/>d</exception>
         public void Start()
         {
             if (_disposed)
@@ -118,6 +160,11 @@ namespace Ultz.SimpleServer.Common
             _logger.LogInformation(working + "/" + Services.Count + " services started");
         }
 
+        /// <summary>
+        /// Stops all of the <see cref="Services"/> contained within this <see cref="SimpleServer"/>, optionally disposing them
+        /// </summary>
+        /// <param name="dispose">if the contained <see cref="Services"/> should be disposed</param>
+        /// <exception cref="ObjectDisposedException">thrown if this <see cref="SimpleServer"/> has been <see cref="Dispose"/>d</exception>
         public void Stop(bool dispose = false)
         {
             if (_disposed)

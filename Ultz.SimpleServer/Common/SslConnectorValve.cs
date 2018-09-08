@@ -34,8 +34,12 @@ using Ultz.SimpleServer.Internals.Http2;
 
 namespace Ultz.SimpleServer.Common
 {
+    /// <summary>
+    /// A <see cref="IValve"/> that's bound to a <see cref="Connector"/>, which will wrap the <see cref="Connector.Listener"/> with a <see cref="SslListener"/>
+    /// </summary>
     public class SslConnectorValve : IValve<Connector>
     {
+        /// <inheritdoc />
         public void Execute(Connector obj, Dictionary<string, string> settings)
         {
             // 2 PEM settings:
@@ -97,6 +101,7 @@ namespace Ultz.SimpleServer.Common
             });
         }
 
+        /// <inheritdoc />
         public string Id => "simpleserver.ssl";
     }
 }

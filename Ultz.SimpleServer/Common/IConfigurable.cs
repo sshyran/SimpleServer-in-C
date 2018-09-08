@@ -25,8 +25,14 @@ using System.Collections.Generic;
 
 namespace Ultz.SimpleServer.Common
 {
+    /// <summary>
+    /// An object that can be configured with <see cref="IValve"/>s
+    /// </summary>
     public interface IConfigurable
     {
+        /// <summary>
+        /// A list of <see cref="Valve"/>s that will be executed on this <see cref="IConfigurable"/>
+        /// </summary>
         List<Valve> Valves { get; set; }
     }
 }
