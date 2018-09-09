@@ -88,6 +88,7 @@ namespace Ultz.SimpleServer
             _servers = Endpoints.Select(x => new Server(Protocol, Protocol.CreateDefaultListener(x), LoggerProvider))
                 .Select(x =>
                 {
+                    Console.WriteLine("NEWSERV");
                     x.RequestReceived += XOnRequestReceived;
                     return x;
                 });
