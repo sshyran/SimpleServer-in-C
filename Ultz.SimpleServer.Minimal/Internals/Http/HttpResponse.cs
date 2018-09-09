@@ -54,6 +54,16 @@ namespace Ultz.SimpleServer.Internals.Http
         public Stream OutputStream { get; } = new MemoryStream();
 
         /// <inheritdoc />
-        public abstract void Close(bool force = false);
+        public abstract void Close(CloseMode mode = CloseMode.Graceful);
+
+        /// <summary>
+        ///     Formats this response, then sends it to the underlying connection and closes it. This method can also forcibly
+        ///     terminate the underlying connection without sending the response.
+        /// </summary>
+        /// <param name="force">true if the stream should be closed without sending the response, false otherwise</param>
+        public void Close(bool force)
+        {
+            Close(force ? CloseMode.Force : CloseMode.Graceful);
+        }
     }
 }

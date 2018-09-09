@@ -197,7 +197,7 @@ namespace Ultz.SimpleServer.Common
                 {
                     try
                     {
-                        e.Context.Response.Close(true);
+                        e.Context.Response.Close(CloseMode.Force);
                     }
                     catch
                     {

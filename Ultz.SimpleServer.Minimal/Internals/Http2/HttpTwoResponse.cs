@@ -42,16 +42,16 @@ namespace Ultz.SimpleServer.Internals.Http2
         private IStream Stream { get; }
 
         /// <inheritdoc />
-        public override void Close(bool force = false)
+        public override void Close(CloseMode mode = CloseMode.Graceful)
         {
-            if (force)
+            if (mode == CloseMode.Force)
                 Stream.CloseAsync().GetAwaiter().GetResult();
             var body = ((MemoryStream) OutputStream).ToArray();
             Stream.WriteHeadersAsync(
                 new List<HeaderField> {new HeaderField {Name = ":status", Value = StatusCode.ToString()}},
                 body.Length == 0).GetAwaiter().GetResult();
             if (body.Length != 0)
-                Stream.WriteAsync(new ArraySegment<byte>(body), true).GetAwaiter().GetResult();
+                Stream.WriteAsync(new ArraySegment<byte>(body), mode != CloseMode.KeepAlive).GetAwaiter().GetResult();
             // the stream is already closed, no need to do anything else.
         }
     }

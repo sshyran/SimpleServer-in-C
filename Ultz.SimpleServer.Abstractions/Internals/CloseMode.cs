@@ -1,4 +1,4 @@
-﻿// IResponse.cs - Ultz.SimpleServer.Abstractions
+// CloseMode.cs - Ultz.SimpleServer.Abstractions
 // 
 // Copyright (C) 2018 Ultz Limited
 // 
@@ -17,29 +17,24 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with SimpleServer. If not, see <http://www.gnu.org/licenses/>.
 
-#region
-
-using System.IO;
-
-#endregion
-
 namespace Ultz.SimpleServer.Internals
 {
     /// <summary>
-    ///     Represents a response
+    /// Represents what should be done with the stream after the response has been sent, if it's going to be
     /// </summary>
-    public interface IResponse
+    public enum CloseMode
     {
         /// <summary>
-        ///     Data associated with this response.
+        /// Keeps the stream open after the response has been sent
         /// </summary>
-        Stream OutputStream { get; }
-
+        KeepAlive = 0x73746179,
         /// <summary>
-        ///     Formats this response, then sends it to the underlying connection and closes it. This method can also forcibly
-        ///     terminate the underlying connection without sending the response.
+        /// Closes the stream without sending the response
         /// </summary>
-        /// <param name="mode">what should be done with the response</param>
-        void Close(CloseMode mode = CloseMode.Graceful);
+        Force = 0x66726365,
+        /// <summary>
+        /// Sends the response, and closes the stream.
+        /// </summary>
+        Graceful = 0x6e726d6c,
     }
 }

@@ -43,9 +43,9 @@ namespace Ultz.SimpleServer.Internals.Http1
         }
 
         /// <inheritdoc />
-        public override void Close(bool force = false)
+        public override void Close(CloseMode mode = CloseMode.Graceful)
         {
-            if (force) _connection.Close();
+            if (mode == CloseMode.Force) _connection.Close();
 
             var headers = Headers.Select(x => new KeyValuePair<string, string>(x.Key.ToLower(), x.Value))
                 .ToDictionary(x => x.Key, x => x.Value);
@@ -70,8 +70,8 @@ namespace Ultz.SimpleServer.Internals.Http1
             bytes = ((MemoryStream) OutputStream).ToArray();
             _connection.Stream.Write(bytes, 0, bytes.Length);
             // close the connection
-            // TODO: Keep Alive support?
-            _connection.Close();
+            if (mode != CloseMode.KeepAlive)
+                _connection.Close();
         }
     }
 }
