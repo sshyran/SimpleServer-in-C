@@ -6,6 +6,5 @@ Our core values for SimpleServer are:
 - **Be efficient**: We want SimpleServer to be able to handle lots of simultanious requests without losing speed or consuming lots of system resources, making it a powerful and cheap server environment for businesses.
 - **Everyone should be able to make a server**: We believe that everyone should be able to make a server, which is why we are bundling SimpleServer with some easy-to-use tools for making a server.
 
-## Tools
-- SimpleServer 2018: A bundle of a friendly GUI tool and a modified version of SimpleServer Httpd, aimed specifically at the average computer user. [coming soon] [Freemium]
-- SimpleServer Configurator: An official GUI tool that will create/modify SimpleServer Httpd configuration files. [coming soon] [Free]
+## SimpleServer 1.0
+SimpleServer 1.0 is currently in release candidate status. See the working branch [here](dev/1.0)
