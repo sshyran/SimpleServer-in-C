@@ -47,7 +47,7 @@ namespace DemoService
             var dat = sr.ReadToEnd();
             ctx.Response.Headers["content-type"] = "text/html";
             var sw = new StreamWriter(ctx.Response.OutputStream);
-            sw.WriteLine("<h1>Hello, " + dat?.Remove(0, 5) + "!</h1><a href=\"/\">< Return</a>");
+            sw.WriteLine("<h1>Hello, " + dat.Remove(0, 5) + "!</h1><a href=\"/\">< Return</a>");
             sw.Flush();
             sw.Close();
             ctx.Response.Close();

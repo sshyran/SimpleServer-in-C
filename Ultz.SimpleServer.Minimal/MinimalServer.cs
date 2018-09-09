@@ -47,12 +47,12 @@ namespace Ultz.SimpleServer
         /// <summary>
         /// A list of <see cref="IPEndPoint"/>s to bind to
         /// </summary>
-        public List<IPEndPoint> Endpoints { get; set; }
+        public List<IPEndPoint> Endpoints { get; set; } = new List<IPEndPoint>();
 
         /// <summary>
         /// A list of <see cref="IHandler"/>s to handle <see cref="IContext"/>s
         /// </summary>
-        public List<IHandler> Handlers { get; set; }
+        public List<IHandler> Handlers { get; set; } = new List<IHandler>();
 
         /// <summary>
         /// The <see cref="IProtocol"/> that this server uses

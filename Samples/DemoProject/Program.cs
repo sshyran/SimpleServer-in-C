@@ -25,6 +25,7 @@ using System.IO;
 using System.Net;
 using System.Net.Security;
 using System.Security.Authentication;
+using System.Security.Cryptography.X509Certificates;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using Ultz.SimpleServer.Common;
