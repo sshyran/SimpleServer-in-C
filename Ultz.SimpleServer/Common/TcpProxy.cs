@@ -47,14 +47,14 @@ namespace Ultz.SimpleServer.Common
                     if (client.Available != 0)
                     {
                         var buffer = new byte[client.Available];
-                        var count = client.GetStream().Read(buffer, 0, client.Available);
+                        var count = client.GetStream().Read(buffer, 0, buffer.Length);
                         localConnection.Stream.Write(buffer, 0, count);
                     }
 
                     if (((NetworkStream) localConnection.Stream).DataAvailable)
                     {
                         var buffer = new byte[4096];
-                        var count = localConnection.Stream.Read(buffer, 0, client.Available);
+                        var count = localConnection.Stream.Read(buffer, 0, buffer.Length);
                         client.GetStream().Write(buffer, 0, count);
                     }
                 }
