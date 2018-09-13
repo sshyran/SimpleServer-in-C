@@ -141,10 +141,10 @@ namespace Ultz.SimpleServer.Common
         public void Start()
         {
             BeforeStart();
-            Logger.LogInformation("Executed prerequisites (BeforeStart)");
+            Logger?.LogInformation("Executed prerequisites (BeforeStart)");
             OnStart();
-            Logger.LogInformation("Executed runtime prerequisites (OnStart)");
-            Logger.LogInformation("Starting all servers...");
+            Logger?.LogInformation("Executed runtime prerequisites (OnStart)");
+            Logger?.LogInformation("Starting all servers...");
             _servers = new List<Server>();
             foreach (var server in GetServers())
             {
@@ -152,10 +152,10 @@ namespace Ultz.SimpleServer.Common
                 _servers.Add(server);
             }
 
-            Logger.LogInformation("All servers started");
+            Logger?.LogInformation("All servers started");
             AfterStart();
-            Logger.LogInformation("Executed post-start operations (AfterStart)");
-            Logger.LogInformation(GetType().Name + " is now running.");
+            Logger?.LogInformation("Executed post-start operations (AfterStart)");
+            Logger?.LogInformation(GetType().Name + " is now running.");
         }
 
         /// <summary>

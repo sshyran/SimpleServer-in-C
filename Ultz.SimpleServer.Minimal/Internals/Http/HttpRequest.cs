@@ -177,7 +177,7 @@ namespace Ultz.SimpleServer.Internals.Http
             return new HttpParserOptional
             {
                 ExpectPayload = methodResolver.GetMethod(Encoding.UTF8.GetBytes(headers[":method"])).ExpectPayload ||
-                                headers.ContainsKey("content-length"),
+                                (headers.ContainsKey("content-length") && headers["content-length"] != "0"),
                 Headers = headers,
                 MethodResolver = methodResolver,
                 Payload = null
