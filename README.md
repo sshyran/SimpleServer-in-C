@@ -1,10 +1,14 @@
+_Note: SimpleServer 1.0 is the full release version of SimpleServer. We strive to make it as backwards compatible as possible, but you may need to make some adjustments when migrating_
+
 # SimpleServer
-SimpleServer is an in-development server environment, written in C#, that natively supports Windows, Mac and the main flavours of Linux.
+SimpleServer is new server environment written in C# for .NET Standard. We aim to make SimpleServer an easy-to-use platform in which developers can make advanced web applications on.
 
 Our core values for SimpleServer are:
-- **Be expandable**: We want developers to develop third-party programs to use the SimpleServer environment, making it easy for developers to make high speed web programs.
-- **Be efficient**: We want SimpleServer to be able to handle lots of simultanious requests without losing speed or consuming lots of system resources, making it a powerful and cheap server environment for businesses.
-- **Everyone should be able to make a server**: We believe that everyone should be able to make a server, which is why we are bundling SimpleServer with some easy-to-use tools for making a server.
+- **Be Expandable**: SimpleServer can be shaped to do anything as we make abstractions at the lowest level of request handling, so if you wanted to you could implement a completely unrelated protocol to HTTP(S).
+- **Be Efficient**: We want SimpleServer to use system resources as sparingly as possible, so running an application built on top of SimpleServer is as cheap as possible.
+- **Be Simple**: We're shaping SimpleServer so that developers can integrate it easily, but can hack at it to great extents if they felt like it.
 
-## SimpleServer 1.0
-SimpleServer 1.0 is currently in release candidate status. See the working branch [here](dev/1.0)
+Current features include:
+- [HTTP/2](https://github.com/Matthias247/http2dotnet) support (with upgrading)
+- SSL support
+- Virtual Hosts

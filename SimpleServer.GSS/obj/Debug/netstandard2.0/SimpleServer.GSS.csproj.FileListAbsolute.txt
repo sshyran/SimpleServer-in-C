@@ -1,9 +1,0 @@
-C:\Users\Dylan Perks\Documents\_Important Documents\SimpleServer\SimpleServer.GSS\bin\Debug\netstandard2.0\SimpleServer.GSS.deps.json
-C:\Users\Dylan Perks\Documents\_Important Documents\SimpleServer\SimpleServer.GSS\bin\Debug\netstandard2.0\SimpleServer.GSS.dll
-C:\Users\Dylan Perks\Documents\_Important Documents\SimpleServer\SimpleServer.GSS\bin\Debug\netstandard2.0\SimpleServer.GSS.pdb
-C:\Users\Dylan Perks\Documents\_Important Documents\SimpleServer\SimpleServer.GSS\obj\Debug\netstandard2.0\SimpleServer.GSS.csprojResolveAssemblyReference.cache
-C:\Users\Dylan Perks\Documents\_Important Documents\SimpleServer\SimpleServer.GSS\obj\Debug\netstandard2.0\SimpleServer.GSS.csproj.CoreCompileInputs.cache
-C:\Users\Dylan Perks\Documents\_Important Documents\SimpleServer\SimpleServer.GSS\obj\Debug\netstandard2.0\SimpleServer.GSS.AssemblyInfoInputs.cache
-C:\Users\Dylan Perks\Documents\_Important Documents\SimpleServer\SimpleServer.GSS\obj\Debug\netstandard2.0\SimpleServer.GSS.AssemblyInfo.cs
-C:\Users\Dylan Perks\Documents\_Important Documents\SimpleServer\SimpleServer.GSS\obj\Debug\netstandard2.0\SimpleServer.GSS.dll
-C:\Users\Dylan Perks\Documents\_Important Documents\SimpleServer\SimpleServer.GSS\obj\Debug\netstandard2.0\SimpleServer.GSS.pdb
