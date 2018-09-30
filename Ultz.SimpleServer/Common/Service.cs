@@ -31,7 +31,7 @@ using Ultz.SimpleServer.Internals;
 namespace Ultz.SimpleServer.Common
 {
     /// <summary>
-    /// A <see cref="Service"/> containing <see cref="IHandler"/>s and one or more <see cref="Connector"/> endpoints.
+    ///     A <see cref="Service" /> containing <see cref="IHandler" />s and one or more <see cref="Connector" /> endpoints.
     /// </summary>
     public abstract class Service : IConfigurable, IDisposable
     {
@@ -40,37 +40,43 @@ namespace Ultz.SimpleServer.Common
         private List<Server> _servers;
 
         /// <summary>
-        /// The protocol that this <see cref="Service"/> is designed for
+        ///     The protocol that this <see cref="Service" /> is designed for
         /// </summary>
         public abstract IProtocol Protocol { get; }
+
         /// <summary>
-        /// The handlers registered on this <see cref="Service"/>.
+        ///     The handlers registered on this <see cref="Service" />.
         /// </summary>
         public IEnumerable<IHandler> Handlers { get; } = new List<IHandler>();
+
         /// <summary>
-        /// The endpoints that this <see cref="Service"/> will listen at.
+        ///     The endpoints that this <see cref="Service" /> will listen at.
         /// </summary>
         public IEnumerable<Connector> Connectors { get; } = new List<Connector>();
+
         /// <summary>
-        /// The <see cref="ILogger"/> for this <see cref="Service"/>.
+        ///     The <see cref="ILogger" /> for this <see cref="Service" />.
         /// </summary>
         public ILogger Logger => _logger ?? (_logger = LoggerProvider?.CreateLogger(GetType().Name));
+
         /// <summary>
-        /// An <see cref="ILoggerProvider"/> for this <see cref="Service"/>, <see cref="IConnection"/>s, and other underlying classes.
+        ///     An <see cref="ILoggerProvider" /> for this <see cref="Service" />, <see cref="IConnection" />s, and other
+        ///     underlying classes.
         /// </summary>
         public ILoggerProvider LoggerProvider { get; set; }
 
         /// <summary>
-        /// An <see cref="Exception"/> representing the current error at the time of <see cref="OnError"/> execution
+        ///     An <see cref="Exception" /> representing the current error at the time of <see cref="OnError" /> execution
         /// </summary>
         protected Exception CurrentError { get; private set; }
 
         /// <summary>
-        /// True if this <see cref="Service"/> has been started
+        ///     True if this <see cref="Service" /> has been started
         /// </summary>
         public bool Active => _servers != null;
+
         /// <summary>
-        /// <see cref="Valve"/> to be applied to this <see cref="Service"/>, or its members.
+        ///     <see cref="Valve" /> to be applied to this <see cref="Service" />, or its members.
         /// </summary>
         public List<Valve> Valves { get; set; }
 
@@ -85,38 +91,44 @@ namespace Ultz.SimpleServer.Common
         }
 
         /// <summary>
-        /// Operations that should be executed before the <see cref="Service"/> begins starting up.
+        ///     Operations that should be executed before the <see cref="Service" /> begins starting up.
         /// </summary>
         protected abstract void BeforeStart();
+
         /// <summary>
-        /// Operations that should be executed mid-startup
+        ///     Operations that should be executed mid-startup
         /// </summary>
         protected abstract void OnStart();
+
         /// <summary>
-        /// Operations that should be executed after the <see cref="Service"/> has started
+        ///     Operations that should be executed after the <see cref="Service" /> has started
         /// </summary>
         protected abstract void AfterStart();
+
         /// <summary>
-        /// Operations that should be executed before the <see cref="Service"/> begins stopping up.
+        ///     Operations that should be executed before the <see cref="Service" /> begins stopping up.
         /// </summary>
         protected abstract void OnStop();
+
         /// <summary>
-        /// Operations that should be executed mid-shutdown
+        ///     Operations that should be executed mid-shutdown
         /// </summary>
         protected abstract void BeforeStop();
+
         /// <summary>
-        /// Operations that should be executed after the <see cref="Service"/> has stopped
+        ///     Operations that should be executed after the <see cref="Service" /> has stopped
         /// </summary>
         protected abstract void AfterStop();
+
         /// <summary>
-        /// Executed when an <see cref="Exception"/> or other error is thrown when handling a request
+        ///     Executed when an <see cref="Exception" /> or other error is thrown when handling a request
         /// </summary>
         /// <param name="type">the error type</param>
         /// <param name="context">the context in question</param>
         protected abstract void OnError(ErrorType type, IContext context);
 
         /// <summary>
-        /// Adds a <see cref="Connector"/> to this <see cref="Service"/>'s <see cref="Connectors"/>
+        ///     Adds a <see cref="Connector" /> to this <see cref="Service" />'s <see cref="Connectors" />
         /// </summary>
         /// <param name="connector">the connector to add</param>
         public void Add(Connector connector)
@@ -126,7 +138,7 @@ namespace Ultz.SimpleServer.Common
         }
 
         /// <summary>
-        /// Adds multiple <see cref="Connector"/>s to this <see cref="Service"/>'s <see cref="Connectors"/>
+        ///     Adds multiple <see cref="Connector" />s to this <see cref="Service" />'s <see cref="Connectors" />
         /// </summary>
         /// <param name="connectors"></param>
         public void Add(params Connector[] connectors)
@@ -136,7 +148,7 @@ namespace Ultz.SimpleServer.Common
         }
 
         /// <summary>
-        /// Starts this <see cref="Service"/> on all <see cref="Connectors"/>
+        ///     Starts this <see cref="Service" /> on all <see cref="Connectors" />
         /// </summary>
         public void Start()
         {
@@ -159,7 +171,7 @@ namespace Ultz.SimpleServer.Common
         }
 
         /// <summary>
-        /// Stops this <see cref="Service"/> on all <see cref="Connectors"/>
+        ///     Stops this <see cref="Service" /> on all <see cref="Connectors" />
         /// </summary>
         public void Stop()
         {
@@ -211,16 +223,17 @@ namespace Ultz.SimpleServer.Common
         }
 
         /// <summary>
-        /// Uses a <see cref="IAttributeHandlerResolver"/> to register <see cref="Handlers"/>
+        ///     Uses a <see cref="IAttributeHandlerResolver" /> to register <see cref="Handlers" />
         /// </summary>
         /// <param name="handlerObject">the type and instance to search and register</param>
         public void RegisterHandlers(object handlerObject)
         {
-            ((List<IHandler>) Handlers).AddRange(Protocol?.AttributeHandlerResolver?.GetHandlers(handlerObject) ?? new List<IHandler>());
+            ((List<IHandler>) Handlers).AddRange(Protocol?.AttributeHandlerResolver?.GetHandlers(handlerObject) ??
+                                                 new List<IHandler>());
         }
 
         /// <summary>
-        /// Registers multiple <see cref="IHandler"/>s
+        ///     Registers multiple <see cref="IHandler" />s
         /// </summary>
         /// <param name="handlers">the handlers to register</param>
         public void RegsiterHandlers(params IHandler[] handlers)
@@ -229,7 +242,7 @@ namespace Ultz.SimpleServer.Common
         }
 
         /// <summary>
-        /// Registers a single <see cref="IHandler"/>
+        ///     Registers a single <see cref="IHandler" />
         /// </summary>
         /// <param name="handler">the handler to register</param>
         public void RegisterHandler(IHandler handler)
@@ -238,7 +251,7 @@ namespace Ultz.SimpleServer.Common
         }
 
         /// <summary>
-        /// Creates a <see cref="LamdaHandler"/> using lamda expressions for CanHandle and Handle methods.
+        ///     Creates a <see cref="LamdaHandler" /> using lamda expressions for CanHandle and Handle methods.
         /// </summary>
         /// <param name="canHandleCallback"></param>
         /// <param name="handler"></param>

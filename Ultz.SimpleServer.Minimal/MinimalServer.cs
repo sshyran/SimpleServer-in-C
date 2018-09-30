@@ -17,6 +17,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with SimpleServer. If not, see <http://www.gnu.org/licenses/>.
 
+#region
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,75 +28,103 @@ using Ultz.SimpleServer.Common;
 using Ultz.SimpleServer.Handlers;
 using Ultz.SimpleServer.Internals;
 
+#endregion
+
 namespace Ultz.SimpleServer
 {
     /// <summary>
-    /// A minimalistic server that uses <see cref="IHandler"/>s and can use multiple <see cref="IPEndPoint"/>
-    /// </summary> 
+    ///     Represents a method which creates an <see cref="IListener" /> from an <see cref="IPEndPoint" />
+    /// </summary>
+    /// <param name="endpoint">the <see cref="IPEndPoint" /> to create an <see cref="IListener" /> from</param>
+    public delegate IListener ListenerProvider(IPEndPoint endpoint);
+
+    /// <summary>
+    ///     A minimalistic server that uses <see cref="IHandler" />s and can use multiple <see cref="IPEndPoint" />
+    /// </summary>
     public class MinimalServer : IDisposable
     {
+        private IEnumerable<Server> _servers;
+
         /// <summary>
-        /// Creates a <see cref="MinimalServer"/> with the given <see cref="IProtocol"/>
+        ///     Creates a <see cref="MinimalServer" /> with the given <see cref="IProtocol" />
         /// </summary>
         /// <param name="protocol"></param>
         public MinimalServer(IProtocol protocol)
         {
+            ListenerProvider = DefaultListenerProvider;
             Protocol = protocol;
         }
 
-        private IEnumerable<Server> _servers;
-
         /// <summary>
-        /// A list of <see cref="IPEndPoint"/>s to bind to
+        ///     A list of <see cref="IPEndPoint" />s to bind to
         /// </summary>
         public List<IPEndPoint> Endpoints { get; set; } = new List<IPEndPoint>();
 
         /// <summary>
-        /// A list of <see cref="IHandler"/>s to handle <see cref="IContext"/>s
+        ///     A list of <see cref="IHandler" />s to handle <see cref="IContext" />s
         /// </summary>
         public List<IHandler> Handlers { get; set; } = new List<IHandler>();
 
         /// <summary>
-        /// The <see cref="IProtocol"/> that this server uses
+        ///     The <see cref="IProtocol" /> that this server uses
         /// </summary>
         public IProtocol Protocol { get; }
 
         /// <summary>
-        /// An <see cref="ILoggerProvider"/> for this server and its members
+        ///     An <see cref="ILoggerProvider" /> for this server and its members
         /// </summary>
         public ILoggerProvider LoggerProvider { get; set; }
 
         /// <summary>
-        /// An <see cref="ILogger"/> for this server.
+        ///     An <see cref="ILogger" /> for this server.
         /// </summary>
         public ILogger Logger => LoggerProvider?.CreateLogger("MinimalServer");
 
         /// <summary>
-        /// Raised when an error occurs when handling.
-        /// </summary>
-        public event EventHandler<ErrorEventArgs> OnError;
-
-        /// <summary>
-        /// True if this server has been started.
+        ///     True if this server has been started.
         /// </summary>
         public bool Active => _servers != null;
 
         /// <summary>
-        /// Starts this server on all <see cref="Endpoints"/>
+        ///     Gets or set the listener provider used to create listeners for endpoints.
+        /// </summary>
+        public ListenerProvider ListenerProvider { get; set; }
+
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            Stop();
+            LoggerProvider?.Dispose();
+            _servers = null;
+            Endpoints.Clear();
+            Handlers.Clear();
+        }
+
+        /// <summary>
+        ///     Raised when an error occurs when handling.
+        /// </summary>
+        public event EventHandler<ErrorEventArgs> OnError;
+
+        private IListener DefaultListenerProvider(IPEndPoint endpoint)
+        {
+            return Protocol.CreateDefaultListener(endpoint);
+        }
+
+        /// <summary>
+        ///     Starts this server on all <see cref="Endpoints" />
         /// </summary>
         public void Start()
         {
             Logger?.LogInformation("SimpleServer is starting...");
-            _servers = Endpoints.Select(x => new Server(Protocol, Protocol.CreateDefaultListener(x), LoggerProvider))
+            if (ListenerProvider == null)
+                throw new NullReferenceException("ListenerProvider cannot be null");
+            _servers = Endpoints.Select(x => new Server(Protocol, ListenerProvider(x), LoggerProvider))
                 .Select(x =>
                 {
                     x.RequestReceived += XOnRequestReceived;
                     return x;
                 });
-            foreach (var server in _servers)
-            {
-                server.Start();
-            }
+            foreach (var server in _servers) server.Start();
             Logger?.LogInformation("SimpleServer has started.");
         }
 
@@ -106,7 +136,7 @@ namespace Ultz.SimpleServer
             {
                 err = new Exception("Handler not found");
                 OnError?.Invoke(this,
-                    new ErrorEventArgs() {Type = ErrorType.HandlerNotFound, Context = e.Context, CurrentError = err});
+                    new ErrorEventArgs {Type = ErrorType.HandlerNotFound, Context = e.Context, CurrentError = err});
                 return;
             }
 
@@ -120,8 +150,7 @@ namespace Ultz.SimpleServer
                 try
                 {
                     OnError?.Invoke(this,
-                        new ErrorEventArgs()
-                            {Type = ErrorType.HandlerNotFound, Context = e.Context, CurrentError = err});
+                        new ErrorEventArgs {Type = ErrorType.HandlerNotFound, Context = e.Context, CurrentError = err});
                 }
                 catch
                 {
@@ -139,7 +168,7 @@ namespace Ultz.SimpleServer
         }
 
         /// <summary>
-        /// Stops this server
+        ///     Stops this server
         /// </summary>
         public void Stop()
         {
@@ -154,15 +183,32 @@ namespace Ultz.SimpleServer
             Logger?.LogInformation("SimpleServer has stopped.");
         }
 
-
-        /// <inheritdoc />
-        public void Dispose()
+        /// <summary>
+        ///     Registers multiple <see cref="IHandler" />s
+        /// </summary>
+        /// <param name="handlers">the handlers to register</param>
+        public void RegsiterHandlers(params IHandler[] handlers)
         {
-            Stop();
-            LoggerProvider?.Dispose();
-            _servers = null;
-            Endpoints.Clear();
-            Handlers.Clear();
+            Handlers.AddRange(handlers);
+        }
+
+        /// <summary>
+        ///     Registers a single <see cref="IHandler" />
+        /// </summary>
+        /// <param name="handler">the handler to register</param>
+        public void RegisterHandler(IHandler handler)
+        {
+            Handlers.Add(handler);
+        }
+
+        /// <summary>
+        ///     Creates a <see cref="LamdaHandler" /> using lamda expressions for CanHandle and Handle methods.
+        /// </summary>
+        /// <param name="canHandleCallback"></param>
+        /// <param name="handler"></param>
+        public void RegisterHandler(Func<IRequest, bool> canHandleCallback, Action<IContext> handler)
+        {
+            Handlers.Add(new LamdaHandler(canHandleCallback, handler));
         }
     }
 }

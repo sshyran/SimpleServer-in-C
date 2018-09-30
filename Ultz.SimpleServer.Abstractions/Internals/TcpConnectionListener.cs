@@ -1,4 +1,4 @@
-﻿// TcpConnectionListener.cs - Ultz.SimpleServer.Minimal
+﻿// TcpConnectionListener.cs - Ultz.SimpleServer.Abstractions
 // 
 // Copyright (C) 2018 Ultz Limited
 // 

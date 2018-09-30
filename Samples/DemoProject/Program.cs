@@ -25,7 +25,6 @@ using System.IO;
 using System.Net;
 using System.Net.Security;
 using System.Security.Authentication;
-using System.Security.Cryptography.X509Certificates;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using Ultz.SimpleServer.Common;
@@ -64,8 +63,8 @@ namespace DemoProject
                 );
             else
                 server = new Server(Http.Create(HttpMode.Dual),
-                new TcpConnectionListener(IPAddress.Any, 11111),
-                new ConsoleLoggerProvider((s, level) => true, true));
+                    new TcpConnectionListener(IPAddress.Any, 11111),
+                    new ConsoleLoggerProvider((s, level) => true, true));
 
             server.RequestReceived += ServerOnRequestReceived;
             var exceptionLogger = logger.CreateLogger("AppDomain-EX");

@@ -35,7 +35,8 @@ using Ultz.SimpleServer.Internals.Http2;
 namespace Ultz.SimpleServer.Common
 {
     /// <summary>
-    /// A <see cref="IValve"/> that's bound to a <see cref="Connector"/>, which will wrap the <see cref="Connector.Listener"/> with a <see cref="SslListener"/>
+    ///     A <see cref="IValve" /> that's bound to a <see cref="Connector" />, which will wrap the
+    ///     <see cref="Connector.Listener" /> with a <see cref="SslListener" />
     /// </summary>
     public class SslConnectorValve : IValve<Connector>
     {

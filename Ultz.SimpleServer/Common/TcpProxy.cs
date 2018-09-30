@@ -1,4 +1,4 @@
-// ConnectProxy.cs - Ultz.SimpleServer
+// TcpProxy.cs - Ultz.SimpleServer
 // 
 // Copyright (C) 2018 Ultz Limited
 // 
@@ -17,20 +17,25 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with SimpleServer. If not, see <http://www.gnu.org/licenses/>.
 
+#region
+
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using Ultz.SimpleServer.Internals;
 
+#endregion
+
 namespace Ultz.SimpleServer.Common
 {
     /// <summary>
-    /// Contains helper classes for a TCP Proxy, intended to be used with the CONNECT method
+    ///     Contains helper classes for a TCP Proxy, intended to be used with the CONNECT method
     /// </summary>
     public static class TcpProxy
     {
         /// <summary>
-        /// Returns a running <see cref="Task"/> proxying traffic to/from the <see cref="TcpConnection"/> from/to the <see cref="TcpClient"/> created from the <see cref="IPEndPoint"/>
+        ///     Returns a running <see cref="Task" /> proxying traffic to/from the <see cref="TcpConnection" /> from/to the
+        ///     <see cref="TcpClient" /> created from the <see cref="IPEndPoint" />
         /// </summary>
         /// <param name="localConnection">the connection that will be on one end of the proxy</param>
         /// <param name="remoteEndPoint">the endpoint of the other end of the proxy</param>

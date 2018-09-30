@@ -28,12 +28,12 @@ using System.Security.Cryptography.X509Certificates;
 namespace Ultz.SimpleServer.Common
 {
     /// <summary>
-    /// A class containing PEM format helper methods
+    ///     A class containing PEM format helper methods
     /// </summary>
     public static class Pem
     {
         /// <summary>
-        /// Gets a <see cref="X509Certificate2"/> from a Base64-encoded certificate.
+        ///     Gets a <see cref="X509Certificate2" /> from a Base64-encoded certificate.
         /// </summary>
         /// <param name="cert"></param>
         /// <returns></returns>
@@ -43,7 +43,7 @@ namespace Ultz.SimpleServer.Common
         }
 
         /// <summary>
-        /// Gets a <see cref="X509Certificate2"/> from a Base64-encoded certificate and private key.
+        ///     Gets a <see cref="X509Certificate2" /> from a Base64-encoded certificate and private key.
         /// </summary>
         /// <param name="cert"></param>
         /// <param name="key"></param>

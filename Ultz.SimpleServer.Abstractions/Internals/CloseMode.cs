@@ -20,21 +20,23 @@
 namespace Ultz.SimpleServer.Internals
 {
     /// <summary>
-    /// Represents what should be done with the stream after the response has been sent, if it's going to be
+    ///     Represents what should be done with the stream after the response has been sent, if it's going to be
     /// </summary>
     public enum CloseMode
     {
         /// <summary>
-        /// Keeps the stream open after the response has been sent
+        ///     Keeps the stream open after the response has been sent
         /// </summary>
         KeepAlive = 0x73746179,
+
         /// <summary>
-        /// Closes the stream without sending the response
+        ///     Closes the stream without sending the response
         /// </summary>
         Force = 0x66726365,
+
         /// <summary>
-        /// Sends the response, and closes the stream.
+        ///     Sends the response, and closes the stream.
         /// </summary>
-        Graceful = 0x6e726d6c,
+        Graceful = 0x6e726d6c
     }
 }

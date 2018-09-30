@@ -42,6 +42,7 @@ namespace Ultz.SimpleServer.Internals.Http
         ///     Creates an instance of this <see cref="HttpAttribute" /> at the specified route
         /// </summary>
         /// <param name="route"></param>
+        // ReSharper disable once UnusedParameter.Local
         protected HttpAttribute(string route)
         {
         }
@@ -49,20 +50,37 @@ namespace Ultz.SimpleServer.Internals.Http
         /// <summary>
         ///     Represents the route that the handler should serve.
         /// </summary>
-        public abstract string Route { get; }
+        public abstract string Route { get; set; }
 
         /// <summary>
         ///     Represents the methods the handler can handle.
         /// </summary>
         public abstract HttpMethod Method { get; }
+
+        /// <summary>
+        ///     Formats the specified route so that it is a web-friendly URI.
+        /// </summary>
+        /// <param name="uri">the route to format</param>
+        /// <returns>a formatted route</returns>
+        protected string ProcessUri(string uri)
+        {
+            var route = uri;
+            if (!route.StartsWith("/"))
+                route = "/" + route;
+            if (route.EndsWith("/"))
+                route = route.Remove(route.Length - 1);
+            return route;
+        }
     }
 
     /// <summary>
     ///     An attribute used on handlers that can handle the GET method
     /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
-    public class HttpGetAttribute : HttpAttribute
+    public sealed class HttpGetAttribute : HttpAttribute
     {
+        private string _route = "";
+
         /// <inheritdoc />
         public HttpGetAttribute() : this("")
         {
@@ -71,15 +89,15 @@ namespace Ultz.SimpleServer.Internals.Http
         /// <inheritdoc />
         public HttpGetAttribute(string route) : base(route)
         {
-            if (!route.StartsWith("/"))
-                route = "/" + route;
-            if (route.EndsWith("/"))
-                route = route.Remove(route.Length - 1);
             Route = route;
         }
 
         /// <inheritdoc />
-        public override string Route { get; }
+        public override string Route
+        {
+            get => _route;
+            set => _route = ProcessUri(value);
+        }
 
         /// <inheritdoc />
         public override HttpMethod Method => HttpMethod.Get;
@@ -89,8 +107,10 @@ namespace Ultz.SimpleServer.Internals.Http
     ///     An attribute used on handlers that can handle the POST method
     /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
-    public class HttpPostAttribute : HttpAttribute
+    public sealed class HttpPostAttribute : HttpAttribute
     {
+        private string _route = "";
+
         /// <inheritdoc />
         public HttpPostAttribute() : this("")
         {
@@ -107,7 +127,11 @@ namespace Ultz.SimpleServer.Internals.Http
         }
 
         /// <inheritdoc />
-        public override string Route { get; }
+        public override string Route
+        {
+            get => _route;
+            set => _route = ProcessUri(value);
+        }
 
         /// <inheritdoc />
         public override HttpMethod Method => HttpMethod.Post;
@@ -117,8 +141,10 @@ namespace Ultz.SimpleServer.Internals.Http
     ///     An attribute used on handlers that can handle the PUT method
     /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
-    public class HttpPutAttribute : HttpAttribute
+    public sealed class HttpPutAttribute : HttpAttribute
     {
+        private string _route = "";
+
         /// <inheritdoc />
         public HttpPutAttribute() : this("")
         {
@@ -135,7 +161,11 @@ namespace Ultz.SimpleServer.Internals.Http
         }
 
         /// <inheritdoc />
-        public override string Route { get; }
+        public override string Route
+        {
+            get => _route;
+            set => _route = ProcessUri(value);
+        }
 
         /// <inheritdoc />
         public override HttpMethod Method => HttpMethod.Put;
@@ -145,8 +175,10 @@ namespace Ultz.SimpleServer.Internals.Http
     ///     An attribute used on handlers that can handle the PATCH method
     /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
-    public class HttpPatchAttribute : HttpAttribute
+    public sealed class HttpPatchAttribute : HttpAttribute
     {
+        private string _route = "";
+
         /// <inheritdoc />
         public HttpPatchAttribute() : this("")
         {
@@ -163,7 +195,11 @@ namespace Ultz.SimpleServer.Internals.Http
         }
 
         /// <inheritdoc />
-        public override string Route { get; }
+        public override string Route
+        {
+            get => _route;
+            set => _route = ProcessUri(value);
+        }
 
         /// <inheritdoc />
         public override HttpMethod Method => HttpMethod.Patch;
@@ -173,8 +209,10 @@ namespace Ultz.SimpleServer.Internals.Http
     ///     An attribute used on handlers that can handle the DELETE method
     /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
-    public class HttpDeleteAttribute : HttpAttribute
+    public sealed class HttpDeleteAttribute : HttpAttribute
     {
+        private string _route = "";
+
         /// <inheritdoc />
         public HttpDeleteAttribute() : this("")
         {
@@ -191,7 +229,11 @@ namespace Ultz.SimpleServer.Internals.Http
         }
 
         /// <inheritdoc />
-        public override string Route { get; }
+        public override string Route
+        {
+            get => _route;
+            set => _route = ProcessUri(value);
+        }
 
         /// <inheritdoc />
         public override HttpMethod Method => HttpMethod.Delete;
@@ -201,8 +243,10 @@ namespace Ultz.SimpleServer.Internals.Http
     ///     An attribute used on handlers that can handle the OPTIONS method
     /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
-    public class HttpOptionsAttribute : HttpAttribute
+    public sealed class HttpOptionsAttribute : HttpAttribute
     {
+        private string _route = "";
+
         /// <inheritdoc />
         public HttpOptionsAttribute() : this("")
         {
@@ -219,7 +263,11 @@ namespace Ultz.SimpleServer.Internals.Http
         }
 
         /// <inheritdoc />
-        public override string Route { get; }
+        public override string Route
+        {
+            get => _route;
+            set => _route = ProcessUri(value);
+        }
 
         /// <inheritdoc />
         public override HttpMethod Method => HttpMethod.Options;
@@ -229,8 +277,15 @@ namespace Ultz.SimpleServer.Internals.Http
     ///     An attribute used on handlers that can handle the HEAD method
     /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
-    public class HttpHeadAttribute : HttpAttribute
+    public sealed class HttpHeadAttribute : HttpAttribute
     {
+        private string _route = "";
+
+        /// <inheritdoc />
+        public HttpHeadAttribute() : this("")
+        {
+        }
+
         /// <inheritdoc />
         public HttpHeadAttribute(string route) : base(route)
         {
@@ -242,7 +297,11 @@ namespace Ultz.SimpleServer.Internals.Http
         }
 
         /// <inheritdoc />
-        public override string Route { get; }
+        public override string Route
+        {
+            get => _route;
+            set => _route = ProcessUri(value);
+        }
 
         /// <inheritdoc />
         public override HttpMethod Method => HttpMethod.Head;
@@ -252,8 +311,10 @@ namespace Ultz.SimpleServer.Internals.Http
     ///     An attribute used on handlers that can handle the TRACE method
     /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
-    public class HttpTraceAttribute : HttpAttribute
+    public sealed class HttpTraceAttribute : HttpAttribute
     {
+        private string _route = "";
+
         /// <inheritdoc />
         public HttpTraceAttribute() : this("")
         {
@@ -270,7 +331,11 @@ namespace Ultz.SimpleServer.Internals.Http
         }
 
         /// <inheritdoc />
-        public override string Route { get; }
+        public override string Route
+        {
+            get => _route;
+            set => _route = ProcessUri(value);
+        }
 
         /// <inheritdoc />
         public override HttpMethod Method => HttpMethod.Trace;
@@ -280,7 +345,7 @@ namespace Ultz.SimpleServer.Internals.Http
     ///     An attribute used on handlers that can handle the CONNECT method
     /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
-    public class HttpConnectAttribute : HttpAttribute
+    public sealed class HttpConnectAttribute : HttpAttribute
     {
         /// <inheritdoc />
         public HttpConnectAttribute(string route) : base(route)
@@ -290,7 +355,7 @@ namespace Ultz.SimpleServer.Internals.Http
         }
 
         /// <inheritdoc />
-        public override string Route { get; }
+        public override string Route { get; set; }
 
         /// <inheritdoc />
         public override HttpMethod Method => HttpMethod.Connect;

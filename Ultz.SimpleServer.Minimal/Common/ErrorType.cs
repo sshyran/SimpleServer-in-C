@@ -1,4 +1,4 @@
-﻿// ErrorType.cs - Ultz.SimpleServer
+﻿// ErrorType.cs - Ultz.SimpleServer.Minimal
 // 
 // Copyright (C) 2018 Ultz Limited
 // 
@@ -17,21 +17,26 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with SimpleServer. If not, see <http://www.gnu.org/licenses/>.
 
+#region
+
 using Ultz.SimpleServer.Internals;
+
+#endregion
 
 namespace Ultz.SimpleServer.Common
 {
     /// <summary>
-    /// A reason to why an error has been thrown
+    ///     A reason to why an error has been thrown
     /// </summary>
     public enum ErrorType
     {
         /// <summary>
-        /// No handlers can handle the <see cref="IRequest"/>
+        ///     No handlers can handle the <see cref="IRequest" />
         /// </summary>
         HandlerNotFound = 404,
+
         /// <summary>
-        /// An unhandled exception occured
+        ///     An unhandled exception occured
         /// </summary>
         UnhandledException = 500
     }

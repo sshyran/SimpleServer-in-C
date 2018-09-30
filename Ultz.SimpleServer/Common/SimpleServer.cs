@@ -30,16 +30,16 @@ using Microsoft.Extensions.Logging;
 namespace Ultz.SimpleServer.Common
 {
     /// <summary>
-    /// A server that will start and stop multiple <see cref="Service"/>s in union
+    ///     A server that will start and stop multiple <see cref="Service" />s in union
     /// </summary>
     public class SimpleServer : IDisposable, ICollection<Service>
     {
-        private bool _disposed;
         private readonly ILogger _logger;
         private readonly ILoggerProvider _loggerProvider;
+        private bool _disposed;
 
         /// <summary>
-        /// Creates an instance of <see cref="SimpleServer"/>, optionally with a logger
+        ///     Creates an instance of <see cref="SimpleServer" />, optionally with a logger
         /// </summary>
         /// <param name="logger"></param>
         public SimpleServer(ILoggerProvider logger = null)
@@ -49,7 +49,7 @@ namespace Ultz.SimpleServer.Common
         }
 
         /// <summary>
-        /// A read only dictionary of <see cref="Service"/>s, indexed by their names
+        ///     A read only dictionary of <see cref="Service" />s, indexed by their names
         /// </summary>
         public IReadOnlyDictionary<string, Service> Services { get; } = new Dictionary<string, Service>();
 
@@ -65,7 +65,7 @@ namespace Ultz.SimpleServer.Common
         }
 
         /// <summary>
-        /// Adds a service to <see cref="Services"/>
+        ///     Adds a service to <see cref="Services" />
         /// </summary>
         /// <param name="item">the service to add</param>
         public void Add(Service item)
@@ -78,17 +78,6 @@ namespace Ultz.SimpleServer.Common
             while (services.ContainsKey(name + number)) number++;
 
             services.Add(name + number, item);
-        }
-        
-        /// <summary>
-        /// Adds a service to <see cref="Services"/> with the given name
-        /// </summary>
-        /// <param name="name">the given name</param>
-        /// <param name="item">the service to add</param>
-        public void Add(string name,Service item)
-        {
-            var services = (Dictionary<string, Service>) Services;
-            services.Add(name, item);
         }
 
         /// <inheritdoc />
@@ -130,9 +119,20 @@ namespace Ultz.SimpleServer.Common
         }
 
         /// <summary>
-        /// Starts all of <see cref="Services"/> contained within this <see cref="SimpleServer"/>
+        ///     Adds a service to <see cref="Services" /> with the given name
         /// </summary>
-        /// <exception cref="ObjectDisposedException">thrown if this <see cref="SimpleServer"/> has been <see cref="Dispose"/>d</exception>
+        /// <param name="name">the given name</param>
+        /// <param name="item">the service to add</param>
+        public void Add(string name, Service item)
+        {
+            var services = (Dictionary<string, Service>) Services;
+            services.Add(name, item);
+        }
+
+        /// <summary>
+        ///     Starts all of <see cref="Services" /> contained within this <see cref="SimpleServer" />
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">thrown if this <see cref="SimpleServer" /> has been <see cref="Dispose" />d</exception>
         public void Start()
         {
             if (_disposed)
@@ -161,10 +161,11 @@ namespace Ultz.SimpleServer.Common
         }
 
         /// <summary>
-        /// Stops all of the <see cref="Services"/> contained within this <see cref="SimpleServer"/>, optionally disposing them
+        ///     Stops all of the <see cref="Services" /> contained within this <see cref="SimpleServer" />, optionally disposing
+        ///     them
         /// </summary>
-        /// <param name="dispose">if the contained <see cref="Services"/> should be disposed</param>
-        /// <exception cref="ObjectDisposedException">thrown if this <see cref="SimpleServer"/> has been <see cref="Dispose"/>d</exception>
+        /// <param name="dispose">if the contained <see cref="Services" /> should be disposed</param>
+        /// <exception cref="ObjectDisposedException">thrown if this <see cref="SimpleServer" /> has been <see cref="Dispose" />d</exception>
         public void Stop(bool dispose = false)
         {
             if (_disposed)

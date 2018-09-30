@@ -35,7 +35,7 @@ using Ultz.SimpleServer.Internals;
 namespace Ultz.SimpleServer.Common
 {
     /// <summary>
-    /// A wrapper that applies an <see cref="SslStream"/> to accepted <see cref="IConnection"/>s
+    ///     A wrapper that applies an <see cref="SslStream" /> to accepted <see cref="IConnection" />s
     /// </summary>
     public class SslListener : IListener
     {
@@ -43,7 +43,8 @@ namespace Ultz.SimpleServer.Common
         private readonly SslServerAuthenticationOptions _opts;
 
         /// <summary>
-        /// Creates an instance of <see cref="SslListener"/>, wrapping the given <see cref="IListener"/> with the given <see cref="SslServerAuthenticationOptions"/>
+        ///     Creates an instance of <see cref="SslListener" />, wrapping the given <see cref="IListener" /> with the given
+        ///     <see cref="SslServerAuthenticationOptions" />
         /// </summary>
         /// <param name="listener">the base listener to wrap</param>
         /// <param name="sslServerAuthenticationOptions">AuthenticateAsServerAsync options</param>

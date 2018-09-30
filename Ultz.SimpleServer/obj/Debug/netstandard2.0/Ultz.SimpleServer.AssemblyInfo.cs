@@ -12,8 +12,8 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyDescriptionAttribute("SimpleServer offers an easy-to-use HTTP server library built with an extendable a" +
 "rchitecture. It is the first to include HTTP/1, HTTP/2, and HTTPS - built for th" +
 "e modern web.")]
-[assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.1.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.1")]
 [assembly: System.Reflection.AssemblyProductAttribute("Ultz.SimpleServer")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Ultz.SimpleServer")]
-[assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
+[assembly: System.Reflection.AssemblyVersionAttribute("1.0.1.0")]

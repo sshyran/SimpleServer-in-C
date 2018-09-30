@@ -104,12 +104,10 @@ namespace Ultz.SimpleServer.Internals.Http
         public bool CanHandle(IRequest request)
         {
             if (_regex != null)
-            {
                 return _regex.IsMatch(_attribute is HttpConnectAttribute
                            ? ((HttpRequest) request).RawUrl
                            : ((HttpRequest) request).RawUrl.ToUrlFormat()) &&
                        _attribute.Method == (HttpMethod) request.Method;
-            }
 
             if (_attribute is HttpConnectAttribute)
                 return ((HttpRequest) request).RawUrl == _attribute.Route;

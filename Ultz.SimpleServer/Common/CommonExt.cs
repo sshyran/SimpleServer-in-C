@@ -25,6 +25,15 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using Ultz.SimpleServer.Handlers;
+using Ultz.SimpleServer.Internals;
+
+#if NETCOREAPP2_1
+using System.Net.Security;
+using System.Security.Authentication;
+using System.Security.Cryptography.X509Certificates;
+using Ultz.SimpleServer.Internals.Http2;
+#endif
 
 #endregion
 
@@ -84,9 +93,9 @@ namespace Ultz.SimpleServer.Common
         }
 
         /// <summary>
-        /// Adds a valve to an <see cref="IConfigurable"/> with the given <see cref="Setting"/>s
+        ///     Adds a valve to an <see cref="IConfigurable" /> with the given <see cref="Setting" />s
         /// </summary>
-        /// <param name="configurable">the target <see cref="IConfigurable"/></param>
+        /// <param name="configurable">the target <see cref="IConfigurable" /></param>
         /// <param name="valve">the valve to add</param>
         /// <param name="settings">the associated settings</param>
         public static void AddValve(this IConfigurable configurable, IValve valve, params Setting[] settings)
@@ -95,7 +104,7 @@ namespace Ultz.SimpleServer.Common
         }
 
         /// <summary>
-        /// Adds valves to an <see cref="IConfigurable"/>
+        ///     Adds valves to an <see cref="IConfigurable" />
         /// </summary>
         /// <param name="configurable">the target</param>
         /// <param name="valve">the valves to add</param>
@@ -103,6 +112,90 @@ namespace Ultz.SimpleServer.Common
         {
             configurable.Valves.Add(valve);
         }
+
+        /// <summary>
+        ///     Searches the methods contained within a given <see cref="object" /> using an
+        ///     <see cref="IAttributeHandlerResolver" />, for methods which can be defined as handlers. This method then adds the
+        ///     resolved handlers to the given <see cref="MinimalServer" />
+        /// </summary>
+        /// <param name="server">the server to add resolved handlers to</param>
+        /// <param name="obj">the object to search for given handlers</param>
+        public static void RegisterHandler(this MinimalServer server, object obj)
+        {
+            server.Handlers.AddRange(
+                server.Protocol?.AttributeHandlerResolver?.GetHandlers(obj) ?? new List<IHandler>());
+        }
+
+#if NETCOREAPP2_1
+/// <summary>
+///     Sets the <see cref="ListenerProvider" /> on the <see cref="MinimalServer" /> to one that provides
+///     <see cref="SslListener" />s with <see cref="TcpConnectionListener" />s, using the given
+///     <see cref="SslServerAuthenticationOptions" />.
+/// </summary>
+/// <param name="server">the server</param>
+/// <param name="serverAuthenticationOptions">
+///     SSL Server Authentication Options to be passed to the
+///     <see cref="SslListener" /> constructor
+/// </param>
+        public static void AddSsl(this MinimalServer server, SslServerAuthenticationOptions serverAuthenticationOptions)
+        {
+            server.ListenerProvider = endpoint =>
+                new SslListener(new TcpConnectionListener(endpoint), serverAuthenticationOptions);
+        }
+
+        /// <summary>
+        ///     Sets the <see cref="ListenerProvider" /> on the <see cref="MinimalServer" /> to one that provides
+        ///     <see cref="SslListener" />s with <see cref="TcpConnectionListener" />s, using the given
+        ///     <see cref="X509Certificate2" /> and <see cref="RSA" /> private key.
+        /// </summary>
+        /// <param name="server">the server</param>
+        /// <param name="certificate">the certificate</param>
+        /// <param name="key">the private key</param>
+        public static void AddSsl(this MinimalServer server, X509Certificate2 certificate, RSA key)
+        {
+            AddSsl(server, certificate.CopyWithPrivateKey(key));
+        }
+
+        /// <summary>
+        ///     Sets the <see cref="ListenerProvider" /> on the <see cref="MinimalServer" /> to one that provides
+        ///     <see cref="SslListener" />s with <see cref="TcpConnectionListener" />s, using the given
+        ///     <see cref="X509Certificate2" /> and <see cref="ECDsa" /> private key.
+        /// </summary>
+        /// <param name="server">the server</param>
+        /// <param name="certificate">the certificate</param>
+        /// <param name="key">the private key</param>
+        public static void AddSsl(this MinimalServer server, X509Certificate2 certificate, ECDsa key)
+        {
+            AddSsl(server, certificate.CopyWithPrivateKey(key));
+        }
+
+        /// <summary>
+        ///     Sets the <see cref="ListenerProvider" /> on the <see cref="MinimalServer" /> to one that provides
+        ///     <see cref="SslListener" />s with <see cref="TcpConnectionListener" />s, using the given
+        ///     <see cref="X509Certificate2" />. The given certificate must have a private key already set.
+        /// </summary>
+        /// <param name="server">the server</param>
+        /// <param name="certificateWithKey">the certificate with the private key already set</param>
+        public static void AddSsl(this MinimalServer server, X509Certificate2 certificateWithKey)
+        {
+            AddSsl(server,
+                server.Protocol is HttpTwo
+                    ? new SslServerAuthenticationOptions
+                    {
+                        ServerCertificate = certificateWithKey, EnabledSslProtocols = SslProtocols.Tls12,
+                        ClientCertificateRequired = false, EncryptionPolicy = EncryptionPolicy.RequireEncryption,
+                        AllowRenegotiation = false,
+                        ApplicationProtocols = new List<SslApplicationProtocol> {SslApplicationProtocol.Http2},
+                        CertificateRevocationCheckMode = X509RevocationMode.Online
+                    }
+                    : new SslServerAuthenticationOptions
+                    {
+                        ServerCertificate = certificateWithKey, EnabledSslProtocols = SslProtocols.Tls12,
+                        ClientCertificateRequired = false, EncryptionPolicy = EncryptionPolicy.RequireEncryption,
+                        CertificateRevocationCheckMode = X509RevocationMode.Online
+                    });
+        }
+#endif
 
         // PEM helpers credit: https://www.codeproject.com/Articles/162194/Certificates-to-DB-and-Back
 
@@ -243,7 +336,7 @@ namespace Ultz.SimpleServer.Common
         }
 
         /// <summary>
-        /// Removes borders from a PEM certificate file, and decodes the Base64 data.
+        ///     Removes borders from a PEM certificate file, and decodes the Base64 data.
         /// </summary>
         /// <param name="pemString">the PEM file</param>
         /// <param name="section">the PEM border name</param>
@@ -264,7 +357,7 @@ namespace Ultz.SimpleServer.Common
         }
 
         /// <summary>
-        /// Decodes an <see cref="RSA"/> private key from its <see cref="Byte"/> form.
+        ///     Decodes an <see cref="RSA" /> private key from its <see cref="byte" /> form.
         /// </summary>
         /// <param name="privateKeyBytes">the raw private key</param>
         /// <returns>the decoded private key</returns>

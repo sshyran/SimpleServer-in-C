@@ -17,15 +17,33 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with SimpleServer. If not, see <http://www.gnu.org/licenses/>.
 
+#region
+
 using System;
 using Ultz.SimpleServer.Internals;
 
+#endregion
+
 namespace Ultz.SimpleServer.Common
 {
+    /// <summary>
+    ///     <see cref="EventArgs" /> that are passed to an error <see cref="EventHandler" />
+    /// </summary>
     public class ErrorEventArgs : EventArgs
     {
+        /// <summary>
+        ///     An <see cref="Exception" /> representing the error thrown by the server.
+        /// </summary>
         public Exception CurrentError { get; set; }
+
+        /// <summary>
+        ///     The <see cref="ErrorType" /> of this error
+        /// </summary>
         public ErrorType Type { get; set; }
+
+        /// <summary>
+        ///     The context in which this error was thrown
+        /// </summary>
         public IContext Context { get; set; }
     }
 }
