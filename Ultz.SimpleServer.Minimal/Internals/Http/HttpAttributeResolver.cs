@@ -57,6 +57,7 @@ namespace Ultz.SimpleServer.Internals.Http
             var type = instance.GetType();
             var methods = type.GetTypeInfo().DeclaredMethods;
             foreach (var method in methods)
+            {
                 if (method.ReturnType == typeof(void))
                 {
                     var parameters = method.GetParameters();
@@ -83,15 +84,79 @@ namespace Ultz.SimpleServer.Internals.Http
                             yield return new HttpAttributeHandler(method, (HttpAttribute) attribute, instance, regex);
                         }
                 }
+
+                foreach (var customAttribute in method.GetCustomAttributes(typeof(HttpRedirectFromAttribute)))
+                {
+                    yield return new HttpRedirectHandler(method,this,(HttpRedirectFromAttribute)customAttribute,instance);
+                }
+            }
+        }
+
+        internal IEnumerable<KeyValuePair<Regex, HttpAttributeHandler>> GetHandlers(MethodInfo info,
+            HttpRedirectFromAttribute redir, object instance)
+        {
+            var str = redir.Route.Replace("/", "\\/").Replace("[", "\\[")
+                .Replace("^", "\\^").Replace("$", "\\$").Replace(".", "\\.").Replace("|", "\\|")
+                .Replace("?", "\\?").Replace("*", "\\*").Replace("+", "\\+").Replace("(", "\\(")
+                .Replace(")", "\\)");
+            foreach (var attribute in info.GetParameters().Select(x => x.Name))
+            {
+                str = str.Replace("{" + attribute + "}", "(?<" + attribute + ">.*)")
+                    .Replace("{", "\\{").Replace("}", "\\}");
+            }
+
+            var redirectRegex = new Regex(str.Replace("{", "\\{").Replace("}", "\\}"));
+            // now we have the regexed URL
+
+            var parameters = info.GetParameters().ToArray();
+            foreach (var attr in Attributes)
+            foreach (var attribute in info.GetCustomAttributes(attr))
+            {
+                var selectedParams = parameters.ToDictionary(x => x.Name, x => x.ParameterType);
+                var regex = new Regex(selectedParams.Keys.Aggregate(
+                        ((HttpAttribute) attribute).Route.Replace("/", "\\/").Replace("[", "\\[")
+                        .Replace("^", "\\^").Replace("$", "\\$").Replace(".", "\\.").Replace("|", "\\|")
+                        .Replace("?", "\\?").Replace("*", "\\*").Replace("+", "\\+").Replace("(", "\\(")
+                        .Replace(")", "\\)"),
+                        (current, argument) =>
+                            current.Replace("{" + argument + "}", "(?<" + argument + ">.*)"))
+                    .Replace("{", "\\{").Replace("}", "\\}"));
+                yield return new KeyValuePair<Regex, HttpAttributeHandler>(redirectRegex, new HttpAttributeHandler(info,(HttpAttribute) attribute, instance, regex));
+            }
+        }
+    }
+
+    internal class HttpRedirectHandler : IHandler
+    {
+        // ReSharper disable once SuggestBaseTypeForParameter
+        public HttpRedirectHandler(MethodInfo method, HttpAttributeResolver resolver,
+            HttpRedirectFromAttribute baseAttribute, object ins)
+        {
+            _base = baseAttribute;
+            _attributes = resolver.GetHandlers(method, baseAttribute, ins);
+        }
+
+        private IEnumerable<KeyValuePair<Regex, HttpAttributeHandler>> _attributes;
+
+        private HttpRedirectFromAttribute _base;
+
+        public bool CanHandle(IRequest request)
+        {
+            return _attributes.Any(x =>
+                x.Value._attribute.Method == ((HttpRequest)request).Method && x.Key.IsMatch(((HttpRequest)request).RawUrl));
+        }
+
+        public void Handle(IContext context)
+        {
         }
     }
 
     internal class HttpAttributeHandler : IHandler
     {
-        private readonly HttpAttribute _attribute;
+        internal readonly HttpAttribute _attribute;
         private readonly MethodInfo _handler;
         private readonly object _instance;
-        private readonly Regex _regex;
+        internal readonly Regex _regex;
 
         public HttpAttributeHandler(MethodInfo methodInfo, HttpAttribute attribute, object instance, Regex regex = null)
         {

@@ -72,6 +72,19 @@ namespace Ultz.SimpleServer.Internals.Http
             return route;
         }
     }
+    /// <summary>
+    ///     Redirects requests from the given URL to the target handler if an attribute able to handle the redirected request exists.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Method)]
+    public sealed class HttpRedirectFromAttribute : Attribute
+    {
+        public HttpRedirectFromAttribute(string route)
+        {
+            Route = route;
+        }
+        
+        public string Route { get; set; }
+    }
 
     /// <summary>
     ///     An attribute used on handlers that can handle the GET method

@@ -29,6 +29,7 @@ namespace DemoService
     public class TestServiceHandlers
     {
         [HttpGet]
+        [HttpRedirectFrom("blarg")]
         public void GetIndexPage(HttpContext ctx)
         {
             ctx.Response.Headers["content-type"] = "text/html";
