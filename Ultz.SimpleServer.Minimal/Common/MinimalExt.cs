@@ -17,6 +17,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with SimpleServer. If not, see <http://www.gnu.org/licenses/>.
 
+using Ultz.SimpleServer.Internals.Http;
+
 namespace Ultz.SimpleServer.Common
 {
     /// <summary>
@@ -36,6 +38,18 @@ namespace Ultz.SimpleServer.Common
             if (s.EndsWith("/"))
                 s = s.Remove(s.Length - 1);
             return s;
+        }
+
+        /// <summary>
+        /// Redirects the current context to a different location
+        /// </summary>
+        /// <param name="context">the context to redirect</param>
+        /// <param name="url">the target location</param>
+        public static void Redirect(this HttpContext context, string url)
+        {
+            context.Response.StatusCode = 302;
+            context.Response.Headers["Location"] = url;
+            context.Response.Close();
         }
     }
 }
