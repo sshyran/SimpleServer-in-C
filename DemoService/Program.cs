@@ -36,11 +36,11 @@ namespace DemoService
             // Logging code
             var loggerFactory = new LoggerFactory().AddConsole();
 
-            var server = new SimpleServer(new ConsoleLoggerProvider((s, level) => true, true));
+            //var server = new SimpleServer(new ConsoleLoggerProvider((s, level) => true, true));
+            //var server = new SimpleServer();
             var service = new TestService();
             service.Add(new Connector(IPAddress.Loopback, 8081));
-            server.Add(service);
-            server.Start();
+            service.Start();
             Console.ReadLine();
         }
     }

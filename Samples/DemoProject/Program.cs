@@ -64,7 +64,8 @@ namespace DemoProject
             else
                 server = new Server(Http.Create(HttpMode.Dual),
                     new TcpConnectionListener(IPAddress.Any, 11111),
-                    new ConsoleLoggerProvider((s, level) => true, true));
+          //        new ConsoleLoggerProvider((s, level) => true, true));
+                    null);
 
             server.RequestReceived += ServerOnRequestReceived;
             var exceptionLogger = logger.CreateLogger("AppDomain-EX");

@@ -267,7 +267,8 @@
         "type": "project",
         "framework": ".NETStandard,Version=v1.4",
         "dependencies": {
-          "Microsoft.Extensions.Logging.Abstractions": "1.1.2"
+          "Microsoft.Extensions.Logging.Abstractions": "1.1.2",
+          "NETStandard.Library": "1.6.1"
         },
         "compile": {
           "bin/placeholder/Ultz.SimpleServer.Abstractions.dll": {}
@@ -281,6 +282,7 @@
         "framework": ".NETStandard,Version=v1.4",
         "dependencies": {
           "Microsoft.Extensions.Logging.Abstractions": "1.1.2",
+          "NETStandard.Library": "1.6.1",
           "System.Buffers": "4.5.0",
           "System.Threading.Tasks.Extensions": "4.5.1",
           "Ultz.SimpleServer.Abstractions": "1.0.1",
@@ -390,7 +392,8 @@
         "type": "project",
         "framework": ".NETStandard,Version=v1.4",
         "dependencies": {
-          "Microsoft.Extensions.Logging.Abstractions": "1.1.2"
+          "Microsoft.Extensions.Logging.Abstractions": "1.1.2",
+          "NETStandard.Library": "1.6.1"
         },
         "compile": {
           "bin/placeholder/Ultz.SimpleServer.Abstractions.dll": {}
@@ -404,6 +407,7 @@
         "framework": ".NETStandard,Version=v1.4",
         "dependencies": {
           "Microsoft.Extensions.Logging.Abstractions": "1.1.2",
+          "NETStandard.Library": "1.6.1",
           "System.Buffers": "4.5.0",
           "System.Threading.Tasks.Extensions": "4.5.1",
           "Ultz.SimpleServer.Abstractions": "1.0.1",
@@ -1049,11 +1053,11 @@
   "project": {
     "version": "1.0.1",
     "restore": {
-      "projectUniqueName": "E:\\7) SimpleServer\\SimpleServer\\Ultz.SimpleServer\\Ultz.SimpleServer.csproj",
+      "projectUniqueName": "C:\\Users\\perks\\Documents\\_Important Documents\\7) SimpleServer\\SimpleServer\\Ultz.SimpleServer\\Ultz.SimpleServer.csproj",
       "projectName": "Ultz.SimpleServer",
-      "projectPath": "E:\\7) SimpleServer\\SimpleServer\\Ultz.SimpleServer\\Ultz.SimpleServer.csproj",
+      "projectPath": "C:\\Users\\perks\\Documents\\_Important Documents\\7) SimpleServer\\SimpleServer\\Ultz.SimpleServer\\Ultz.SimpleServer.csproj",
       "packagesPath": "C:\\Users\\perks\\.nuget\\packages\\",
-      "outputPath": "E:\\7) SimpleServer\\SimpleServer\\Ultz.SimpleServer\\obj\\",
+      "outputPath": "C:\\Users\\perks\\Documents\\_Important Documents\\7) SimpleServer\\SimpleServer\\Ultz.SimpleServer\\obj\\",
       "projectStyle": "PackageReference",
       "crossTargeting": true,
       "fallbackFolders": [
@@ -1076,15 +1080,15 @@
       "frameworks": {
         "netcoreapp2.1": {
           "projectReferences": {
-            "E:\\7) SimpleServer\\SimpleServer\\Ultz.SimpleServer.Minimal\\Ultz.SimpleServer.Minimal.csproj": {
-              "projectPath": "E:\\7) SimpleServer\\SimpleServer\\Ultz.SimpleServer.Minimal\\Ultz.SimpleServer.Minimal.csproj"
+            "C:\\Users\\perks\\Documents\\_Important Documents\\7) SimpleServer\\SimpleServer\\Ultz.SimpleServer.Minimal\\Ultz.SimpleServer.Minimal.csproj": {
+              "projectPath": "C:\\Users\\perks\\Documents\\_Important Documents\\7) SimpleServer\\SimpleServer\\Ultz.SimpleServer.Minimal\\Ultz.SimpleServer.Minimal.csproj"
             }
           }
         },
         "netstandard2.0": {
           "projectReferences": {
-            "E:\\7) SimpleServer\\SimpleServer\\Ultz.SimpleServer.Minimal\\Ultz.SimpleServer.Minimal.csproj": {
-              "projectPath": "E:\\7) SimpleServer\\SimpleServer\\Ultz.SimpleServer.Minimal\\Ultz.SimpleServer.Minimal.csproj"
+            "C:\\Users\\perks\\Documents\\_Important Documents\\7) SimpleServer\\SimpleServer\\Ultz.SimpleServer.Minimal\\Ultz.SimpleServer.Minimal.csproj": {
+              "projectPath": "C:\\Users\\perks\\Documents\\_Important Documents\\7) SimpleServer\\SimpleServer\\Ultz.SimpleServer.Minimal\\Ultz.SimpleServer.Minimal.csproj"
             }
           }
         }

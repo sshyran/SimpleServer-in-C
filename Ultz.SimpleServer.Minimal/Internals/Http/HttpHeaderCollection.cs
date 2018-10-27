@@ -19,6 +19,7 @@
 
 #region
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,7 +42,6 @@ namespace Ultz.SimpleServer.Internals.Http
             _headerFields = new List<HeaderField>();
             _headerFields.AddRange(fields);
         }
-
         /// <inheritdoc />
         public IEnumerator<HeaderField> GetEnumerator()
         {
@@ -102,6 +102,38 @@ namespace Ultz.SimpleServer.Internals.Http
             return value != null;
         }
 
+        /// <summary>
+        /// Attempts to get the first <see cref="HeaderField"/> with the given key and returns true if the operation was successful.
+        /// </summary>
+        /// <param name="key">the key to search for</param>
+        /// <param name="value">the first value</param>
+        /// <returns>whether the operation yielded results</returns>
+        public bool TryGetHeader(string key, out HeaderField value)
+        {
+            try
+            {
+                value = _headerFields.First(x => x.Name == key.ToLower());
+                return true;
+            }
+            catch (InvalidOperationException)
+            {
+                value = new HeaderField();
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Attempts to get the <see cref="HeaderField"/>s with the given key and returns true if the operation was successful.
+        /// </summary>
+        /// <param name="key">the key to search for</param>
+        /// <param name="value">the values</param>
+        /// <returns>whether the operation yielded results</returns>
+        public bool TryGetHeaders(string key, out IEnumerable<HeaderField> value)
+        {
+            value = _headerFields.Where(x => x.Name == key.ToLower());
+            return value.Any();
+        }
+        
         /// <inheritdoc />
         public string this[string key]
         {
@@ -113,8 +145,7 @@ namespace Ultz.SimpleServer.Internals.Http
                     Add(key, value);
                     return;
                 }
-
-                // ReSharper disable once NotAccessedVariable
+                
                 var headerField =
                     _headerFields[_headerFields.IndexOf(_headerFields.FirstOrDefault(x => x.Name == key.ToLower()))];
                 headerField.Value =
