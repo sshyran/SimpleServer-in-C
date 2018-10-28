@@ -45,14 +45,13 @@ namespace Ultz.SimpleServer.Internals.Http1
         /// <inheritdoc />
         public override void Close(CloseMode mode = CloseMode.Graceful)
         {
+            foreach (var cookie in Cookies)
+                Headers.Add("set-cookie",cookie.ToString());
             if (mode == CloseMode.Force) _connection.Close();
-
-            var headers = Headers.Select(x => new KeyValuePair<string, string>(x.Key.ToLower(), x.Value))
-                .ToDictionary(x => x.Key, x => x.Value);
-            if (headers.TryGetValue("server", out var val))
-                headers["server"] = "SimpleServer/1.0 " + val;
+            if (Headers.TryGetValue("server", out var val))
+                Headers["server"] = "SimpleServer/1.0 " + val;
             else
-                headers["server"] = "SimpleServer/1.0";
+                Headers["server"] = "SimpleServer/1.0";
             const string crlf = "\r\n";
             var response = "";
 #pragma warning disable 618
@@ -61,7 +60,7 @@ namespace Ultz.SimpleServer.Internals.Http1
 #pragma warning restore 618
 #pragma warning restore 612
             foreach (var header in Headers)
-                response += header.Key + ": " + header.Value + crlf;
+                response += header.Name + ": " + header.Value + crlf;
             response += crlf;
             // write headers
             var bytes = Encoding.UTF8.GetBytes(response);

@@ -126,12 +126,13 @@ namespace Ultz.SimpleServer.Internals.Http
 
         public async Task WaitForPayload(int length)
         {
+            if (length == 0)
+                return;
             var initLength = _httpBuffer.Length;
             while (_httpBuffer.Length - initLength == length)
             {
                 var res = await _stream.ReadAsync(
                     new ArraySegment<byte>(_httpBuffer, _httpBufferOffset, _httpBuffer.Length - _httpBufferOffset));
-
                 if (res.EndOfStream)
                     throw new EndOfStreamException();
                 _httpBufferOffset += res.BytesRead;

@@ -32,9 +32,11 @@ using Ultz.SimpleServer.Handlers;
 
 namespace Ultz.SimpleServer.Internals.Http
 {
+    
     /// <inheritdoc />
     public class HttpAttributeResolver : IAttributeHandlerResolver
     {
+        
         /// <summary>
         ///     A list of
         /// </summary>
@@ -56,6 +58,7 @@ namespace Ultz.SimpleServer.Internals.Http
         {
             var type = instance.GetType();
             var methods = type.GetTypeInfo().DeclaredMethods;
+            var prefix = type.GetTypeInfo().GetCustomAttributes<HttpRouteAttribute>()?.FirstOrDefault()?.Route ?? "";
             foreach (var method in methods)
                 if (method.ReturnType == typeof(void))
                 {
@@ -66,11 +69,15 @@ namespace Ultz.SimpleServer.Internals.Http
                         foreach (var attr in Attributes.Where(x =>
                             typeof(HttpAttribute).GetTypeInfo().IsAssignableFrom(x.GetTypeInfo())))
                         foreach (var attribute in method.GetCustomAttributes(attr))
+                        {
+                            ((HttpAttribute) attribute).Route = prefix + ((HttpAttribute) attribute).Route;
                             yield return new HttpAttributeHandler(method, (HttpAttribute) attribute, instance);
+                        }
                     else
                         foreach (var attr in Attributes)
                         foreach (var attribute in method.GetCustomAttributes(attr))
                         {
+                            ((HttpAttribute) attribute).Route = prefix + ((HttpAttribute) attribute).Route;
                             var selectedParams = parameters.ToDictionary(x => x.Name, x => x.ParameterType);
                             var regex = new Regex(selectedParams.Keys.Aggregate(
                                     ((HttpAttribute) attribute).Route.Replace("/", "\\/").Replace("[", "\\[")

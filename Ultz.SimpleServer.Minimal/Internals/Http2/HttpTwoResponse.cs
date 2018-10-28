@@ -44,6 +44,8 @@ namespace Ultz.SimpleServer.Internals.Http2
         /// <inheritdoc />
         public override void Close(CloseMode mode = CloseMode.Graceful)
         {
+            foreach (var cookie in Cookies)
+                Headers.Add("set-cookie",cookie.ToString());
             if (mode == CloseMode.Force)
                 Stream.CloseAsync().GetAwaiter().GetResult();
             var body = ((MemoryStream) OutputStream).ToArray();
