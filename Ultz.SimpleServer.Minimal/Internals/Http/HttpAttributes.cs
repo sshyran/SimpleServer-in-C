@@ -62,14 +62,40 @@ namespace Ultz.SimpleServer.Internals.Http
         /// </summary>
         /// <param name="uri">the route to format</param>
         /// <returns>a formatted route</returns>
-        protected string ProcessUri(string uri)
+        protected internal static string ProcessUri(string uri)
         {
             var route = uri;
+            if (uri == "")
+                return "/";
             if (!route.StartsWith("/"))
                 route = "/" + route;
             if (route.EndsWith("/"))
                 route = route.Remove(route.Length - 1);
             return route;
+        }
+    }
+
+    [AttributeUsage(AttributeTargets.Class)]
+    public sealed class HttpRouteAttribute : Attribute
+    {
+        
+        private string _route = "";
+        /// <summary>
+        /// Creates an instance with the given route
+        /// </summary>
+        /// <param name="route">the route to create an instance with</param>
+        public HttpRouteAttribute(string route)
+        {
+            Route = route;
+        }
+
+        /// <summary>
+        /// The prefix of all <see cref="HttpAttribute"/> routes contained within this class
+        /// </summary>
+        public string Route
+        {
+            get => _route;
+            set => _route = HttpAttribute.ProcessUri(value);
         }
     }
 

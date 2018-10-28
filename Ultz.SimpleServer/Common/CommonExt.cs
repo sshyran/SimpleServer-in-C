@@ -27,12 +27,12 @@ using System.Linq;
 using System.Security.Cryptography;
 using Ultz.SimpleServer.Handlers;
 using Ultz.SimpleServer.Internals;
-
 #if NETCOREAPP2_1
 using System.Net.Security;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using Ultz.SimpleServer.Internals.Http2;
+
 #endif
 
 #endregion
@@ -127,16 +127,17 @@ namespace Ultz.SimpleServer.Common
         }
 
 #if NETCOREAPP2_1
-/// <summary>
-///     Sets the <see cref="ListenerProvider" /> on the <see cref="MinimalServer" /> to one that provides
-///     <see cref="SslListener" />s with <see cref="TcpConnectionListener" />s, using the given
-///     <see cref="SslServerAuthenticationOptions" />.
-/// </summary>
-/// <param name="server">the server</param>
-/// <param name="serverAuthenticationOptions">
-///     SSL Server Authentication Options to be passed to the
-///     <see cref="SslListener" /> constructor
-/// </param>
+
+        /// <summary>
+        ///     Sets the <see cref="ListenerProvider" /> on the <see cref="MinimalServer" /> to one that provides
+        ///     <see cref="SslListener" />s with <see cref="TcpConnectionListener" />s, using the given
+        ///     <see cref="SslServerAuthenticationOptions" />.
+        /// </summary>
+        /// <param name="server">the server</param>
+        /// <param name="serverAuthenticationOptions">
+        ///     SSL Server Authentication Options to be passed to the
+        ///     <see cref="SslListener" /> constructor
+        /// </param>
         public static void AddSsl(this MinimalServer server, SslServerAuthenticationOptions serverAuthenticationOptions)
         {
             server.ListenerProvider = endpoint =>

@@ -263,7 +263,7 @@
           "lib/netcoreapp2.1/_._": {}
         }
       },
-      "Ultz.SimpleServer.Abstractions/1.0.1": {
+      "Ultz.SimpleServer.Abstractions/1.1.0-beta1": {
         "type": "project",
         "framework": ".NETStandard,Version=v1.4",
         "dependencies": {
@@ -276,14 +276,14 @@
           "bin/placeholder/Ultz.SimpleServer.Abstractions.dll": {}
         }
       },
-      "Ultz.SimpleServer.Minimal/1.0.1": {
+      "Ultz.SimpleServer.Minimal/1.1.0-beta1": {
         "type": "project",
         "framework": ".NETStandard,Version=v1.4",
         "dependencies": {
           "Microsoft.Extensions.Logging.Abstractions": "1.1.2",
           "System.Buffers": "4.5.0",
           "System.Threading.Tasks.Extensions": "4.5.1",
-          "Ultz.SimpleServer.Abstractions": "1.0.1",
+          "Ultz.SimpleServer.Abstractions": "1.1.0-beta1",
           "http2dotnet": "0.8.0"
         },
         "compile": {
@@ -386,7 +386,7 @@
           "lib/netstandard2.0/System.Threading.Tasks.Extensions.dll": {}
         }
       },
-      "Ultz.SimpleServer.Abstractions/1.0.1": {
+      "Ultz.SimpleServer.Abstractions/1.1.0-beta1": {
         "type": "project",
         "framework": ".NETStandard,Version=v1.4",
         "dependencies": {
@@ -399,14 +399,14 @@
           "bin/placeholder/Ultz.SimpleServer.Abstractions.dll": {}
         }
       },
-      "Ultz.SimpleServer.Minimal/1.0.1": {
+      "Ultz.SimpleServer.Minimal/1.1.0-beta1": {
         "type": "project",
         "framework": ".NETStandard,Version=v1.4",
         "dependencies": {
           "Microsoft.Extensions.Logging.Abstractions": "1.1.2",
           "System.Buffers": "4.5.0",
           "System.Threading.Tasks.Extensions": "4.5.1",
-          "Ultz.SimpleServer.Abstractions": "1.0.1",
+          "Ultz.SimpleServer.Abstractions": "1.1.0-beta1",
           "http2dotnet": "0.8.0"
         },
         "compile": {
@@ -1019,12 +1019,12 @@
         "version.txt"
       ]
     },
-    "Ultz.SimpleServer.Abstractions/1.0.1": {
+    "Ultz.SimpleServer.Abstractions/1.1.0-beta1": {
       "type": "project",
       "path": "../Ultz.SimpleServer.Abstractions/Ultz.SimpleServer.Abstractions.csproj",
       "msbuildProject": "../Ultz.SimpleServer.Abstractions/Ultz.SimpleServer.Abstractions.csproj"
     },
-    "Ultz.SimpleServer.Minimal/1.0.1": {
+    "Ultz.SimpleServer.Minimal/1.1.0-beta1": {
       "type": "project",
       "path": "../Ultz.SimpleServer.Minimal/Ultz.SimpleServer.Minimal.csproj",
       "msbuildProject": "../Ultz.SimpleServer.Minimal/Ultz.SimpleServer.Minimal.csproj"
@@ -1034,12 +1034,12 @@
     ".NETCoreApp,Version=v2.1": [
       "Microsoft.Extensions.Logging.Abstractions >= 2.1.1",
       "Microsoft.NETCore.App >= 2.1.0",
-      "Ultz.SimpleServer.Minimal >= 1.0.1"
+      "Ultz.SimpleServer.Minimal >= 1.1.0-beta1"
     ],
     ".NETStandard,Version=v2.0": [
       "Microsoft.Extensions.Logging.Abstractions >= 2.1.1",
       "NETStandard.Library >= 2.0.3",
-      "Ultz.SimpleServer.Minimal >= 1.0.1"
+      "Ultz.SimpleServer.Minimal >= 1.1.0-beta1"
     ]
   },
   "packageFolders": {
@@ -1047,7 +1047,7 @@
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
-    "version": "1.0.1",
+    "version": "1.1.0-beta1",
     "restore": {
       "projectUniqueName": "E:\\7) SimpleServer\\SimpleServer\\Ultz.SimpleServer\\Ultz.SimpleServer.csproj",
       "projectName": "Ultz.SimpleServer",

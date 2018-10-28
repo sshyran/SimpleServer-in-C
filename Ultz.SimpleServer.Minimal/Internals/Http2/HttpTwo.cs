@@ -111,7 +111,7 @@ namespace Ultz.SimpleServer.Internals.Http2
                             headerBytes.Array, headerBytes.Offset, headerBytes.Count - 4),
                         (MethodResolver<HttpMethod>) MethodResolver, stream.Connection);
 
-                    if (req.ExpectPayload && req.Headers.TryGetValue("content-length", out var contentLength))
+                    if (req.ExpectPayload && req.Headers.TryGetValue("content-length", out string contentLength))
                     {
                         if (int.TryParse(contentLength, out var length))
                         {
@@ -150,10 +150,10 @@ namespace Ultz.SimpleServer.Internals.Http2
                         return;
                     }
 
-                    if (!request.Headers.TryGetValue("connection", out var connectionHeader) ||
-                        !request.Headers.TryGetValue("host", out _) ||
-                        !request.Headers.TryGetValue("upgrade", out var upgradeHeader) ||
-                        !request.Headers.TryGetValue("http2-settings", out var http2SettingsHeader) ||
+                    if (!request.Headers.TryGetValue("connection", out string connectionHeader) ||
+                        !request.Headers.TryGetValue("host", out string _) ||
+                        !request.Headers.TryGetValue("upgrade", out string upgradeHeader) ||
+                        !request.Headers.TryGetValue("http2-settings", out string http2SettingsHeader) ||
                         upgradeHeader != "h2c" ||
                         http2SettingsHeader.Length == 0)
                     {

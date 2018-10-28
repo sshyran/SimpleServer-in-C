@@ -22,6 +22,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Http2.Hpack;
 
 #endregion
 
@@ -46,8 +47,13 @@ namespace Ultz.SimpleServer.Internals.Http
         /// <summary>
         ///     Gets a dictionary containing additional HTTP headers to be sent
         /// </summary>
-        public Dictionary<string, string> Headers { get; } = new Dictionary<string, string>();
+        public HttpHeaderCollection Headers { get; } = new HttpHeaderCollection(new List<HeaderField>());
 
+        /// <summary>
+        /// Gets a collection containing additional HTTP cookies to be sent
+        /// </summary>
+        public HttpCookieCollection Cookies { get; } = new HttpCookieCollection();
+        
         /// <summary>
         ///     Gets a writable stream for the response payload.
         /// </summary>

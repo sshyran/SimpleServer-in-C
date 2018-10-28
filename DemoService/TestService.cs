@@ -30,27 +30,28 @@ namespace DemoService
 {
     public class TestService : Service
     {
-        public override IProtocol Protocol { get; } = Http.Create(HttpMode.Dual);
+        public override IProtocol Protocol { get; } = Http.Create(HttpMode.Legacy);
 
         protected override void BeforeStart()
         {
             RegisterHandlers(new TestServiceHandlers());
-            Logger.LogInformation("Go for launch.");
+            RegisterHandlers(new CookieTestHandlers());
+            Logger?.LogInformation("Go for launch.");
         }
 
         protected override void OnStart()
         {
-            Logger.LogInformation("Starting");
+            Logger?.LogInformation("Starting");
         }
 
         protected override void AfterStart()
         {
-            Logger.LogInformation("Started");
+            Logger?.LogInformation("Started");
         }
 
         protected override void OnStop()
         {
-            Logger.LogInformation("Stopping");
+            Logger?.LogInformation("Stopping");
         }
 
         protected override void BeforeStop()
@@ -59,12 +60,12 @@ namespace DemoService
 
         protected override void AfterStop()
         {
-            Logger.LogInformation("Stopped.");
+            Logger?.LogInformation("Stopped.");
         }
 
         protected override void OnError(ErrorType type, IContext context)
         {
-            Logger.LogInformation(type + ": " + CurrentError);
+            Logger?.LogInformation(type + ": " + CurrentError);
         }
     }
 }
