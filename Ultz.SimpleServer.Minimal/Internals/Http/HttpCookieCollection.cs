@@ -26,26 +26,51 @@ using System.Text;
 
 namespace Ultz.SimpleServer.Internals.Http
 {
-    public class HttpCookieCollection : IList<Cookie>, IDictionary<string, Cookie>
+    /// <summary>
+    /// Represents a collection of <see cref="HttpCookie"/>s. Can be read-only.
+    /// </summary>
+    public class HttpCookieCollection : IList<HttpCookie>, IDictionary<string, HttpCookie>, IDictionary<string, string>
     {
-        private List<Cookie> _cookies;
+        private List<HttpCookie> _cookies;
+        private bool _readOnly;
 
-        public HttpCookieCollection(HttpHeaderCollection headers)
+        /// <summary>
+        /// Creates and populates this collection from a <see cref="HttpHeaderCollection"/>, and optionally make it read-only 
+        /// </summary>
+        /// <param name="headers"></param>
+        /// <param name="readOnly"></param>
+        public HttpCookieCollection(HttpHeaderCollection headers, bool readOnly = false)
         {
-            _cookies = new List<Cookie>();
+            _cookies = new List<HttpCookie>();
             foreach (var headerField in headers)
             {
                 if (headerField.Name == "cookie")
-                    _cookies.AddRange(Cookie.Parse(headerField.Value));
+                    _cookies.AddRange(HttpCookie.Parse(headerField.Value));
             }
+
+            _readOnly = readOnly;
         }
 
-        IEnumerator<KeyValuePair<string, Cookie>> IEnumerable<KeyValuePair<string, Cookie>>.GetEnumerator()
+        /// <summary>
+        /// Creates an empty instance of this collection 
+        /// </summary>
+        public HttpCookieCollection()
+        {
+            _cookies = new List<HttpCookie>();
+        }
+
+        IEnumerator<KeyValuePair<string, string>> IEnumerable<KeyValuePair<string, string>>.GetEnumerator()
+        {
+            return _cookies.ToDictionary(x => x.Name, x => x.Value).GetEnumerator();
+        }
+
+        IEnumerator<KeyValuePair<string, HttpCookie>> IEnumerable<KeyValuePair<string, HttpCookie>>.GetEnumerator()
         {
             return _cookies.ToDictionary(x => x.Name, x => x).GetEnumerator();
         }
 
-        public IEnumerator<Cookie> GetEnumerator()
+        /// <inheritdoc />
+        public IEnumerator<HttpCookie> GetEnumerator()
         {
             return _cookies.GetEnumerator();
         }
@@ -55,126 +80,343 @@ namespace Ultz.SimpleServer.Internals.Http
             return GetEnumerator();
         }
 
-        public void Add(Cookie item)
+        /// <inheritdoc />
+        public void Add(HttpCookie item)
         {
+            if (_readOnly)
+                throw new NotSupportedException("Can't write to a read-only collection");
             _cookies.Add(item);
         }
 
-        void ICollection<KeyValuePair<string, Cookie>>.Add(KeyValuePair<string, Cookie> item)
+        /// <inheritdoc />
+        void ICollection<KeyValuePair<string, HttpCookie>>.Add(KeyValuePair<string, HttpCookie> item)
         {
-            throw new NotImplementedException();
+            if (_readOnly)
+                throw new NotSupportedException("Can't write to a read-only collection");
+            var itemValue = item.Value;
+            itemValue.Name = item.Key;
+            _cookies.Add(item.Value);
         }
 
-        void ICollection<KeyValuePair<string, Cookie>>.Clear()
+        /// <inheritdoc />
+        public void Add(KeyValuePair<string, string> item)
         {
-            throw new NotImplementedException();
+            Add(new HttpCookie() {Name = item.Key, Value = item.Value});
         }
 
-        public bool Contains(KeyValuePair<string, Cookie> item)
+        /// <summary>
+        /// Clears this collection
+        /// </summary>
+        /// <exception cref="NotSupportedException"></exception>
+        public void Clear()
         {
-            throw new NotImplementedException();
+            if (_readOnly)
+                throw new NotSupportedException("Can't write to a read-only collection");
+            _cookies.Clear();
         }
 
-        public void CopyTo(KeyValuePair<string, Cookie>[] array, int arrayIndex)
+        /// <inheritdoc />
+        public bool Contains(KeyValuePair<string, string> item)
         {
-            throw new NotImplementedException();
+            return _cookies.Any(x => x.Name == item.Key && x.Value == item.Value);
         }
 
-        public bool Remove(KeyValuePair<string, Cookie> item)
+        /// <inheritdoc />
+        public void CopyTo(KeyValuePair<string, string>[] array, int arrayIndex)
         {
-            throw new NotImplementedException();
+            _cookies.ToDictionary(x => x.Name, x => x.Value).ToArray().CopyTo(array, arrayIndex);
         }
 
-        int ICollection<KeyValuePair<string, Cookie>>.Count => _count1;
-
-        bool ICollection<KeyValuePair<string, Cookie>>.IsReadOnly => _isReadOnly1;
-
-        void ICollection<Cookie>.Clear()
+        /// <inheritdoc />
+        public bool Remove(KeyValuePair<string, string> item)
         {
-            throw new NotImplementedException();
+            if (!Contains(item))
+                return false;
+            _cookies = _cookies.Where(x => x.Name != item.Key && x.Value != item.Value).ToList();
+            return true;
         }
 
-        public bool Contains(Cookie item)
+        /// <inheritdoc />
+        public bool Contains(KeyValuePair<string, HttpCookie> item)
         {
-            throw new NotImplementedException();
+            return _cookies.Any(x => x.Name == item.Key && x == item.Value);
         }
 
-        public void CopyTo(Cookie[] array, int arrayIndex)
+        /// <inheritdoc />
+        public void CopyTo(KeyValuePair<string, HttpCookie>[] array, int arrayIndex)
         {
-            throw new NotImplementedException();
+            _cookies.Select(x => new KeyValuePair<string, HttpCookie>(x.Name, x)).ToArray().CopyTo(array, arrayIndex);
         }
 
-        public bool Remove(Cookie item)
+        /// <inheritdoc />
+        public bool Remove(KeyValuePair<string, HttpCookie> item)
         {
-            throw new NotImplementedException();
+            if (_readOnly)
+                throw new NotSupportedException("Can't write to a read-only collection");
+            return Contains(item) && _cookies.Remove(_cookies.First(x => x.Name == item.Key && x == item.Value));
         }
 
-        int ICollection<Cookie>.Count => _count;
+        /// <summary>
+        /// Gets the amount of items in this collection
+        /// </summary>
+        public int Count => _cookies.Count;
 
-        bool ICollection<Cookie>.IsReadOnly => _isReadOnly;
+        /// <summary>
+        /// Returns true if this collection is read-only, otherwise false
+        /// </summary>
+        public bool IsReadOnly => ((ICollection<HttpCookie>) _cookies).IsReadOnly;
 
-        public int IndexOf(Cookie item)
+        /// <inheritdoc />
+        public bool Contains(HttpCookie item)
         {
-            throw new NotImplementedException();
+            return _cookies.Contains(item);
         }
 
-        public void Insert(int index, Cookie item)
+        /// <inheritdoc />
+        public void CopyTo(HttpCookie[] array, int arrayIndex)
         {
-            throw new NotImplementedException();
+            _cookies.CopyTo(array, arrayIndex);
         }
 
+        /// <inheritdoc />
+        public bool Remove(HttpCookie item)
+        {
+            return _cookies.Contains(item);
+        }
+
+        /// <inheritdoc />
+        public int IndexOf(HttpCookie item)
+        {
+            return _cookies.IndexOf(item);
+        }
+
+        /// <inheritdoc />
+        public void Insert(int index, HttpCookie item)
+        {
+            if (_readOnly)
+                throw new NotSupportedException("Can't write to a read-only collection");
+            _cookies.Insert(index, item);
+        }
+
+        /// <inheritdoc />
         public void RemoveAt(int index)
         {
-            throw new NotImplementedException();
+            if (_readOnly)
+                throw new NotSupportedException("Can't write to a read-only collection");
+            _cookies.RemoveAt(index);
         }
 
-        public Cookie this[int index]
+        /// <inheritdoc />
+        public HttpCookie this[int index]
         {
-            get => throw new NotImplementedException();
-            set => throw new NotImplementedException();
+            get => _cookies[index];
+            set
+            {
+                if (_readOnly)
+                {
+                    throw new NotSupportedException("Can't write to a read-only collection");
+                }
+                else
+                {
+                    _cookies[index] = value;
+                }
+            }
         }
 
-        public void Add(string key, Cookie value)
+        /// <inheritdoc />
+        public void Add(string key, HttpCookie value)
         {
-            throw new NotImplementedException();
+            if (_readOnly)
+                throw new NotSupportedException("Can't write to a read-only collection");
+            var cookie = value;
+            cookie.Name = key;
+            _cookies.Add(cookie);
         }
 
+        /// <inheritdoc />
+        public void Add(string key, string value)
+        {
+            Add(new KeyValuePair<string, string>(key, value));
+        }
+
+        /// <summary>
+        /// Returns a value indicating whether there's a cookie in this collection with the matching key
+        /// </summary>
+        /// <param name="key">the key to search for</param>
+        /// <returns>the result</returns>
         public bool ContainsKey(string key)
         {
-            throw new NotImplementedException();
+            return _cookies.Any(x => x.Name == key);
         }
 
+        /// <summary>
+        /// Removes all cookies with a matching key
+        /// </summary>
+        /// <param name="key">the key to match</param>
+        /// <returns>whether any values were removed</returns>
+        /// <exception cref="NotSupportedException">this collection <see cref="IsReadOnly"/></exception>
         public bool Remove(string key)
         {
-            throw new NotImplementedException();
+            if (_readOnly)
+                throw new NotSupportedException("Can't write to a read-only collection");
+            return ContainsKey(key) && _cookies.Remove(_cookies.First(x => x.Name == key));
         }
 
-        public bool TryGetValue(string key, out Cookie value)
+        /// <inheritdoc />
+        public bool TryGetValue(string key, out string value)
         {
-            throw new NotImplementedException();
+            var op = ((IDictionary<string,HttpCookie>)this).TryGetValue(key, out HttpCookie cookie);
+            value = cookie?.Value;
+            return op;
         }
 
-        public Cookie this[string key]
+        /// <inheritdoc />
+        public string this[string key]
         {
-            get => throw new NotImplementedException();
-            set => throw new NotImplementedException();
+            get => ((IDictionary<string, HttpCookie>) this)[key].Value;
+            set => ((IDictionary<string, HttpCookie>) this)[key].Value = value;
         }
 
-        public ICollection<string> Keys { get; }
-        public ICollection<Cookie> Values { get; }
+        /// <inheritdoc />
+        bool IDictionary<string,HttpCookie>.TryGetValue(string key, out HttpCookie value)
+        {
+            if (!ContainsKey(key))
+            {
+                value = new HttpCookie();
+                return false;
+            }
+
+            value = ((IDictionary<string, HttpCookie>) this)[key];
+            return true;
+        }
+
+        /// <inheritdoc />
+        HttpCookie IDictionary<string, HttpCookie>.this[string key]
+        {
+            get
+            {
+                try
+                {
+                    return _cookies.First(x => x.Name == key);
+                }
+                catch
+                {
+                    throw new KeyNotFoundException();
+                }
+            }
+            set
+            {
+                if (!ContainsKey(key))
+                {
+                    if (!_readOnly)
+                        Add(key, value);
+                    else
+                        throw new KeyNotFoundException();
+                }
+
+                if (_readOnly)
+                    throw new NotSupportedException("Can't write to a read-only collection");
+                _cookies[_cookies.FindIndex(x => x.Name == key)] = value;
+            }
+        }
+
+        ICollection<string> IDictionary<string, HttpCookie>.Keys => _cookies.Select(x => x.Name).ToList();
+
+        /// <inheritdoc />
+        public ICollection<string> Values => _cookies.Select(x => x.Value).ToList();
+
+        /// <inheritdoc />
+        public ICollection<string> Keys => _cookies.Select(x => x.Name).ToList();
+
+        ICollection<HttpCookie> IDictionary<string, HttpCookie>.Values => _cookies;
     }
 
-    public struct Cookie
+    /// <summary>
+    /// Represents a cookie as defined by the HTTP protocol
+    /// </summary>
+    public class HttpCookie
     {
+        /// <summary>
+        /// Returns true if the contents of this cookie exactly matches the other cookie provided
+        /// </summary>
+        /// <param name="other">the other cookie</param>
+        /// <returns>the comparison result</returns>
+        public bool Equals(HttpCookie other)
+        {
+            return string.Equals(Name, other.Name) && string.Equals(Value, other.Value) &&
+                   string.Equals(Path, other.Path) && Secure == other.Secure && HttpOnly == other.HttpOnly &&
+                   string.Equals(Domain, other.Domain) && Expires.Equals(other.Expires) && SameSite == other.SameSite;
+        }
+
+        /// <summary>
+        /// Returns true if the contents of the left cookie exactly matches the right cookie
+        /// </summary>
+        /// <param name="right">the right cookie</param>
+        /// <returns>the comparison result</returns>
+        public static bool operator ==(HttpCookie left, HttpCookie right)
+        {
+            return left?.Equals(right) ?? right is null;
+        }
+
+        /// <summary>
+        /// Returns true if the contents of the left cookie exactly doesn't match the right cookie
+        /// </summary>
+        /// <param name="right">the right cookie</param>
+        /// <returns>the comparison result</returns>
+        public static bool operator !=(HttpCookie left, HttpCookie right)
+        {
+            return !(left == right);
+        }
+
+        /// <summary>
+        /// The name/key of this cookie
+        /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// The value/content of this cookie
+        /// </summary>
         public string Value { get; set; }
+
+        /// <summary>
+        /// The path that this cookie should be set at. See the HTTP RFC for more info.
+        /// </summary>
         public string Path { get; set; }
+
+        /// <summary>
+        /// If this cookie should only be set & sent on a secure endpoint. See the HTTP RFC for more info.
+        /// </summary>
         public bool Secure { get; set; }
+
+        /// <summary>
+        /// If this cookie should only be accessed by the server, and not client-side scripts. See the HTTP RFC for more info.
+        /// </summary>
         public bool HttpOnly { get; set; }
+
+        /// <summary>
+        /// The domain that this cookie should be set at. See the HTTP RFC for more info.
+        /// </summary>
         public string Domain { get; set; }
+
+        /// <summary>
+        /// The date that this cookie should expire. See the HTTP RFC for more info.
+        /// </summary>
         public DateTime? Expires { get; set; }
+
+        /// <summary>
+        /// The amount of seconds before this cookie should expire. Takes precedence over <see cref="Expires"/>, see the HTTP RFC for more info.
+        /// </summary>
+        public long MaxAge { get; set; }
+
+        /// <summary>
+        /// The mode of prevention of this cookie being sent in cross-site requests. See the HTTP RFC for more info.
+        /// </summary>
         public SameSiteMode SameSite { get; set; }
 
+        /// <summary>
+        /// Creates a Set-Cookie header value from this instance.
+        /// </summary>
+        /// <returns>a Set-Cookie header value</returns>
         public override string ToString()
         {
             // id=a3fWa; Expires=Wed, 21 Oct 2015 07:28:00 GMT; Secure; HttpOnly
@@ -195,7 +437,12 @@ namespace Ultz.SimpleServer.Internals.Http
         }
 
         // ReSharper disable ConvertIfStatementToSwitchStatement
-        public static IEnumerable<Cookie> Parse(string s)
+        /// <summary>
+        /// Parses a cookie from a Cookie request header value. See the HTTP RFC for more info. The returned cookie does not contain any response header values such as <see cref="Secure"/> or <see cref="HttpOnly"/>
+        /// </summary>
+        /// <param name="s">the request header</param>
+        /// <returns>the parsed cookie(s)</returns>
+        public static IEnumerable<HttpCookie> Parse(string s)
         {
             foreach (var part in s.Split(';').Select(x => x.Trim()))
             {
@@ -205,16 +452,30 @@ namespace Ultz.SimpleServer.Internals.Http
                 var key = kvp[0];
                 var value = kvp.Where(x => x != kvp[0]).Aggregate("", (current, s1) => current + s1 + "=")
                     .TrimEnd('=');
-                yield return new Cookie(){Name=key,Value = value};
+                yield return new HttpCookie() {Name = key, Value = value};
             }
         }
         // ReSharper restore ConvertIfStatementToSwitchStatement
     }
 
+    /// <summary>
+    /// Represents values of the SameSite attribute of a Set-Cookie header. See the HTTP RFC for more info.
+    /// </summary>
     public enum SameSiteMode
     {
+        /// <summary>
+        /// Strips the SameSite property from the Set-Cookie header
+        /// </summary>
         None,
+
+        /// <summary>
+        /// Represents the lax value of the Set-Cookie header. See the HTTP RFC for more info.
+        /// </summary>
         Lax,
+
+        /// <summary>
+        /// Represents the strict value of the Set-Cookie header. See the HTTP RFC for more info.
+        /// </summary>
         Strict
     }
 }

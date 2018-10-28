@@ -35,6 +35,7 @@ namespace DemoService
         protected override void BeforeStart()
         {
             RegisterHandlers(new TestServiceHandlers());
+            RegisterHandlers(new CookieTestHandlers());
             Logger?.LogInformation("Go for launch.");
         }
 

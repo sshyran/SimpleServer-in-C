@@ -61,6 +61,7 @@ namespace Ultz.SimpleServer.Internals.Http
 #pragma warning disable 618
             Protocol = headers.ContainsKey(":version") ? headers[":version"] : null;
 #pragma warning restore 618
+            Cookies = new HttpCookieCollection(headers,true);
         }
 
         /// <summary>
@@ -77,6 +78,11 @@ namespace Ultz.SimpleServer.Internals.Http
         ///     A collection of additional headers sent with this request.
         /// </summary>
         public HttpHeaderCollection Headers { get; }
+        
+        /// <summary>
+        /// A collection of cookies sent with this request.
+        /// </summary>
+        public HttpCookieCollection Cookies { get; }
 
         /// <summary>
         ///     The URL attached to this request.

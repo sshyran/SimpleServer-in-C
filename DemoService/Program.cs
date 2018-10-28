@@ -33,12 +33,8 @@ namespace DemoService
     {
         private static void Main(string[] args)
         {
-            // Logging code
-            var loggerFactory = new LoggerFactory().AddConsole();
-
-            //var server = new SimpleServer(new ConsoleLoggerProvider((s, level) => true, true));
-            //var server = new SimpleServer();
             var service = new TestService();
+            service.LoggerProvider = new ConsoleLoggerProvider((x,y) => true,true,false);
             service.Add(new Connector(IPAddress.Loopback, 8081));
             service.Start();
             Console.ReadLine();
