@@ -336,6 +336,31 @@ namespace Ultz.SimpleServer.Internals.Http
     /// </summary>
     public class HttpCookie
     {
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((HttpCookie) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = (Name != null ? Name.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (Value != null ? Value.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (Path != null ? Path.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ Secure.GetHashCode();
+                hashCode = (hashCode * 397) ^ HttpOnly.GetHashCode();
+                hashCode = (hashCode * 397) ^ (Domain != null ? Domain.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ Expires.GetHashCode();
+                hashCode = (hashCode * 397) ^ MaxAge.GetHashCode();
+                hashCode = (hashCode * 397) ^ (int) SameSite;
+                return hashCode;
+            }
+        }
+
         /// <summary>
         /// Returns true if the contents of this cookie exactly matches the other cookie provided
         /// </summary>
@@ -433,6 +458,8 @@ namespace Ultz.SimpleServer.Internals.Http
                 val += "Secure; ";
             if (HttpOnly)
                 val += "HttpOnly; ";
+            if (MaxAge > 0)
+                val += "Max-Age=" + MaxAge + "; ";
             return val.TrimEnd();
         }
 
