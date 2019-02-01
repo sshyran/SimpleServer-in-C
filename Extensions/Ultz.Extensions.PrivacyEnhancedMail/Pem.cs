@@ -17,15 +17,14 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with SimpleServer. If not, see <http://www.gnu.org/licenses/>.
 
-#if NETCOREAPP2_1 || NETSTANDARD2_1
-
 #region
 
+using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 
 #endregion
 
-namespace Ultz.SimpleServer.Common
+namespace Ultz.Extensions.PrivacyEnhancedMail
 {
     /// <summary>
     ///     A class containing PEM format helper methods
@@ -39,9 +38,10 @@ namespace Ultz.SimpleServer.Common
         /// <returns></returns>
         public static X509Certificate2 GetCertificate(string cert)
         {
-            return new X509Certificate2(CommonExt.GetBytesFromPem(cert, "CERTIFICATE"));
+            return new X509Certificate2(PemExt.GetBytesFromPem(cert, "CERTIFICATE"));
         }
 
+#if NET472 || NETCOREAPP2_0 || NETSTANDARD2_1
         /// <summary>
         ///     Gets a <see cref="X509Certificate2" /> from a Base64-encoded certificate and private key.
         /// </summary>
@@ -51,9 +51,14 @@ namespace Ultz.SimpleServer.Common
         public static X509Certificate2 GetCertificate(string cert, string key)
         {
             return GetCertificate(cert).CopyWithPrivateKey(
-                CommonExt.DecodeRsaPrivateKey(CommonExt.GetBytesFromPem(key,
+                PemExt.DecodeRsaPrivateKey(PemExt.GetBytesFromPem(key,
                     "RSA PRIVATE KEY")));
+        }
+#endif
+
+        public static (X509Certificate2, RSA) GetCertificateAndKey(string cert, string key)
+        {
+            return (GetCertificate(cert), PemExt.DecodeRsaPrivateKey(PemExt.GetBytesFromPem(key, "RSA PRIVATE KEY")));
         }
     }
 }
-#endif

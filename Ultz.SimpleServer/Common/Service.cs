@@ -78,7 +78,7 @@ namespace Ultz.SimpleServer.Common
         /// <summary>
         ///     <see cref="Valve" /> to be applied to this <see cref="Service" />, or its members.
         /// </summary>
-        public List<Valve> Valves { get; set; }
+        public List<Valve> Valves { get; set; } = new List<Valve>();
 
         /// <inheritdoc />
         public void Dispose()

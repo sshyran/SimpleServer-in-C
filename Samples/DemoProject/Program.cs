@@ -27,6 +27,7 @@ using System.Net.Security;
 using System.Security.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
+using Ultz.Extensions.PrivacyEnhancedMail;
 using Ultz.SimpleServer.Common;
 using Ultz.SimpleServer.Internals;
 using Ultz.SimpleServer.Internals.Http;

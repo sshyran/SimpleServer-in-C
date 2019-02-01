@@ -28,6 +28,7 @@ using System.Linq;
 using System.Net.Security;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
+using Ultz.Extensions.PrivacyEnhancedMail;
 using Ultz.SimpleServer.Internals.Http2;
 
 #endregion
@@ -56,19 +57,19 @@ namespace Ultz.SimpleServer.Common
             // in an ideal world, the user does not provide both.
             X509Certificate2 cert;
             if (settings.ContainsKey("pemCert"))
-                cert = new X509Certificate2(CommonExt.GetBytesFromPem(settings["pemCert"], "CERTIFICATE"));
+                cert = new X509Certificate2(PemExt.GetBytesFromPem(settings["pemCert"], "CERTIFICATE"));
             else if (settings.ContainsKey("pemCertPath"))
-                cert = new X509Certificate2(CommonExt.GetBytesFromPem(File.ReadAllText(settings["pemCert"]),
+                cert = new X509Certificate2(PemExt.GetBytesFromPem(File.ReadAllText(settings["pemCert"]),
                     "CERTIFICATE"));
             else
                 throw new ArgumentException("The settings given contains neither a pemCert or pemCertPath property.",
                     nameof(settings));
             if (settings.ContainsKey("pemKey"))
                 cert = cert.CopyWithPrivateKey(
-                    CommonExt.DecodeRsaPrivateKey(CommonExt.GetBytesFromPem(settings["pemKey"], "RSA PRIVATE KEY")));
+                    PemExt.DecodeRsaPrivateKey(PemExt.GetBytesFromPem(settings["pemKey"], "RSA PRIVATE KEY")));
             else if (settings.ContainsKey("pemKeyPath"))
                 cert = cert.CopyWithPrivateKey(
-                    CommonExt.DecodeRsaPrivateKey(CommonExt.GetBytesFromPem(File.ReadAllText(settings["pemKeyPath"]),
+                    PemExt.DecodeRsaPrivateKey(PemExt.GetBytesFromPem(File.ReadAllText(settings["pemKeyPath"]),
                         "RSA PRIVATE KEY")));
             else
                 throw new ArgumentException("The settings given contains neither a pemKey or pemKeyPath property.",

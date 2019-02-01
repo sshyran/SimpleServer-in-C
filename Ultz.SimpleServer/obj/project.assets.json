@@ -263,9 +263,19 @@
           "lib/netcoreapp2.1/_._": {}
         }
       },
-      "Ultz.SimpleServer.Abstractions/1.1.0-beta1": {
+      "Ultz.Extensions.PrivacyEnhancedMail/1.0.0": {
         "type": "project",
-        "framework": ".NETStandard,Version=v1.4",
+        "framework": ".NETCoreApp,Version=v2.0",
+        "compile": {
+          "bin/placeholder/Ultz.Extensions.PrivacyEnhancedMail.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Ultz.Extensions.PrivacyEnhancedMail.dll": {}
+        }
+      },
+      "Ultz.SimpleServer.Abstractions/1.1.0-rc1": {
+        "type": "project",
+        "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
           "Microsoft.Extensions.Logging.Abstractions": "1.1.2"
         },
@@ -276,14 +286,14 @@
           "bin/placeholder/Ultz.SimpleServer.Abstractions.dll": {}
         }
       },
-      "Ultz.SimpleServer.Minimal/1.1.0-beta1": {
+      "Ultz.SimpleServer.Minimal/1.1.0-rc1": {
         "type": "project",
-        "framework": ".NETStandard,Version=v1.4",
+        "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
           "Microsoft.Extensions.Logging.Abstractions": "1.1.2",
           "System.Buffers": "4.5.0",
           "System.Threading.Tasks.Extensions": "4.5.1",
-          "Ultz.SimpleServer.Abstractions": "1.1.0-beta1",
+          "Ultz.SimpleServer.Abstractions": "1.1.0-rc1",
           "http2dotnet": "0.8.0"
         },
         "compile": {
@@ -386,9 +396,9 @@
           "lib/netstandard2.0/System.Threading.Tasks.Extensions.dll": {}
         }
       },
-      "Ultz.SimpleServer.Abstractions/1.1.0-beta1": {
+      "Ultz.SimpleServer.Abstractions/1.1.0-rc1": {
         "type": "project",
-        "framework": ".NETStandard,Version=v1.4",
+        "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
           "Microsoft.Extensions.Logging.Abstractions": "1.1.2"
         },
@@ -399,14 +409,14 @@
           "bin/placeholder/Ultz.SimpleServer.Abstractions.dll": {}
         }
       },
-      "Ultz.SimpleServer.Minimal/1.1.0-beta1": {
+      "Ultz.SimpleServer.Minimal/1.1.0-rc1": {
         "type": "project",
-        "framework": ".NETStandard,Version=v1.4",
+        "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
           "Microsoft.Extensions.Logging.Abstractions": "1.1.2",
           "System.Buffers": "4.5.0",
           "System.Threading.Tasks.Extensions": "4.5.1",
-          "Ultz.SimpleServer.Abstractions": "1.1.0-beta1",
+          "Ultz.SimpleServer.Abstractions": "1.1.0-rc1",
           "http2dotnet": "0.8.0"
         },
         "compile": {
@@ -440,10 +450,11 @@
       ]
     },
     "Microsoft.Extensions.Logging.Abstractions/2.1.1": {
-      "sha512": "QWFWKrdeoDSEr8nVJaBAVDMj24wnh9clGzDNmMdgHHRsOIwTUMeh4XljeZXJhIKPT00jWuzwEzn3uNxOtO4cYg==",
+      "sha512": "XRzK7ZF+O6FzdfWrlFTi1Rgj2080ZDsd46vzOjadHUB0Cz5kOvDG8vI7caa5YFrsHQpcfn0DxtjS4E46N4FZsA==",
       "type": "package",
       "path": "microsoft.extensions.logging.abstractions/2.1.1",
       "files": [
+        ".nupkg.metadata",
         ".signature.p7s",
         "lib/netstandard2.0/Microsoft.Extensions.Logging.Abstractions.dll",
         "lib/netstandard2.0/Microsoft.Extensions.Logging.Abstractions.xml",
@@ -452,10 +463,11 @@
       ]
     },
     "Microsoft.NETCore.App/2.1.0": {
-      "sha512": "AvT774nTFgU8cYcGO9j1EMwuayKslxqYTurg32HGpWa2hEYNuW2+XgYVVNcZe6Ndbr84QX6fwaOZfd5n+1m2OA==",
+      "sha512": "2DtRTpAhUdaPDnBM1R4Tbl1hxLW+3L4/byMonI+7aAQPFRmVeKc1epmM4wpxA4h1E7uK6tSPOBOU7f+MDcY5Bg==",
       "type": "package",
       "path": "microsoft.netcore.app/2.1.0",
       "files": [
+        ".nupkg.metadata",
         ".signature.p7s",
         "LICENSE.TXT",
         "Microsoft.NETCore.App.versions.txt",
@@ -717,10 +729,11 @@
       ]
     },
     "Microsoft.NETCore.DotNetAppHost/2.1.0": {
-      "sha512": "f/47I60Wg3SrveTvnecCQhCZCAMYlUujWF15EQ/AZTqF/54qeEJjbCIAxKcZI8ToUYzSg6JdfrHggsgjCyCE9Q==",
+      "sha512": "cZiASE81rksPJsGJ04hd/uEn6guNGAoqNsrzE/DP6AaNRPCHwTe6nZvHd4uAPj3MaVRQ3U0c6cRycMaHCYLPUQ==",
       "type": "package",
       "path": "microsoft.netcore.dotnetapphost/2.1.0",
       "files": [
+        ".nupkg.metadata",
         ".signature.p7s",
         "LICENSE.TXT",
         "THIRD-PARTY-NOTICES.TXT",
@@ -730,10 +743,11 @@
       ]
     },
     "Microsoft.NETCore.DotNetHostPolicy/2.1.0": {
-      "sha512": "p50yZYKzhH64lmArJgoKjtvsNehECa+/sAuOQzZh5uDNBTbRKxjN8IXP1e517xdVsgrFcSNxSEVDKZIOWVjGcQ==",
+      "sha512": "LdhSWUEZmFalhz6fLBE5WDmCdO9jqvW5q3CUOTk9n/hdmmwnTu7KowPPIw5p2t1vn7ozStLG3RZMJbf48f7WtA==",
       "type": "package",
       "path": "microsoft.netcore.dotnethostpolicy/2.1.0",
       "files": [
+        ".nupkg.metadata",
         ".signature.p7s",
         "LICENSE.TXT",
         "THIRD-PARTY-NOTICES.TXT",
@@ -743,10 +757,11 @@
       ]
     },
     "Microsoft.NETCore.DotNetHostResolver/2.1.0": {
-      "sha512": "fS9D8a+y55n6mHMbNqgHXaPGkjmpVH9h97OyrBxsCuo3Z8aQaFMJ5xIfmzji2ntUd/3truhMbSgSfIelHOkQpg==",
+      "sha512": "+9D7G59Fz1H2ZO87Hlgl7Zv44BrAmWnyRfqrofrHW4gQTu573xQP6cuYiNUeqr189eH6hZuh5MKUhOoUGJjqiQ==",
       "type": "package",
       "path": "microsoft.netcore.dotnethostresolver/2.1.0",
       "files": [
+        ".nupkg.metadata",
         ".signature.p7s",
         "LICENSE.TXT",
         "THIRD-PARTY-NOTICES.TXT",
@@ -769,10 +784,11 @@
       ]
     },
     "Microsoft.NETCore.Platforms/2.1.0": {
-      "sha512": "TT+QCi9LcxGTjBssH7S7n5+8DVcwfG4DYgXX7Dk7+BfZ4oVHj8Q0CbYk9glzAlHLsSt3bYzol+fOdra2iu6GOw==",
+      "sha512": "GmkKfoyerqmsHMn7OZj0AKpcBabD+GaafqphvX2Mw406IwiJRy1pKcKqdCfKJfYmkRyJ6+e+RaUylgdJoDa1jQ==",
       "type": "package",
       "path": "microsoft.netcore.platforms/2.1.0",
       "files": [
+        ".nupkg.metadata",
         ".signature.p7s",
         "LICENSE.TXT",
         "THIRD-PARTY-NOTICES.TXT",
@@ -785,10 +801,11 @@
       ]
     },
     "Microsoft.NETCore.Targets/2.1.0": {
-      "sha512": "etaYwrLZQUS+b3UWTpCnUggd6SQ/ZIkZ5pHnoR7+dIWt/wp2Rv3CvMKOZISsrt7FYCHKwCxfcepuuyEWkQxADg==",
+      "sha512": "I2NAAePyfAzSLl/AWmgNs493xJQDDql2Ldpx3PRl7fE+FrsgdGmVHyyWlfd3doMkxHPstOkqYVGvSLbIBhyzsg==",
       "type": "package",
       "path": "microsoft.netcore.targets/2.1.0",
       "files": [
+        ".nupkg.metadata",
         ".signature.p7s",
         "LICENSE.TXT",
         "THIRD-PARTY-NOTICES.TXT",
@@ -801,10 +818,12 @@
       ]
     },
     "NETStandard.Library/2.0.3": {
-      "sha512": "st47PosZSHrjECdjeIzZQbzivYBJFv6P2nv4cj2ypdI204DO+vZ7l5raGMiX4eXMJ53RfOIg+/s4DHVZ54Nu2A==",
+      "sha512": "548M6mnBSJWxsIlkQHfbzoYxpiYFXZZSL00p4GHYv8PkiqFBnnT68mW5mGEsA/ch9fDO9GkPgkFQpWiXZN7mAQ==",
       "type": "package",
       "path": "netstandard.library/2.0.3",
       "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
         "LICENSE.TXT",
         "THIRD-PARTY-NOTICES.TXT",
         "build/netstandard2.0/NETStandard.Library.targets",
@@ -928,10 +947,11 @@
       ]
     },
     "System.Buffers/4.5.0": {
-      "sha512": "xpHYjjtyTEpzMwtSQBWdVc3dPjLdQtvyUg6fBlBqcLl1r2Y7gDG/W/enAYOB98nG3oD3Q153Y2FBO8JDWd+0Xw==",
+      "sha512": "pL2ChpaRRWI/p4LXyy4RgeWlYF2sgfj/pnVMvBqwNFr5cXg7CXNnWZWxrOONLg8VGdFB8oB+EG2Qw4MLgTOe+A==",
       "type": "package",
       "path": "system.buffers/4.5.0",
       "files": [
+        ".nupkg.metadata",
         ".signature.p7s",
         "LICENSE.TXT",
         "THIRD-PARTY-NOTICES.TXT",
@@ -956,10 +976,11 @@
       ]
     },
     "System.Runtime.CompilerServices.Unsafe/4.5.0": {
-      "sha512": "6zBxkHYemB0kQiHP3vGXGRXejZVoNVuMn2paUuqKKi5Wyjkxfkp+D0rd0c3VrGwotidRINt6KpOi2smL4VkJKw==",
+      "sha512": "YrzNWduCDHhUaSRBxHxL11UkM2fD6y8hITHis4/LbQZ6vj3vdRjoH3IoPWWC9uDXK2wHIqn+b5gv1Np/VKyM1g==",
       "type": "package",
       "path": "system.runtime.compilerservices.unsafe/4.5.0",
       "files": [
+        ".nupkg.metadata",
         ".signature.p7s",
         "LICENSE.TXT",
         "THIRD-PARTY-NOTICES.TXT",
@@ -982,10 +1003,11 @@
       ]
     },
     "System.Threading.Tasks.Extensions/4.5.1": {
-      "sha512": "rckdhLJtzQ3EI+0BGuq7dUVtCSnerqAoAmL3S6oMRZ4VMZTL3Rq9DS8IDW57c6PYVebA4O0NbSA1BDvyE18UMA==",
+      "sha512": "WSKUTtLhPR8gllzIWO2x6l4lmAIfbyMAiTlyXAis4QBDonXK4b4S6F8zGARX4/P8wH3DH+sLdhamCiHn+fTU1A==",
       "type": "package",
       "path": "system.threading.tasks.extensions/4.5.1",
       "files": [
+        ".nupkg.metadata",
         ".signature.p7s",
         "LICENSE.TXT",
         "THIRD-PARTY-NOTICES.TXT",
@@ -1019,12 +1041,17 @@
         "version.txt"
       ]
     },
-    "Ultz.SimpleServer.Abstractions/1.1.0-beta1": {
+    "Ultz.Extensions.PrivacyEnhancedMail/1.0.0": {
+      "type": "project",
+      "path": "../Extensions/Ultz.Extensions.PrivacyEnhancedMail/Ultz.Extensions.PrivacyEnhancedMail.csproj",
+      "msbuildProject": "../Extensions/Ultz.Extensions.PrivacyEnhancedMail/Ultz.Extensions.PrivacyEnhancedMail.csproj"
+    },
+    "Ultz.SimpleServer.Abstractions/1.1.0-rc1": {
       "type": "project",
       "path": "../Ultz.SimpleServer.Abstractions/Ultz.SimpleServer.Abstractions.csproj",
       "msbuildProject": "../Ultz.SimpleServer.Abstractions/Ultz.SimpleServer.Abstractions.csproj"
     },
-    "Ultz.SimpleServer.Minimal/1.1.0-beta1": {
+    "Ultz.SimpleServer.Minimal/1.1.0-rc1": {
       "type": "project",
       "path": "../Ultz.SimpleServer.Minimal/Ultz.SimpleServer.Minimal.csproj",
       "msbuildProject": "../Ultz.SimpleServer.Minimal/Ultz.SimpleServer.Minimal.csproj"
@@ -1034,12 +1061,13 @@
     ".NETCoreApp,Version=v2.1": [
       "Microsoft.Extensions.Logging.Abstractions >= 2.1.1",
       "Microsoft.NETCore.App >= 2.1.0",
-      "Ultz.SimpleServer.Minimal >= 1.1.0-beta1"
+      "Ultz.Extensions.PrivacyEnhancedMail >= 1.0.0",
+      "Ultz.SimpleServer.Minimal >= 1.1.0-rc1"
     ],
     ".NETStandard,Version=v2.0": [
       "Microsoft.Extensions.Logging.Abstractions >= 2.1.1",
       "NETStandard.Library >= 2.0.3",
-      "Ultz.SimpleServer.Minimal >= 1.1.0-beta1"
+      "Ultz.SimpleServer.Minimal >= 1.1.0-rc1"
     ]
   },
   "packageFolders": {
@@ -1047,7 +1075,7 @@
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
-    "version": "1.1.0-beta1",
+    "version": "1.1.0-rc1",
     "restore": {
       "projectUniqueName": "E:\\7) SimpleServer\\SimpleServer\\Ultz.SimpleServer\\Ultz.SimpleServer.csproj",
       "projectName": "Ultz.SimpleServer",
@@ -1076,6 +1104,9 @@
       "frameworks": {
         "netcoreapp2.1": {
           "projectReferences": {
+            "E:\\7) SimpleServer\\SimpleServer\\Extensions\\Ultz.Extensions.PrivacyEnhancedMail\\Ultz.Extensions.PrivacyEnhancedMail.csproj": {
+              "projectPath": "E:\\7) SimpleServer\\SimpleServer\\Extensions\\Ultz.Extensions.PrivacyEnhancedMail\\Ultz.Extensions.PrivacyEnhancedMail.csproj"
+            },
             "E:\\7) SimpleServer\\SimpleServer\\Ultz.SimpleServer.Minimal\\Ultz.SimpleServer.Minimal.csproj": {
               "projectPath": "E:\\7) SimpleServer\\SimpleServer\\Ultz.SimpleServer.Minimal\\Ultz.SimpleServer.Minimal.csproj"
             }

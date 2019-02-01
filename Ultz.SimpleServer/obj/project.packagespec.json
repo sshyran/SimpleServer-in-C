@@ -1,5 +1,5 @@
 ﻿{
-  "version": "1.1.0-beta1",
+  "version": "1.1.0-rc1",
   "restore": {
     "projectUniqueName": "E:\\7) SimpleServer\\SimpleServer\\Ultz.SimpleServer\\Ultz.SimpleServer.csproj",
     "projectName": "Ultz.SimpleServer",
@@ -17,6 +17,9 @@
     "frameworks": {
       "netcoreapp2.1": {
         "projectReferences": {
+          "E:\\7) SimpleServer\\SimpleServer\\Extensions\\Ultz.Extensions.PrivacyEnhancedMail\\Ultz.Extensions.PrivacyEnhancedMail.csproj": {
+            "projectPath": "E:\\7) SimpleServer\\SimpleServer\\Extensions\\Ultz.Extensions.PrivacyEnhancedMail\\Ultz.Extensions.PrivacyEnhancedMail.csproj"
+          },
           "E:\\7) SimpleServer\\SimpleServer\\Ultz.SimpleServer.Minimal\\Ultz.SimpleServer.Minimal.csproj": {
             "projectPath": "E:\\7) SimpleServer\\SimpleServer\\Ultz.SimpleServer.Minimal\\Ultz.SimpleServer.Minimal.csproj"
           }
