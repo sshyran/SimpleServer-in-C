@@ -4,4 +4,5 @@
         <TargetFrameworks>netstandard20;net472;netcoreapp20</TargetFrameworks>
     </PropertyGroup>
 
+    <Import Project="..\..\Props\nuget.props"/>
 </Project>
