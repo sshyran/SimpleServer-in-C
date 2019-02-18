@@ -1,7 +1,7 @@
 <Project>
     <PropertyGroup>
-        <Version>1.1.0</Version>
-        <PackageVersion>1.1.0</PackageVersion>
+        <Version>1.1.1</Version>
+        <PackageVersion>1.1.1</PackageVersion>
     </PropertyGroup>
     <PropertyGroup>
         <PackageIconUrl>https://static.ultz.co.uk/new/ss2.png</PackageIconUrl>
