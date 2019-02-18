@@ -56,7 +56,8 @@ namespace Ultz.SimpleServer.Internals
         /// <inheritdoc />
         public void Close()
         {
-            Base.Client.Disconnect(true);
+            Base.Client.Shutdown(SocketShutdown.Both);
+            Base.Client.Close();
             Base.Dispose();
         }
 

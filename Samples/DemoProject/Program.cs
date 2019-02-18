@@ -41,7 +41,7 @@ namespace DemoProject
 {
     internal class Program
     {
-        private const bool IsSslTest = true;
+        private const bool IsSslTest = false;
 
         private static void Main(string[] args)
         {

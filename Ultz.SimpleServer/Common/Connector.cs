@@ -82,7 +82,6 @@ namespace Ultz.SimpleServer.Common
         /// </summary>
         public string Ip { get; set; }
 
-
         /// <inheritdoc />
         public List<Valve> Valves { get; set; } = new List<Valve>();
 

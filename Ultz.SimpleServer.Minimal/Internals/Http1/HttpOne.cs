@@ -50,7 +50,7 @@ namespace Ultz.SimpleServer.Internals.Http1
                 if (int.TryParse(contentLength, out var length))
                 {
                     await stream.WaitForPayload(length);
-                    req.Payload = stream.Payload.ToArray();
+                    req.Payload = new ArraySegment<byte>(stream.Payload.ToArray(), 0, length).ToArray();
                 }
                 else
                 {
