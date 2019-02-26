@@ -1,14 +1,14 @@
 <Project>
     <PropertyGroup>
-        <Version>1.1.1</Version>
-        <PackageVersion>1.1.1</PackageVersion>
+        <Version>1.1.2</Version>
+        <PackageVersion>1.1.2</PackageVersion>
     </PropertyGroup>
     <PropertyGroup>
         <PackageIconUrl>https://static.ultz.co.uk/new/ss2.png</PackageIconUrl>
         <RepositoryUrl>https://stash.onultz.com/projects/SS/repos/simpleserver/browse/</RepositoryUrl>
         <RepositoryType>Git</RepositoryType>
         <Description>SimpleServer offers an easy-to-use HTTP server library built with an extendable architecture. It is the first to include HTTP/1, HTTP/2, and HTTPS - built for the modern web.</Description>
-        <PackageReleaseNotes>SimpleServer 1.1 is a servicing update fixing bugs found in 1.0, as well as adding new features such as cookie management. Full patch notes: https://confluence.onultz.com/simpleserver/patch-notes</PackageReleaseNotes>
+        <PackageReleaseNotes>SimpleServer 1.1 is a servicing update fixing bugs found in 1.0, as well as adding new features such as cookie management. SimpleServer 1.1.2 introduces support for larger payloads up to a total request size of nearly 2GB. Full patch notes: https://confluence.onultz.com/simpleserver/patch-notes</PackageReleaseNotes>
         <Authors>Ultz</Authors>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <PackageLicenseExpression>LGPL-3.0-or-later</PackageLicenseExpression>

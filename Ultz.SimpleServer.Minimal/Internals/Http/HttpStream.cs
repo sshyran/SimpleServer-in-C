@@ -38,6 +38,7 @@ namespace Ultz.SimpleServer.Internals.Http
         private byte[] _httpBuffer = new byte[MaxHeaderLength];
         private int _httpBufferOffset;
         private ArraySegment<byte> _remains;
+        public byte[] Payload { get; private set; }
 
         public HttpStream(IReadableByteStream stream)
         {
@@ -48,9 +49,6 @@ namespace Ultz.SimpleServer.Internals.Http
 
         public ArraySegment<byte> HeaderBytes =>
             new ArraySegment<byte>(_httpBuffer, 0, HttpHeaderLength);
-
-        public ArraySegment<byte> Payload =>
-            new ArraySegment<byte>(_httpBuffer, HttpHeaderLength, _httpBuffer.Length - HttpHeaderLength);
 
         public ValueTask<StreamReadResult> ReadAsync(ArraySegment<byte> buffer)
         {
@@ -124,18 +122,30 @@ namespace Ultz.SimpleServer.Internals.Http
             }
         }
 
-        public async Task WaitForPayload(int length)
+        public async Task WaitForPayloadAsync(int length)
         {
             if (length == 0)
                 return;
-            var initLength = _httpBuffer.Length;
-            while (_httpBuffer.Length - initLength == length)
+            var read = 0;
+            Payload = new byte[length];
+            if (_httpBufferOffset != HttpHeaderLength)
+            {
+                // oh no, a bit of payload has leaked into the buffer!
+                var seg = new ArraySegment<byte>(_httpBuffer, HttpHeaderLength, _httpBufferOffset - HttpHeaderLength);
+                foreach (var b in seg)
+                {
+                    Payload[read++] = b;
+                }
+
+                // there, the leaky pipe has been fixed.
+            }
+            while (read != length)
             {
                 var res = await _stream.ReadAsync(
-                    new ArraySegment<byte>(_httpBuffer, _httpBufferOffset, _httpBuffer.Length - _httpBufferOffset));
+                    new ArraySegment<byte>(Payload, read, length - read));
                 if (res.EndOfStream)
                     throw new EndOfStreamException();
-                _httpBufferOffset += res.BytesRead;
+                read += res.BytesRead;
             }
         }
 
@@ -143,10 +153,15 @@ namespace Ultz.SimpleServer.Internals.Http
         ///     Marks the HTTP reader as unread, which means following
         ///     ReadAsync calls will reread the header.
         /// </summary>
-        public void UnreadHttpHeader()
+        public void Unread()
         {
-            _completeRemains = new ArraySegment<byte>(
-                _httpBuffer, 0, _httpBufferOffset);
+            if (Payload == null)
+                _completeRemains = new ArraySegment<byte>(_httpBuffer, 0, _httpBufferOffset);
+            else
+            {
+                Array.Resize(ref _httpBuffer, _httpBuffer.Length + Payload.Length);
+                Payload.CopyTo(_httpBuffer, _httpBufferOffset);
+            }
         }
 
         /// <summary>Removes the received HTTP header from the input buffer</summary>

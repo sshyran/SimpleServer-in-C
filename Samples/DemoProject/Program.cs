@@ -22,7 +22,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Net.Security;
 using System.Security.Authentication;
 using Microsoft.Extensions.Logging;
@@ -65,8 +67,8 @@ namespace DemoProject
             else
                 server = new Server(Http.Create(HttpMode.Dual),
                     new TcpConnectionListener(IPAddress.Any, 11111),
-          //        new ConsoleLoggerProvider((s, level) => true, true));
-                    null);
+                    new ConsoleLoggerProvider((s, level) => true, true));
+          //        null);
 
             server.RequestReceived += ServerOnRequestReceived;
             var exceptionLogger = logger.CreateLogger("AppDomain-EX");
@@ -83,6 +85,14 @@ namespace DemoProject
             var ctx = (HttpContext) e.Context;
             foreach (var header in ctx.Request.ToDictionary())
                 Console.WriteLine(header.Name + ": " + header.Value);
+            if (ctx.Request.RawUrl.StartsWith("/audio_echo"))
+            {
+                // this was used for testing big data streams
+                ctx.Request.InputStream.CopyTo(ctx.Response.OutputStream);
+                ctx.Response.Headers["content-type"] = "audio/wav";
+                ctx.Response.Close();
+                return;
+            }
             ctx.Response.Headers["content-type"] = "text/html";
             var sw = new StreamWriter(ctx.Response.OutputStream);
             if (ctx.Request.Method.Id != "POST")

@@ -100,7 +100,7 @@ namespace Ultz.SimpleServer.Internals.Http2
                 if (MaybeHttpStart(headerBytes))
                 {
                     // This seems to be a HTTP/2 request
-                    upgradeReadStream.UnreadHttpHeader();
+                    upgradeReadStream.Unread();
                 }
                 else
                 {
@@ -115,7 +115,7 @@ namespace Ultz.SimpleServer.Internals.Http2
                     {
                         if (int.TryParse(contentLength, out var length))
                         {
-                            await upgradeReadStream.WaitForPayload(length);
+                            await upgradeReadStream.WaitForPayloadAsync(length);
                             req.Payload = upgradeReadStream.Payload.ToArray();
                         }
                         else
