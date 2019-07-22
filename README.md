@@ -1,4 +1,7 @@
-_Note: SimpleServer 1.0 is the full release version of SimpleServer. We strive to make it as backwards compatible as possible, but you may need to make some adjustments when migrating_
+# Deprecation Notice
+SimpleServer has been superseded by Project Spirit, also made by Ultz. Please use that instead.
+
+- 4pm UTC+1, 22nd July 2019
 
 # SimpleServer
 SimpleServer is new server environment written in C# for .NET Standard. We aim to make SimpleServer an easy-to-use platform in which developers can make advanced web applications on.
